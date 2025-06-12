@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from trivoting.election.alternative import Alternative
 from trivoting.election.trichotomours_ballot import TrichotomousBallot
 from trivoting.election.trichotomours_profile import TrichotomousProfile
@@ -6,7 +8,7 @@ from pabutools.election import AbstractApprovalProfile, AbstractApprovalBallot, 
 from pabutools.election import parse_pabulib as pabutools_parse_pabulib
 
 def pb_approval_ballot_to_trichotomous_ballot(app_ballot: AbstractApprovalBallot, alt_map: dict[Project, Alternative]):
-    return TrichotomousBallot(approved=[p for p in app_ballot])
+    return TrichotomousBallot(approved=[alt_map[p] for p in app_ballot])
 
 def pb_approval_profile_to_trichotomous_profile(instance: Instance, app_profile: AbstractApprovalProfile):
     alt_map = {p: Alternative(p.name) for p in instance}
