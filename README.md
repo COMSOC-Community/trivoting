@@ -1,2 +1,2 @@
 # trivoting
-Python library for trichotomours voting.
+Python library for trichotomous voting.
