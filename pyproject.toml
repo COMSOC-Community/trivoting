@@ -37,7 +37,7 @@ dev = [
     "sphinxcontrib-napoleon",
     "unittest2",
     "sphinx-toolbox",
-    "yaml"
+    "pyyaml"
 ]
 
 [project.urls]
