@@ -1,0 +1,130 @@
+from __future__ import annotations
+
+from collections.abc import Callable, Collection
+
+from trivoting.utils import Numeric
+
+from trivoting.election.trichotomours_profile import TrichotomousProfile
+from trivoting.election.alternative import Alternative
+
+
+class TieBreakingException(Exception):
+    """Raised when a tie occurs and no tie-breaking rule is provided."""
+
+
+class TieBreakingRule:
+    """
+    Implements a tie-breaking rule.
+
+    Parameters
+    ----------
+        func : Callable[[TrichotomousProfile, Alternative], Numeric]
+            A function taking as input an instance, a profile and a project and returning the value on which the
+            project will be sorted.
+
+    Attributes
+    ----------
+        func : Callable[[TrichotomousProfile, Alternative], Numeric]
+            A function taking as input an instance, a profile and a project and returning the value on which the
+            project will be sorted.
+    """
+
+    def __init__(self, func: Callable[[TrichotomousProfile, Alternative], Numeric]):
+        self.func = func
+
+    def order(
+        self,
+        profile: TrichotomousProfile,
+        alternatives: Collection[Alternative],
+        key: Callable[..., Alternative] | None = None,
+    ) -> list[Alternative]:
+        """
+        Break the ties among all the alternatives provided in input and returns them ordered.
+
+        Parameters
+        ----------
+            profile : TrichotomousProfile
+                The profile.
+            alternatives : Collection[Alternative]
+                The set of alternatives between which ties are to be broken.
+            key : Callable[..., Alternative], optional
+                A key function to select the value associated with each alternative, passed as the
+                `key` argument of the `sorted` function. Defaults to `lambda x: x`.
+
+        Returns
+        -------
+            list[Alternative]
+                The alternatives, ordered by the tie-breaking rule.
+        """
+
+        def default_key(p):
+            return p
+
+        if key is None:
+            key = default_key
+        return sorted(
+            alternatives,
+            key=lambda alt: self.func(profile, key(alt)),
+        )
+
+    def untie(
+        self,
+        profile: TrichotomousProfile,
+        alternatives: Collection[Alternative],
+        key: Callable[..., Alternative] | None = None,
+    ) -> Alternative:
+        """
+        Break the ties among all the alternatives provided in input and returns a single one of them. Orders the
+        alternatives according to the tie-breaking rule and return the first element of the order.
+
+        Parameters
+        ----------
+            profile : TrichotomousProfile
+                The profile.
+            alternatives : Collection[Alternative]
+                The set of alternatives between which ties are to be broken.
+            key : Callable[..., Alternative], optional
+                A key function to select the value associated with each alternative, passed as the
+                `key` argument of the `sorted` function. Defaults to `lambda x: x`.
+
+        Returns
+        -------
+            Alternative
+                The first alternative according to the tie-breaking order.
+        """
+
+        def default_key(p):
+            return p
+
+        if key is None:
+            key = default_key
+        return self.order(profile, alternatives, key)[0]
+
+
+lexico_tie_breaking = TieBreakingRule(lambda prof, alt: alt.name)
+"""
+Implements lexicographic tie breaking, i.e., tie-breaking based on the name of the alternatives.
+"""
+
+sym_app_score_tie_breaking = TieBreakingRule(
+    lambda prof, alt: -prof.approval_score(alt)
+)
+"""
+Implements tie breaking based on the symmetric approval score where the projects with the highest net support (number 
+of approvers minus number of disapprovers) in the profile is selected.
+"""
+
+asym_app_score_tie_breaking = TieBreakingRule(
+    lambda prof, alt: -prof.approval_score(alt, symmetric=False)
+)
+"""
+Implements tie breaking based on the asymmetric approval score where the projects with the highest support (number 
+of approvers) in the profile is selected.
+"""
+
+refuse_tie_breaking = TieBreakingRule(
+    lambda prof, alt: TieBreakingException("A tie occurred, but no tie-breaking rule was provided.")
+)
+"""
+Special tie-breaking function that simply raises an error when a tie needs to be broken.
+"""
