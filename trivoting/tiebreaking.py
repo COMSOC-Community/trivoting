@@ -2,10 +2,10 @@ from __future__ import annotations
 
 from collections.abc import Callable, Collection
 
-from trivoting.utils import Numeric
 
-from trivoting.election.trichotomours_profile import TrichotomousProfile
+from trivoting.election.trichotomours_profile import TrichotomousProfile, AbstractTrichotomousProfile
 from trivoting.election.alternative import Alternative
+from trivoting.fractions import Numeric
 
 
 class TieBreakingException(Exception):
@@ -29,12 +29,12 @@ class TieBreakingRule:
             project will be sorted.
     """
 
-    def __init__(self, func: Callable[[TrichotomousProfile, Alternative], Numeric]):
+    def __init__(self, func: Callable[[AbstractTrichotomousProfile, Alternative], Numeric]):
         self.func = func
 
     def order(
         self,
-        profile: TrichotomousProfile,
+        profile: AbstractTrichotomousProfile,
         alternatives: Collection[Alternative],
         key: Callable[..., Alternative] | None = None,
     ) -> list[Alternative]:
@@ -69,7 +69,7 @@ class TieBreakingRule:
 
     def untie(
         self,
-        profile: TrichotomousProfile,
+        profile: AbstractTrichotomousProfile,
         alternatives: Collection[Alternative],
         key: Callable[..., Alternative] | None = None,
     ) -> Alternative:
@@ -122,9 +122,10 @@ Implements tie breaking based on the asymmetric approval score where the project
 of approvers) in the profile is selected.
 """
 
-refuse_tie_breaking = TieBreakingRule(
-    lambda prof, alt: TieBreakingException("A tie occurred, but no tie-breaking rule was provided.")
-)
+def refuse_tie_breaking(profile, alternative):
+    raise TieBreakingException("A tie occurred, but no tie-breaking rule was provided.")
+
+refuse_tie_breaking = TieBreakingRule(refuse_tie_breaking)
 """
 Special tie-breaking function that simply raises an error when a tie needs to be broken.
 """

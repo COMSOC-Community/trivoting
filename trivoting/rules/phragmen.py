@@ -1,5 +1,13 @@
-from trivoting.election import TrichotomousBallot
-from trivoting.fractions import Numeric
+from __future__ import annotations
+
+from collections.abc import Collection
+from copy import deepcopy
+
+from trivoting.election.alternative import Alternative
+from trivoting.election.trichotomours_ballot import AbstractTrichotomousBallot
+from trivoting.election.trichotomours_profile import AbstractTrichotomousProfile
+from trivoting.fractions import Numeric, frac
+from trivoting.tiebreaking import TieBreakingRule, lexico_tie_breaking
 
 
 class PhragmenVoter:
@@ -8,7 +16,7 @@ class PhragmenVoter:
 
     Parameters
     ----------
-        ballot: :py:class:`~pabutools.election.ballot.approvalballot.AbstractApprovalBallot`
+        ballot: AbstractTrichotomousBallot
             The ballot of the voter.
         load: Numeric
             The initial load of the voter.
@@ -17,7 +25,7 @@ class PhragmenVoter:
 
     Attributes
     ----------
-        ballot: :py:class:`~pabutools.election.ballot.approvalballot.AbstractApprovalBallot`
+        ballot: AbstractTrichotomousBallot
             The ballot of the voter.
         load: Numeric
             The initial load of the voter.
@@ -26,7 +34,7 @@ class PhragmenVoter:
     """
 
     def __init__(
-        self, ballot: TrichotomousBallot, load: Numeric, multiplicity: int
+        self, ballot: AbstractTrichotomousBallot, load: Numeric, multiplicity: int
     ):
         self.ballot = ballot
         self.load = load
@@ -37,32 +45,27 @@ class PhragmenVoter:
 
 
 def sequential_phragmen(
-    instance: Instance,
-    profile: AbstractApprovalProfile,
+    profile: AbstractTrichotomousProfile,
+    max_size_selection: int,
     initial_loads: list[Numeric] | None = None,
-    initial_budget_allocation: Collection[Project] | None = None,
+    initial_selection: Collection[Alternative] | None = None,
     tie_breaking: TieBreakingRule | None = None,
     resoluteness: bool = True,
-) -> BudgetAllocation | list[BudgetAllocation]:
+) -> list[Alternative] | list[list[Alternative]]:
     """
-    Phragmén's sequential rule. It works as follows. Voters receive money in a virtual currency. They all start with a
-    budget of 0 and that budget continuously increases. As soon asa group of supporters have enough virtual currency to
-    buy a project they all approve, the project is bought. The rule stops as soon as there is a project that could be
-    bought  but only by violating the budget constraint.
 
-    Note that this rule can only be applied to profile of approval ballots.
 
     Parameters
     ----------
-        instance : :py:class:`~pabutools.election.instance.Instance`
-            The instance.
-        profile : :py:class:`~pabutools.election.profile.approvalprofile.AbstractApprovalProfile`
+        profile : AbstractTrichotomousProfile
             The profile.
+        max_size_selection : int
+            The maximum number of alternatives that can be selected.
         initial_loads: list[Numeric], optional
             A list of initial load, one per ballot in `profile`. By defaults, the initial load is `0`.
-        initial_budget_allocation : Iterable[:py:class:`~pabutools.election.instance.Project`]
+        initial_selection : Iterable[Alternative], optional
             An initial budget allocation, typically empty.
-        tie_breaking : :py:class:`~pabutools.tiebreaking.TieBreakingRule`, optional
+        tie_breaking : TieBreakingRule, optional
             The tie-breaking rule used.
             Defaults to the lexicographic tie-breaking.
         resoluteness : bool, optional
@@ -71,142 +74,90 @@ def sequential_phragmen(
 
     Returns
     -------
-        :py:class:`~pabutools.rules.budgetallocation.BudgetAllocation` | list[:py:class:`~pabutools.rules.budgetallocation.BudgetAllocation`]
-            The selected projects if resolute (:code:`resoluteness == True`), or the set of selected projects if irresolute
-            (:code:`resoluteness == False`).
+        list[Alternative] | list[list[Alternative]]
+            The selected alternatives if resolute (:code:`resoluteness == True`), or the set of selected alternatives
+            if irresolute (:code:`resoluteness == False`).
     """
 
-    def aux(
-        inst,
-        projects,
-        prof,
-        voters,
-        supporters,
-        approval_scores,
-        alloc,
-        cost,
-        allocs,
-        resolute,
-    ):
-        if len(projects) == 0:
-            alloc.sort()
-            if alloc not in allocs:
-                allocs.append(alloc)
+    def _sequential_phragmen_rec(alternatives, voters, selection):
+        if len(alternatives) == 0:
+            selection.sort()
+            if selection not in all_selections:
+                all_selections.append(selection)
         else:
             min_new_maxload = None
             arg_min_new_maxload = None
-            for project in projects:
-                if approval_scores[project] == 0:
+            for alt in alternatives:
+                if approval_scores[alt] == 0:
                     new_maxload = float("inf")
                 else:
                     new_maxload = frac(
-                        sum(voters[i].total_load() for i in supporters[project])
-                        + project.cost,
-                        approval_scores[project],
+                        sum(voters[i].total_load() for i in supporters[alt])
+                        + alt.cost,
+                        approval_scores[alt],
                     )
                 if min_new_maxload is None or new_maxload < min_new_maxload:
                     min_new_maxload = new_maxload
-                    arg_min_new_maxload = [project]
+                    arg_min_new_maxload = [alt]
                 elif min_new_maxload == new_maxload:
-                    arg_min_new_maxload.append(project)
+                    arg_min_new_maxload.append(alt)
 
-            if any(
-                cost + project.cost > inst.budget_limit
-                for project in arg_min_new_maxload
-            ):
-                alloc.sort()
-                if alloc not in allocs:
-                    allocs.append(alloc)
+            tied_alternatives = tie_breaking.order(profile, arg_min_new_maxload)
+            if resoluteness:
+                selected_alternative = tied_alternatives[0]
+                for voter in voters:
+                    if selected_alternative in voter.ballot.approved:
+                        voter.load = min_new_maxload
+                selection.append(selected_alternative)
+                alternatives.remove(selected_alternative)
+                _sequential_phragmen_rec(alternatives, voters, selection)
             else:
-                tied_projects = tie_breaking.order(inst, prof, arg_min_new_maxload)
-                if resolute:
-                    selected_project = tied_projects[0]
-                    for voter in voters:
-                        if selected_project in voter.ballot:
+                for selected_alternative in tied_alternatives:
+                    new_voters = deepcopy(voters)
+                    for voter in new_voters:
+                        if selected_alternative in voter.ballot.approved:
                             voter.load = min_new_maxload
-                    alloc.append(selected_project)
-                    projects.remove(selected_project)
-                    aux(
-                        inst,
-                        projects,
-                        prof,
-                        voters,
-                        supporters,
-                        approval_scores,
-                        alloc,
-                        cost + selected_project.cost,
-                        allocs,
-                        resolute,
-                    )
-                else:
-                    for selected_project in tied_projects:
-                        new_voters = deepcopy(voters)
-                        for voter in new_voters:
-                            if selected_project in voter.ballot:
-                                voter.load = min_new_maxload
-                        new_alloc = deepcopy(alloc) + [selected_project]
-                        new_cost = cost + selected_project.cost
-                        new_projs = deepcopy(projects)
-                        new_projs.remove(selected_project)
-                        aux(
-                            inst,
-                            new_projs,
-                            prof,
-                            new_voters,
-                            supporters,
-                            approval_scores,
-                            new_alloc,
-                            new_cost,
-                            allocs,
-                            resolute,
-                        )
-
-    if not isinstance(profile, AbstractApprovalProfile):
-        raise ValueError("The Sequential Phragmen Rule only applies to approval profiles.")
+                    new_selection = deepcopy(selection) + [selected_alternative]
+                    new_alternatives = deepcopy(alternatives)
+                    new_alternatives.remove(selected_alternative)
+                    _sequential_phragmen_rec(new_alternatives, new_voters, new_selection)
 
     if tie_breaking is None:
         tie_breaking = lexico_tie_breaking
-    if initial_budget_allocation is None:
-        initial_budget_allocation = BudgetAllocation()
+    if initial_selection is None:
+        initial_selection = list()
     else:
-        initial_budget_allocation = BudgetAllocation(initial_budget_allocation)
-    current_cost = total_cost(initial_budget_allocation)
+        initial_selection = list(initial_selection)
 
-    initial_projects = set(
-        p
-        for p in instance
-        if p not in initial_budget_allocation and p.cost <= instance.budget_limit
-    )
+    max_size_selection -= len(initial_selection)
+
+    initial_alternatives = set(a for a in profile.alternatives if a not in initial_selection)
 
     if initial_loads is None:
-        voters_details = [PhragmenVoter(b, 0, profile.multiplicity(b)) for b in profile]
+        initial_voters = [PhragmenVoter(b, 0, profile.multiplicity(b)) for b in profile]
     else:
-        voters_details = [
+        initial_voters = [
             PhragmenVoter(b, initial_loads[i], profile.multiplicity(b))
             for i, b in enumerate(profile)
         ]
-    supps = {
-        proj: [i for i, v in enumerate(voters_details) if proj in v.ballot]
-        for proj in initial_projects
+
+    # Stores indices of the voters details list
+    supporters = {
+        alt: [i for i, v in enumerate(initial_voters) if alt in v.ballot.approved]
+        for alt in initial_alternatives
+    }
+    opposants = {
+        alt: [i for i, v in enumerate(initial_voters) if alt in v.ballot.disapproved]
+        for alt in initial_alternatives
     }
 
-    scores = {project: profile.approval_score(project) for project in instance}
+    approval_scores = {alt: profile.approval_score(alt) for alt in initial_alternatives}
 
-    all_budget_allocations: list[BudgetAllocation] = []
-    aux(
-        instance,
-        initial_projects,
-        profile,
-        voters_details,
-        supps,
-        scores,
-        initial_budget_allocation,
-        current_cost,
-        all_budget_allocations,
-        resoluteness,
-    )
+    all_selections : list[list[Alternative]] = []
+
+    _sequential_phragmen_rec(initial_alternatives, initial_voters, initial_selection)
 
     if resoluteness:
-        return all_budget_allocations[0]
-    return all_budget_allocations
+        return all_selections[0]
+    return all_selections
 
