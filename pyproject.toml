@@ -24,7 +24,9 @@ classifiers = [
 requires-python = ">=3.9"
 dependencies = [
     "preflibtools>=2.0.33",
-    "pabutools>=1.1.13"
+    "pabutools>=1.1.13",
+    "abcvoting",
+    "prefsampling"
 ]
 
 [project.optional-dependencies]
@@ -34,9 +36,8 @@ dev = [
     "sphinx-book-theme",
     "sphinxcontrib-napoleon",
     "unittest2",
-    "parameterized",
     "sphinx-toolbox",
-    "enum-tools"
+    "yaml"
 ]
 
 [project.urls]

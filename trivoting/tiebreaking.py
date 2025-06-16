@@ -1,7 +1,6 @@
 from __future__ import annotations
 
-from collections.abc import Callable, Collection
-
+from collections.abc import Callable, Iterable
 
 from trivoting.election.trichotomours_profile import TrichotomousProfile, AbstractTrichotomousProfile
 from trivoting.election.alternative import Alternative
@@ -35,7 +34,7 @@ class TieBreakingRule:
     def order(
         self,
         profile: AbstractTrichotomousProfile,
-        alternatives: Collection[Alternative],
+        alternatives: Iterable,
         key: Callable[..., Alternative] | None = None,
     ) -> list[Alternative]:
         """
@@ -45,7 +44,7 @@ class TieBreakingRule:
         ----------
             profile : TrichotomousProfile
                 The profile.
-            alternatives : Collection[Alternative]
+            alternatives : Iterable
                 The set of alternatives between which ties are to be broken.
             key : Callable[..., Alternative], optional
                 A key function to select the value associated with each alternative, passed as the
@@ -60,6 +59,9 @@ class TieBreakingRule:
         def default_key(p):
             return p
 
+        if not alternatives:
+            return []
+
         if key is None:
             key = default_key
         return sorted(
@@ -70,7 +72,7 @@ class TieBreakingRule:
     def untie(
         self,
         profile: AbstractTrichotomousProfile,
-        alternatives: Collection[Alternative],
+        alternatives: Iterable,
         key: Callable[..., Alternative] | None = None,
     ) -> Alternative:
         """
@@ -81,7 +83,7 @@ class TieBreakingRule:
         ----------
             profile : TrichotomousProfile
                 The profile.
-            alternatives : Collection[Alternative]
+            alternatives : Iterable
                 The set of alternatives between which ties are to be broken.
             key : Callable[..., Alternative], optional
                 A key function to select the value associated with each alternative, passed as the

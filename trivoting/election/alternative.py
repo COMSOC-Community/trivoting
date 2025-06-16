@@ -9,13 +9,25 @@ class Alternative:
         self.name = name
 
     def __eq__(self, other):
-        return self.name == other
+        if isinstance(other, Alternative):
+            return self.name == other.name
+        elif isinstance(other, str):
+            return self.name == other
+        return NotImplemented
 
     def __lt__(self, other):
-        return self.name < other
+        if isinstance(other, Alternative):
+            return self.name < other.name
+        elif isinstance(other, str):
+            return self.name < other
+        return NotImplemented
 
     def __le__(self, other):
-        return self.name <= other
+        if isinstance(other, Alternative):
+            return self.name <= other.name
+        elif isinstance(other, str):
+            return self.name <= other
+        return NotImplemented
 
     def __hash__(self):
         return hash(self.name)

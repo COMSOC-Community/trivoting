@@ -82,12 +82,12 @@ class TrichotomousBallot(AbstractTrichotomousBallot):
     def __eq__(self, other):
         if isinstance(other, TrichotomousBallot):
             return self.approved == other.approved and self.disapproved == other.disapproved
-        return False
+        return NotImplemented
 
     def __lt__(self, other):
         if isinstance(other, TrichotomousBallot):
             return self.approved < other.approved
-        return False
+        return NotImplemented
 
 
 class FrozenTrichotomousBallot(AbstractTrichotomousBallot):

@@ -14,11 +14,12 @@ class AbstractTrichotomousProfile(ABC, Iterable[AbstractTrichotomousBallot]):
     Abstract class representing a profile, that is, a collection of ballots. This class is only meant to be inherited.
     """
 
-    def __init__(self, alternatives: Iterable[Alternative] = None):
+    def __init__(self, alternatives: Iterable[Alternative] = None, max_size_selection : int = None):
         if alternatives is None:
             self.alternatives = set()
         else:
             self.alternatives = set(alternatives)
+        self.max_size_selection = max_size_selection
 
     @abstractmethod
     def multiplicity(self, ballot: AbstractTrichotomousBallot) -> int:
@@ -95,11 +96,14 @@ class TrichotomousProfile(AbstractTrichotomousProfile, MutableSequence[Trichotom
         init: Iterable[TrichotomousBallot] = (),
         *,
         alternatives: Iterable[Alternative] = None,
+        max_size_selection: int = None,
     ) -> None:
         self._ballots_list = list(init)
         if alternatives is None and isinstance(init, AbstractTrichotomousProfile):
             alternatives = init.alternatives
-        AbstractTrichotomousProfile.__init__(self, alternatives)
+        if max_size_selection is None and isinstance(init, AbstractTrichotomousProfile):
+            max_size_selection = init.max_size_selection
+        AbstractTrichotomousProfile.__init__(self, alternatives, max_size_selection)
 
     def approval_score(self, alternative: Alternative, symmetric: bool = True) -> Numeric:
         """ Returns the approval score of an alternative. By default, the approval score is symmetric, i.e., approving
@@ -152,7 +156,7 @@ class TrichotomousProfile(AbstractTrichotomousProfile, MutableSequence[Trichotom
             TrichotomousMultiProfile
                 The multiprofile.
         """
-        return TrichotomousMultiProfile([ballot.freeze() for ballot in self], alternatives=self.alternatives)
+        return TrichotomousMultiProfile([ballot.freeze() for ballot in self], alternatives=self.alternatives, max_size_selection=self.max_size_selection)
 
     def __getitem__(self, index):
         if isinstance(index, slice):
@@ -242,6 +246,12 @@ class TrichotomousProfile(AbstractTrichotomousProfile, MutableSequence[Trichotom
         self._ballots_list *= n
         return self
 
+    def __repr__(self):
+        return self._ballots_list.__repr__()
+
+    def __str__(self):
+        return self._ballots_list.__str__()
+
 
 class TrichotomousMultiProfile(AbstractTrichotomousProfile, MutableMapping[FrozenTrichotomousBallot, int]):
     """
@@ -254,11 +264,14 @@ class TrichotomousMultiProfile(AbstractTrichotomousProfile, MutableMapping[Froze
         init: Iterable[FrozenTrichotomousBallot] = (),
         *,
         alternatives: Iterable[Alternative] = None,
+        max_size_selection: int = None,
     ) -> None:
         self._ballots_counter = Counter(init)
         if alternatives is None and isinstance(init, AbstractTrichotomousProfile):
             alternatives = init.alternatives
-        AbstractTrichotomousProfile.__init__(self, alternatives)
+        if max_size_selection is None and isinstance(init, AbstractTrichotomousProfile):
+            max_size_selection = init.max_size_selection
+        AbstractTrichotomousProfile.__init__(self, alternatives, max_size_selection)
 
     def approval_score(self, alternative: Alternative, symmetric: bool = True) -> Numeric:
         """ Returns the approval score of an alternative. By default, the approval score is symmetric, i.e., approving
@@ -335,6 +348,9 @@ class TrichotomousMultiProfile(AbstractTrichotomousProfile, MutableMapping[Froze
 
     def __repr__(self):
         return repr(self._ballots_counter)
+
+    def __str__(self):
+        return self._ballots_counter.__str__()
 
     def __add__(self, other):
         new_profile = TrichotomousMultiProfile(self)

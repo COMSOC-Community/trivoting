@@ -80,7 +80,7 @@ def sequential_phragmen(
     """
 
     def _sequential_phragmen_rec(alternatives, voters, selection):
-        if len(alternatives) == 0:
+        if len(alternatives) == 0 or len(selection) == max_size_selection:
             selection.sort()
             if selection not in all_selections:
                 all_selections.append(selection)
@@ -88,39 +88,49 @@ def sequential_phragmen(
             min_new_maxload = None
             arg_min_new_maxload = None
             for alt in alternatives:
-                if approval_scores[alt] == 0:
-                    new_maxload = float("inf")
-                else:
-                    new_maxload = frac(
-                        sum(voters[i].total_load() for i in supporters[alt])
-                        + alt.cost,
-                        approval_scores[alt],
-                    )
-                if min_new_maxload is None or new_maxload < min_new_maxload:
-                    min_new_maxload = new_maxload
-                    arg_min_new_maxload = [alt]
-                elif min_new_maxload == new_maxload:
-                    arg_min_new_maxload.append(alt)
+                for considered_voters, veto in ((supporters[alt], False), (opposants[alt], True)):
+                    num_considered_voters = len(considered_voters)
+                    if num_considered_voters > 0:
+                        new_maxload = frac(
+                            sum(voters[i].total_load() for i in considered_voters) + 1, num_considered_voters,
+                        )
+                        if min_new_maxload is None or new_maxload < min_new_maxload:
+                            min_new_maxload = new_maxload
+                            arg_min_new_maxload = [(alt, veto)]
+                        elif min_new_maxload == new_maxload:
+                            arg_min_new_maxload.append((alt, veto))
 
-            tied_alternatives = tie_breaking.order(profile, arg_min_new_maxload)
+            tied_alternatives = tie_breaking.order(profile, arg_min_new_maxload, key=lambda x: x[0])
             if resoluteness:
-                selected_alternative = tied_alternatives[0]
+                selected_alternative, vetoed = tied_alternatives[0]
                 for voter in voters:
-                    if selected_alternative in voter.ballot.approved:
+                    if not vetoed and selected_alternative in voter.ballot.approved:
                         voter.load = min_new_maxload
-                selection.append(selected_alternative)
+                    elif vetoed and selected_alternative in voter.ballot.disapproved:
+                        voter.load = min_new_maxload
+                if not vetoed:
+                    selection.append(selected_alternative)
                 alternatives.remove(selected_alternative)
                 _sequential_phragmen_rec(alternatives, voters, selection)
             else:
-                for selected_alternative in tied_alternatives:
+                for selected_alternative, vetoed in tied_alternatives:
                     new_voters = deepcopy(voters)
                     for voter in new_voters:
-                        if selected_alternative in voter.ballot.approved:
+                        if not vetoed and selected_alternative in voter.ballot.approved:
                             voter.load = min_new_maxload
-                    new_selection = deepcopy(selection) + [selected_alternative]
+                        elif vetoed and selected_alternative in voter.ballot.disapproved:
+                            voter.load = min_new_maxload
+                    new_selection = deepcopy(selection)
+                    if not vetoed:
+                        new_selection.append(selected_alternative)
                     new_alternatives = deepcopy(alternatives)
                     new_alternatives.remove(selected_alternative)
                     _sequential_phragmen_rec(new_alternatives, new_voters, new_selection)
+
+    try:
+        max_size_selection = int(max_size_selection)
+    except ValueError:
+        raise ValueError('max_size_selection must be an integer.')
 
     if tie_breaking is None:
         tie_breaking = lexico_tie_breaking
@@ -131,7 +141,6 @@ def sequential_phragmen(
 
     max_size_selection -= len(initial_selection)
 
-    initial_alternatives = set(a for a in profile.alternatives if a not in initial_selection)
 
     if initial_loads is None:
         initial_voters = [PhragmenVoter(b, 0, profile.multiplicity(b)) for b in profile]
@@ -141,22 +150,21 @@ def sequential_phragmen(
             for i, b in enumerate(profile)
         ]
 
-    # Stores indices of the voters details list
-    supporters = {
-        alt: [i for i, v in enumerate(initial_voters) if alt in v.ballot.approved]
-        for alt in initial_alternatives
-    }
-    opposants = {
-        alt: [i for i, v in enumerate(initial_voters) if alt in v.ballot.disapproved]
-        for alt in initial_alternatives
-    }
 
-    approval_scores = {alt: profile.approval_score(alt) for alt in initial_alternatives}
+    supporters = {}
+    opposants = {}
+    initial_alternatives = set()
+    for alt in profile.alternatives:
+        supps = [i for i, v in enumerate(initial_voters) if alt in v.ballot.approved]
+        opps = [i for i, v in enumerate(initial_voters) if alt in v.ballot.disapproved]
+        if supps or opps:
+            supporters[alt] = supps
+            opposants[alt] = opps
+            initial_alternatives.add(alt)
 
     all_selections : list[list[Alternative]] = []
 
     _sequential_phragmen_rec(initial_alternatives, initial_voters, initial_selection)
-
     if resoluteness:
         return all_selections[0]
     return all_selections
