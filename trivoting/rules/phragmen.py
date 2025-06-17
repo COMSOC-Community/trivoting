@@ -48,7 +48,8 @@ def sequential_phragmen(
     profile: AbstractTrichotomousProfile,
     max_size_selection: int,
     initial_loads: list[Numeric] | None = None,
-    initial_selection: Collection[Alternative] | None = None,
+    force_selected: Collection[Alternative] | None = None,
+    force_not_selected: Collection[Alternative] | None = None,
     tie_breaking: TieBreakingRule | None = None,
     resoluteness: bool = True,
 ) -> list[Alternative] | list[list[Alternative]]:
@@ -63,8 +64,10 @@ def sequential_phragmen(
             The maximum number of alternatives that can be selected.
         initial_loads: list[Numeric], optional
             A list of initial load, one per ballot in `profile`. By defaults, the initial load is `0`.
-        initial_selection : Iterable[Alternative], optional
-            An initial budget allocation, typically empty.
+        force_selected : Iterable[Alternative], optional
+            A set of alternatives initially selected.
+        force_not_selected : Iterable[Alternative], optional
+            A set of alternatives initially not selected.
         tie_breaking : TieBreakingRule, optional
             The tie-breaking rule used.
             Defaults to the lexicographic tie-breaking.
@@ -134,13 +137,16 @@ def sequential_phragmen(
 
     if tie_breaking is None:
         tie_breaking = lexico_tie_breaking
-    if initial_selection is None:
-        initial_selection = list()
+    if force_selected is None:
+        force_selected = list()
     else:
-        initial_selection = list(initial_selection)
+        force_selected = list(force_selected)
+    if force_not_selected is None:
+        force_not_selected = list()
+    else:
+        force_not_selected = list(force_not_selected)
 
-    max_size_selection -= len(initial_selection)
-
+    max_size_selection -= len(force_selected)
 
     if initial_loads is None:
         initial_voters = [PhragmenVoter(b, 0, profile.multiplicity(b)) for b in profile]
@@ -150,22 +156,21 @@ def sequential_phragmen(
             for i, b in enumerate(profile)
         ]
 
-
     supporters = {}
     opposants = {}
     initial_alternatives = set()
     for alt in profile.alternatives:
-        supps = [i for i, v in enumerate(initial_voters) if alt in v.ballot.approved]
-        opps = [i for i, v in enumerate(initial_voters) if alt in v.ballot.disapproved]
-        if supps or opps:
-            supporters[alt] = supps
-            opposants[alt] = opps
-            initial_alternatives.add(alt)
+        if alt not in force_not_selected:
+            supps = [i for i, v in enumerate(initial_voters) if alt in v.ballot.approved]
+            opps = [i for i, v in enumerate(initial_voters) if alt in v.ballot.disapproved]
+            if supps or opps:
+                supporters[alt] = supps
+                opposants[alt] = opps
+                initial_alternatives.add(alt)
 
     all_selections : list[list[Alternative]] = []
 
-    _sequential_phragmen_rec(initial_alternatives, initial_voters, initial_selection)
+    _sequential_phragmen_rec(initial_alternatives, initial_voters, force_selected)
     if resoluteness:
         return all_selections[0]
     return all_selections
-
