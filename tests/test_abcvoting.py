@@ -8,7 +8,7 @@ from trivoting.election.alternative import Alternative
 class TestABCVoting(TestCase):
     def test_abcvoting(self):
         current_file_path = os.path.dirname(os.path.realpath(__file__))
-        yaml_dir_path = os.path.join(current_file_path, "abcvoting_test_instances")
+        yaml_dir_path = os.path.join(current_file_path, "test_rules", "abcvoting_test_instances")
         for yaml_file in os.listdir(yaml_dir_path)[:50]:
             yaml_file_path = os.path.join(yaml_dir_path, yaml_file)
             profile = parse_abcvoting_yaml(yaml_file_path)
@@ -17,6 +17,6 @@ class TestABCVoting(TestCase):
             for alt in profile.alternatives:
                 self.assertEqual(type(alt), Alternative)
 
-        yaml_file_path = os.path.join(current_file_path, "abcvoting_test_instances", "instanceL0000.abc.yaml")
+        yaml_file_path = os.path.join(yaml_dir_path, "instanceL0000.abc.yaml")
         profile = parse_abcvoting_yaml(yaml_file_path)
         self.assertEqual(profile.num_ballots(), 8)
