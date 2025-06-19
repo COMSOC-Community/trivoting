@@ -109,7 +109,7 @@ Implements lexicographic tie breaking, i.e., tie-breaking based on the name of t
 """
 
 sym_app_score_tie_breaking = TieBreakingRule(
-    lambda prof, alt: -prof.approval_score(alt)
+    lambda prof, alt: -prof.support(alt)
 )
 """
 Implements tie breaking based on the symmetric approval score where the projects with the highest net support (number 
@@ -117,7 +117,7 @@ of approvers minus number of disapprovers) in the profile is selected.
 """
 
 asym_app_score_tie_breaking = TieBreakingRule(
-    lambda prof, alt: -prof.approval_score(alt, symmetric=False)
+    lambda prof, alt: -prof.support(alt, symmetric=False)
 )
 """
 Implements tie breaking based on the asymmetric approval score where the projects with the highest support (number 

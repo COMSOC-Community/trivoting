@@ -1,7 +1,5 @@
 from collections.abc import Callable
 
-from preflibtools.properties import num_voters
-
 from trivoting.election.alternative import Alternative
 from trivoting.election.trichotomours_ballot import TrichotomousBallot
 from trivoting.election.trichotomours_profile import TrichotomousProfile
@@ -22,11 +20,17 @@ def generate_random_ballot(
             potentially_approved.append(a)
         else:
             potentially_disapproved.append(a)
-    approved_indices = approved_sampler(num_voters=1, num_candidates=len(potentially_approved))[0]
+    if len(potentially_approved) == 0:
+        approved_indices = []
+    else:
+        approved_indices = approved_sampler(num_voters=1, num_candidates=len(potentially_approved))[0]
     ballot.approved = [alternatives[i] for i in approved_indices]
-    disaspproved_indices = disapproved_sampler(num_voters=1, num_candidates=len(potentially_disapproved))[0]
-    disaspproved_indices = [i for i in disaspproved_indices if i not in approved_indices]
-    ballot.disapproved = [alternatives[i] for i in disaspproved_indices]
+    if len(potentially_disapproved) == 0:
+        disapproved_indices = []
+    else:
+        disapproved_indices = disapproved_sampler(num_voters=1, num_candidates=len(potentially_disapproved))[0]
+        disapproved_indices = [i for i in disapproved_indices if i not in approved_indices]
+    ballot.disapproved = [alternatives[i] for i in disapproved_indices]
     return ballot
 
 def generate_random_profile(

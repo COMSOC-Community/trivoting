@@ -5,7 +5,6 @@ import yaml
 from unittest import TestCase
 
 from trivoting.election.abcvoting import parse_abcvoting_yaml
-from trivoting.election.alternative import Alternative
 from trivoting.rules.pav import proportional_approval_voting
 from trivoting.rules.phragmen import sequential_phragmen
 
@@ -19,7 +18,7 @@ def read_abcvoting_expected_result(file_path, profile):
     # Alternative that have support
     supported_alternatives = set()
     for alt in profile.alternatives:
-        if profile.approval_score(alt) > 0:
+        if profile.support(alt) > 0:
             supported_alternatives.add(int(alt.name))
 
     for entry in data["compute"]:
@@ -41,7 +40,7 @@ def resolute_res_representation(budget_allocation, profile):
     # Alternative that have support
     supported_alternatives = set()
     for alt in profile.alternatives:
-        if profile.approval_score(alt) > 0:
+        if profile.support(alt) > 0:
             supported_alternatives.add(alt)
     return sorted([int(a.name) for a in budget_allocation if a in supported_alternatives])
 
