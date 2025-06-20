@@ -3,15 +3,15 @@ Election module
 
 .. automodule:: trivoting.election
 
-Alternative
------------
+Alternatives
+------------
 
 .. autoclass:: trivoting.election.alternative.Alternative
     :members:
     :show-inheritance:
 
-Trichotomous Ballot
--------------------
+Trichotomous Ballots
+--------------------
 
 .. autoclass:: trivoting.election.trichotomous_ballot.AbstractTrichotomousBallot
     :members:
@@ -25,30 +25,29 @@ Trichotomous Ballot
     :members:
     :show-inheritance:
 
-Trichotomous Profile
---------------------
+Trichotomous Profiles
+---------------------
 
 .. autoclass:: trivoting.election.trichotomous_profile.AbstractTrichotomousProfile
-    :members:
-    :show-inheritance:
 
 .. autoclass:: trivoting.election.trichotomous_profile.TrichotomousProfile
     :members:
     :show-inheritance:
+    :exclude-members:
 
 .. autoclass:: trivoting.election.trichotomous_profile.TrichotomousMultiProfile
     :members:
     :show-inheritance:
 
-ABC Voting
-----------
+Link to abcvoting
+-----------------
 
 .. autofunction:: trivoting.election.abcvoting.abcvoting_to_trichotomous_profile
 
 .. autofunction:: trivoting.election.abcvoting.parse_abcvoting_yaml
 
-Pabulib
--------
+Link with Pabulib and pabutools
+-------------------------------
 
 .. autofunction:: trivoting.election.pabulib.parse_pabulib
 
@@ -56,8 +55,8 @@ Pabulib
 
 .. autofunction:: trivoting.election.pabulib.pb_approval_ballot_to_trichotomous_ballot
 
-PrefLib
--------
+Link with PrefLib
+-----------------
 
 .. autofunction:: trivoting.election.preflib.parse_preflib
 

@@ -12,6 +12,7 @@ from trivoting.fractions import Numeric
 class AbstractTrichotomousProfile(ABC, Iterable[AbstractTrichotomousBallot]):
     """
     Abstract class representing a profile, that is, a collection of ballots. This class is only meant to be inherited.
+
     """
 
     def __init__(self, alternatives: Iterable[Alternative] = None, max_size_selection : int = None):
@@ -73,78 +74,143 @@ class AbstractTrichotomousProfile(ABC, Iterable[AbstractTrichotomousBallot]):
 
     @abstractmethod
     def support(self, alternative: Alternative) -> Numeric:
-        """ Returns the support of an alternative. The support is a cummulative measure over all ballots of the
-        profile. Each ballot approving of an alternative increases its support by one and each ballot disapproving of
-        an alternative decreases its support by 1.
-
+        """
+        Returns the support of an alternative, i.e., the net number of voters supporting it (the number of approvers
+        minus the number of disapprovers).
+        
         Parameters
         ----------
-            alternative : Alternative
+            alternative: Alternative
                 The alternative to consider.
 
+        Returns
+        -------
+            int
+                The support of the alternative.
         """
 
     @abstractmethod
-    def support_dict(self) -> defaultdict[Alternative, Numeric]:
-        """ Returns the support of the alternatives of the instance as a dictionary. Alternatives not appearing in
+    def support_dict(self) -> defaultdict[Alternative, int]:
+        """
+        Returns the support of the alternatives of the instance as a dictionary. Alternatives not appearing in
         any ballot will not be present in the dictionary. The method returns a defaultdict so querying it for
         absent alternatives will succeed and return 0.
+
+        Returns
+        -------
+            collections.defaultdict[Alternative, int]
+                The support of each alternative appearing in at least one ballot.
         """
-
+        
     @abstractmethod
-    def approval_score(self, alternative: Alternative) -> Numeric:
-        """ Returns the approval score of an alternative, i.e., the number of voters approving of it.
-
+    def approval_score(self, alternative: Alternative) -> int:
+        """
+        Returns the approval score of an alternative, i.e., the number of voters approving of it.
+        
         Parameters
         ----------
-            alternative : Alternative
+            alternative: Alternative
                 The alternative to consider.
+
+        Returns
+        -------
+            int
+                The approval score of the alternative.
         """
 
     @abstractmethod
-    def approval_score_dict(self) -> defaultdict[Alternative, Numeric]:
-        """ Returns the approval scores of the alternatives of the profile as a dictionary. Never approved alternatives
+    def approval_score_dict(self) -> defaultdict[Alternative, int]:
+        """
+        Returns the approval scores of the alternatives of the profile as a dictionary. Never approved alternatives
         will not be present in the dictionary. The method returns a defaultdict so querying it for
         non-approved alternatives will succeed and return 0.
+
+        Returns
+        -------
+            collections.defaultdict[Alternative, int]
+                The approval score of each alternative appearing in at least one ballot.
         """
+        
 
     @abstractmethod
-    def disapproval_score(self, alternative: Alternative) -> Numeric:
-        """ Returns the disapproval score of an alternative, i.e., the number of voters disapproving of it. Never
-        disapproved alternatives will not be present in the dictionary. The method returns a defaultdict so querying
-        it for non-disapproved alternatives will succeed and return 0.
-
+    def disapproval_score(self, alternative: Alternative) -> int:
+        """
+        Returns the disapproval score of an alternative, i.e., the number of voters disapproving of it.
+        
         Parameters
         ----------
-            alternative : Alternative
+            alternative: Alternative
                 The alternative to consider.
+
+        Returns
+        -------
+            int
+                The disapproval score of the alternative.
+        """
+       
+
+    @abstractmethod
+    def disapproval_score_dict(self) -> defaultdict[Alternative, int]:
+        """
+        Returns the disapproval scores of the alternatives of the profile as a dictionary. Never disapproved alternatives
+        will not be present in the dictionary. The method returns a defaultdict so querying it for
+        non-approved alternatives will succeed and return 0.
+
+        Returns
+        -------
+            collections.defaultdict[Alternative, int]
+                The disapproval score of each alternative appearing in at least one ballot.
         """
 
     @abstractmethod
-    def disapproval_score_dict(self) -> defaultdict[Alternative, Numeric]:
-        """ Returns the disapproval scores of the alternatives of the profile as a dictionary.
+    def approval_disapproval_score(self, alternative: Alternative) -> tuple[int, int]:
         """
-
-    @abstractmethod
-    def approval_disapproval_score(self, alternative: Alternative) -> tuple[Numeric, Numeric]:
-        """ Returns the approval and the disapproval scores of an alternative.
-
+        Returns the approval and disapproval score of an alternative together at the same time.
+        
         Parameters
         ----------
-            alternative : Alternative
+            alternative: Alternative
                 The alternative to consider.
+
+        Returns
+        -------
+            tuple[int, int]
+                The approval and the disapproval score of the alternative.
         """
+       
 
     @abstractmethod
-    def approval_disapproval_score_dict(self) -> tuple[dict[Alternative, Numeric], dict[Alternative, Numeric]]:
-        """ Returns the approval and the disapproval scores of the alternatives of the profile as a dictionary.
-        Alternatives not appearing in any ballot will not be present in the dictionary. The method returns a
-        defaultdict so querying it for absent alternatives will succeed and return 0.
+    def approval_disapproval_score_dict(self) -> tuple[defaultdict[Alternative, int], defaultdict[Alternative, int]]:
+        """
+        Returns the dictionaries of the approval score and of the disapproval score.
+
+        Returns
+        -------
+            tuple[collections.defaultdict[Alternative, int], collections.defaultdict[Alternative, int]]
+                The approval score and the disapproval score dictionaries.
         """
 
 class TrichotomousProfile(AbstractTrichotomousProfile, MutableSequence[TrichotomousBallot]):
     """
     Represents a trichotomous profile, i.e., a collection of trichotomous ballots, one per voter.
+
+    Parameters
+    ----------
+        init: Iterable[TrichotomousBallot], Optional
+            An iterable of trichotomours ballots used to initialise the profile.
+        alternatives: Iterable[Alternative], Optional
+            An iterable of alternatives representing all the alternatives of the instance.
+        max_size_selection: int, Optional
+            The maximum number of alternatives to be selected when computing the outcome of a rule on the profile.
+            Used notably when reading files from preference libraries.
+
+    Attributes
+    ----------
+        alternatives: set[Alternative]
+            A set of alternatives representing all the alternatives of the instance.
+        max_size_selection: int
+            The maximum number of alternatives to be selected when computing the outcome of a rule on the profile.
+            Used notably when reading files from preference libraries.
     """
 
     def __init__(
@@ -161,7 +227,7 @@ class TrichotomousProfile(AbstractTrichotomousProfile, MutableSequence[Trichotom
             max_size_selection = init.max_size_selection
         AbstractTrichotomousProfile.__init__(self, alternatives, max_size_selection)
 
-    def support(self, alternative: Alternative) -> Numeric:
+    def support(self, alternative: Alternative) -> int:
         score = 0
         for ballot in self:
             if alternative in ballot.approved:
@@ -170,7 +236,7 @@ class TrichotomousProfile(AbstractTrichotomousProfile, MutableSequence[Trichotom
                 score -= 1
         return score
 
-    def support_dict(self) -> dict[Alternative, Numeric]:
+    def support_dict(self) -> dict[Alternative, int]:
         res = defaultdict(int)
         for ballot in self:
             for alt in ballot.approved:
@@ -179,35 +245,35 @@ class TrichotomousProfile(AbstractTrichotomousProfile, MutableSequence[Trichotom
                 res[alt] -= 1
         return res
 
-    def approval_score(self, alternative: Alternative) -> Numeric:
+    def approval_score(self, alternative: Alternative) -> int:
         score = 0
         for ballot in self:
             if alternative in ballot.approved:
                 score += 1
         return score
 
-    def approval_score_dict(self) -> dict[Alternative, Numeric]:
+    def approval_score_dict(self) -> dict[Alternative, int]:
         res = defaultdict(int)
         for ballot in self:
             for alt in ballot.approved:
                 res[alt] += 1
         return res
 
-    def disapproval_score(self, alternative: Alternative) -> Numeric:
+    def disapproval_score(self, alternative: Alternative) -> int:
         score = 0
         for ballot in self:
             if alternative in ballot.disapproved:
                 score += 1
         return score
 
-    def disapproval_score_dict(self) -> dict[Alternative, Numeric]:
+    def disapproval_score_dict(self) -> dict[Alternative, int]:
         res = defaultdict(int)
         for ballot in self:
             for alt in ballot.disapproved:
                 res[alt] += 1
         return res
 
-    def approval_disapproval_score(self, alternative: Alternative) -> tuple[Numeric, Numeric]:
+    def approval_disapproval_score(self, alternative: Alternative) -> tuple[int, int]:
         app_score = 0
         disapp_score = 0
         for ballot in self:
@@ -217,7 +283,7 @@ class TrichotomousProfile(AbstractTrichotomousProfile, MutableSequence[Trichotom
                 disapp_score += 1
         return app_score, disapp_score
 
-    def approval_disapproval_score_dict(self) -> tuple[dict[Alternative, Numeric], dict[Alternative, Numeric]]:
+    def approval_disapproval_score_dict(self) -> tuple[dict[Alternative, int], dict[Alternative, int]]:
         app_scores = defaultdict(int)
         disapp_scores = defaultdict(int)
         for ballot in self:
@@ -375,7 +441,7 @@ class TrichotomousMultiProfile(AbstractTrichotomousProfile, MutableMapping[Froze
             max_size_selection = init.max_size_selection
         AbstractTrichotomousProfile.__init__(self, alternatives, max_size_selection)
 
-    def support(self, alternative: Alternative) -> Numeric:
+    def support(self, alternative: Alternative) -> int:
         score = 0
         for ballot, count in self.items():
             if alternative in ballot.approved:
@@ -384,7 +450,7 @@ class TrichotomousMultiProfile(AbstractTrichotomousProfile, MutableMapping[Froze
                 score -= count
         return score
 
-    def support_dict(self) -> dict[Alternative, Numeric]:
+    def support_dict(self) -> dict[Alternative, int]:
         res = dict()
         for ballot, count in self.items():
             for alt in ballot.approved:
@@ -399,34 +465,34 @@ class TrichotomousMultiProfile(AbstractTrichotomousProfile, MutableMapping[Froze
                     res[alt] = -count
         return res
 
-    def approval_score(self, alternative: Alternative) -> Numeric:
+    def approval_score(self, alternative: Alternative) -> int:
         score = 0
         for ballot, count in self.items():
             if alternative in ballot.approved:
                 score += count
         return score
 
-    def approval_score_dict(self) -> dict[Alternative, Numeric]:
+    def approval_score_dict(self) -> dict[Alternative, int]:
         res = defaultdict(int)
         for ballot, count in self.items():
             for alt in ballot.approved:
                 res[alt] += count
         return res
-    def disapproval_score(self, alternative: Alternative) -> Numeric:
+    def disapproval_score(self, alternative: Alternative) -> int:
         score = 0
         for ballot, count in self.items():
             if alternative in ballot.disapproved:
                 score += count
         return score
 
-    def disapproval_score_dict(self) -> dict[Alternative, Numeric]:
+    def disapproval_score_dict(self) -> dict[Alternative, int]:
         res = defaultdict(int)
         for ballot, count in self.items():
             for alt in ballot.disapproved:
                 res[alt] += count
         return res
 
-    def approval_disapproval_score(self, alternative: Alternative) -> tuple[Numeric, Numeric]:
+    def approval_disapproval_score(self, alternative: Alternative) -> tuple[int, int]:
         app_score = 0
         disapp_score = 0
         for ballot, count in self.items():
@@ -436,7 +502,7 @@ class TrichotomousMultiProfile(AbstractTrichotomousProfile, MutableMapping[Froze
                 disapp_score += count
         return app_score, disapp_score
 
-    def approval_disapproval_score_dict(self) -> tuple[dict[Alternative, Numeric], dict[Alternative, Numeric]]:
+    def approval_disapproval_score_dict(self) -> tuple[dict[Alternative, int], dict[Alternative, int]]:
         app_scores = defaultdict(int)
         disapp_scores = defaultdict(int)
         for ballot, count in self.items():
