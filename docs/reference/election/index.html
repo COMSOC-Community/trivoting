@@ -1,0 +1,1231 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" data-theme="light">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Election module &#8212; Trivoting</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "light";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../_static/documentation_options.js?v=e645c8fa"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'reference/election/index';</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Rules module" href="../rules/index.html" />
+    <link rel="prev" title="Reference" href="../index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="light">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Trivoting</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Trivoting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Quick Start</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../index.html">Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Election module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../rules/index.html">Rules module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tiebreaking.html">Tie-Breaking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fractions.html">Fractions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../utils.html">Utils</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/Simon-Rey/trivoting" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/reference/election/index.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Election module</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#alternative">Alternative</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.alternative.Alternative"><code class="docutils literal notranslate"><span class="pre">Alternative</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#trichotomous-ballot">Trichotomous Ballot</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_ballot.AbstractTrichotomousBallot"><code class="docutils literal notranslate"><span class="pre">AbstractTrichotomousBallot</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_ballot.TrichotomousBallot"><code class="docutils literal notranslate"><span class="pre">TrichotomousBallot</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_ballot.FrozenTrichotomousBallot"><code class="docutils literal notranslate"><span class="pre">FrozenTrichotomousBallot</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#trichotomous-profile">Trichotomous Profile</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile"><code class="docutils literal notranslate"><span class="pre">AbstractTrichotomousProfile</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile.add_ballot"><code class="docutils literal notranslate"><span class="pre">AbstractTrichotomousProfile.add_ballot()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile.add_ballots"><code class="docutils literal notranslate"><span class="pre">AbstractTrichotomousProfile.add_ballots()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile.approval_disapproval_score"><code class="docutils literal notranslate"><span class="pre">AbstractTrichotomousProfile.approval_disapproval_score()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile.approval_disapproval_score_dict"><code class="docutils literal notranslate"><span class="pre">AbstractTrichotomousProfile.approval_disapproval_score_dict()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile.approval_score"><code class="docutils literal notranslate"><span class="pre">AbstractTrichotomousProfile.approval_score()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile.approval_score_dict"><code class="docutils literal notranslate"><span class="pre">AbstractTrichotomousProfile.approval_score_dict()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile.disapproval_score"><code class="docutils literal notranslate"><span class="pre">AbstractTrichotomousProfile.disapproval_score()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile.disapproval_score_dict"><code class="docutils literal notranslate"><span class="pre">AbstractTrichotomousProfile.disapproval_score_dict()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile.multiplicity"><code class="docutils literal notranslate"><span class="pre">AbstractTrichotomousProfile.multiplicity()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile.num_ballots"><code class="docutils literal notranslate"><span class="pre">AbstractTrichotomousProfile.num_ballots()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile.support"><code class="docutils literal notranslate"><span class="pre">AbstractTrichotomousProfile.support()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile.support_dict"><code class="docutils literal notranslate"><span class="pre">AbstractTrichotomousProfile.support_dict()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousProfile"><code class="docutils literal notranslate"><span class="pre">TrichotomousProfile</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.add_ballot"><code class="docutils literal notranslate"><span class="pre">TrichotomousProfile.add_ballot()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.append"><code class="docutils literal notranslate"><span class="pre">TrichotomousProfile.append()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.approval_disapproval_score"><code class="docutils literal notranslate"><span class="pre">TrichotomousProfile.approval_disapproval_score()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.approval_disapproval_score_dict"><code class="docutils literal notranslate"><span class="pre">TrichotomousProfile.approval_disapproval_score_dict()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.approval_score"><code class="docutils literal notranslate"><span class="pre">TrichotomousProfile.approval_score()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.approval_score_dict"><code class="docutils literal notranslate"><span class="pre">TrichotomousProfile.approval_score_dict()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.as_multiprofile"><code class="docutils literal notranslate"><span class="pre">TrichotomousProfile.as_multiprofile()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.clear"><code class="docutils literal notranslate"><span class="pre">TrichotomousProfile.clear()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.count"><code class="docutils literal notranslate"><span class="pre">TrichotomousProfile.count()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.disapproval_score"><code class="docutils literal notranslate"><span class="pre">TrichotomousProfile.disapproval_score()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.disapproval_score_dict"><code class="docutils literal notranslate"><span class="pre">TrichotomousProfile.disapproval_score_dict()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.extend"><code class="docutils literal notranslate"><span class="pre">TrichotomousProfile.extend()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.index"><code class="docutils literal notranslate"><span class="pre">TrichotomousProfile.index()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.insert"><code class="docutils literal notranslate"><span class="pre">TrichotomousProfile.insert()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.multiplicity"><code class="docutils literal notranslate"><span class="pre">TrichotomousProfile.multiplicity()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.num_ballots"><code class="docutils literal notranslate"><span class="pre">TrichotomousProfile.num_ballots()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.pop"><code class="docutils literal notranslate"><span class="pre">TrichotomousProfile.pop()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.remove"><code class="docutils literal notranslate"><span class="pre">TrichotomousProfile.remove()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.reverse"><code class="docutils literal notranslate"><span class="pre">TrichotomousProfile.reverse()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.support"><code class="docutils literal notranslate"><span class="pre">TrichotomousProfile.support()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.support_dict"><code class="docutils literal notranslate"><span class="pre">TrichotomousProfile.support_dict()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousMultiProfile"><code class="docutils literal notranslate"><span class="pre">TrichotomousMultiProfile</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.add_ballot"><code class="docutils literal notranslate"><span class="pre">TrichotomousMultiProfile.add_ballot()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.approval_disapproval_score"><code class="docutils literal notranslate"><span class="pre">TrichotomousMultiProfile.approval_disapproval_score()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.approval_disapproval_score_dict"><code class="docutils literal notranslate"><span class="pre">TrichotomousMultiProfile.approval_disapproval_score_dict()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.approval_score"><code class="docutils literal notranslate"><span class="pre">TrichotomousMultiProfile.approval_score()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.approval_score_dict"><code class="docutils literal notranslate"><span class="pre">TrichotomousMultiProfile.approval_score_dict()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.clear"><code class="docutils literal notranslate"><span class="pre">TrichotomousMultiProfile.clear()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.disapproval_score"><code class="docutils literal notranslate"><span class="pre">TrichotomousMultiProfile.disapproval_score()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.disapproval_score_dict"><code class="docutils literal notranslate"><span class="pre">TrichotomousMultiProfile.disapproval_score_dict()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.multiplicity"><code class="docutils literal notranslate"><span class="pre">TrichotomousMultiProfile.multiplicity()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.num_ballots"><code class="docutils literal notranslate"><span class="pre">TrichotomousMultiProfile.num_ballots()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.support"><code class="docutils literal notranslate"><span class="pre">TrichotomousMultiProfile.support()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.support_dict"><code class="docutils literal notranslate"><span class="pre">TrichotomousMultiProfile.support_dict()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.update"><code class="docutils literal notranslate"><span class="pre">TrichotomousMultiProfile.update()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#abc-voting">ABC Voting</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.abcvoting.abcvoting_to_trichotomous_profile"><code class="docutils literal notranslate"><span class="pre">abcvoting_to_trichotomous_profile()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.abcvoting.parse_abcvoting_yaml"><code class="docutils literal notranslate"><span class="pre">parse_abcvoting_yaml()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pabulib">Pabulib</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.pabulib.parse_pabulib"><code class="docutils literal notranslate"><span class="pre">parse_pabulib()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.pabulib.pb_approval_profile_to_trichotomous_profile"><code class="docutils literal notranslate"><span class="pre">pb_approval_profile_to_trichotomous_profile()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.pabulib.pb_approval_ballot_to_trichotomous_ballot"><code class="docutils literal notranslate"><span class="pre">pb_approval_ballot_to_trichotomous_ballot()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#preflib">PrefLib</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.preflib.parse_preflib"><code class="docutils literal notranslate"><span class="pre">parse_preflib()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.preflib.cat_instance_to_trichotomous_profile"><code class="docutils literal notranslate"><span class="pre">cat_instance_to_trichotomous_profile()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.preflib.cat_preferences_to_trichotomous_ballot"><code class="docutils literal notranslate"><span class="pre">cat_preferences_to_trichotomous_ballot()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#generate-random-profile">Generate Random Profile</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.generate.generate_random_ballot"><code class="docutils literal notranslate"><span class="pre">generate_random_ballot()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.generate.generate_random_profile"><code class="docutils literal notranslate"><span class="pre">generate_random_profile()</span></code></a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="module-trivoting.election">
+<span id="election-module"></span><h1>Election module<a class="headerlink" href="#module-trivoting.election" title="Link to this heading">#</a></h1>
+<section id="alternative">
+<h2>Alternative<a class="headerlink" href="#alternative" title="Link to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="trivoting.election.alternative.Alternative">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Alternative</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/trivoting/election/alternative.html#Alternative"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.election.alternative.Alternative" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class representing an alternative, i.e., one of the potential outcome of the election.</p>
+</dd></dl>
+
+</section>
+<section id="trichotomous-ballot">
+<h2>Trichotomous Ballot<a class="headerlink" href="#trichotomous-ballot" title="Link to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="trivoting.election.trichotomous_ballot.AbstractTrichotomousBallot">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AbstractTrichotomousBallot</span></span><a class="reference internal" href="../../_modules/trivoting/election/trichotomous_ballot.html#AbstractTrichotomousBallot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.election.trichotomous_ballot.AbstractTrichotomousBallot" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
+<p>Abstract class used for typing.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="trivoting.election.trichotomous_ballot.TrichotomousBallot">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">TrichotomousBallot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">approved</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#trivoting.election.alternative.Alternative" title="trivoting.election.alternative.Alternative"><span class="pre">Alternative</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disapproved</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#trivoting.election.alternative.Alternative" title="trivoting.election.alternative.Alternative"><span class="pre">Alternative</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/trivoting/election/trichotomous_ballot.html#TrichotomousBallot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.election.trichotomous_ballot.TrichotomousBallot" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#trivoting.election.trichotomous_ballot.AbstractTrichotomousBallot" title="trivoting.election.trichotomous_ballot.AbstractTrichotomousBallot"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractTrichotomousBallot</span></code></a></p>
+<p>Represents a trichotomous ballot, i.e., a ballot in which the voter classifies the alternatives between approved,
+disapproved and not seen/no opinion.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="trivoting.election.trichotomous_ballot.FrozenTrichotomousBallot">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">FrozenTrichotomousBallot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">approved</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#trivoting.election.alternative.Alternative" title="trivoting.election.alternative.Alternative"><span class="pre">Alternative</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disapproved</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#trivoting.election.alternative.Alternative" title="trivoting.election.alternative.Alternative"><span class="pre">Alternative</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/trivoting/election/trichotomous_ballot.html#FrozenTrichotomousBallot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.election.trichotomous_ballot.FrozenTrichotomousBallot" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#trivoting.election.trichotomous_ballot.AbstractTrichotomousBallot" title="trivoting.election.trichotomous_ballot.AbstractTrichotomousBallot"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractTrichotomousBallot</span></code></a></p>
+</dd></dl>
+
+</section>
+<section id="trichotomous-profile">
+<h2>Trichotomous Profile<a class="headerlink" href="#trichotomous-profile" title="Link to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="trivoting.election.trichotomous_profile.AbstractTrichotomousProfile">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AbstractTrichotomousProfile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alternatives</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#trivoting.election.alternative.Alternative" title="trivoting.election.alternative.Alternative"><span class="pre">Alternative</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_size_selection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/trivoting/election/trichotomous_profile.html#AbstractTrichotomousProfile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Iterable</span></code>[<a class="reference internal" href="#trivoting.election.trichotomous_ballot.AbstractTrichotomousBallot" title="trivoting.election.trichotomous_ballot.AbstractTrichotomousBallot"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractTrichotomousBallot</span></code></a>]</p>
+<p>Abstract class representing a profile, that is, a collection of ballots. This class is only meant to be inherited.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="trivoting.election.trichotomous_profile.AbstractTrichotomousProfile.add_ballot">
+<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add_ballot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ballot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#trivoting.election.trichotomous_ballot.AbstractTrichotomousBallot" title="trivoting.election.trichotomous_ballot.AbstractTrichotomousBallot"><span class="pre">AbstractTrichotomousBallot</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/trivoting/election/trichotomous_profile.html#AbstractTrichotomousProfile.add_ballot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile.add_ballot" title="Link to this definition">#</a></dt>
+<dd><p>Adds a ballot to the profile.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ballot</strong> (<a class="reference internal" href="#trivoting.election.trichotomous_ballot.AbstractTrichotomousBallot" title="trivoting.election.trichotomous_ballot.AbstractTrichotomousBallot"><em>AbstractTrichotomousBallot</em></a>) – The ballot to add.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="trivoting.election.trichotomous_profile.AbstractTrichotomousProfile.add_ballots">
+<span class="sig-name descname"><span class="pre">add_ballots</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ballots</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#trivoting.election.trichotomous_ballot.AbstractTrichotomousBallot" title="trivoting.election.trichotomous_ballot.AbstractTrichotomousBallot"><span class="pre">AbstractTrichotomousBallot</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/trivoting/election/trichotomous_profile.html#AbstractTrichotomousProfile.add_ballots"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile.add_ballots" title="Link to this definition">#</a></dt>
+<dd><p>Adds multiple ballots to the profile.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ballots</strong> (<em>Iterable</em><em>[</em><a class="reference internal" href="#trivoting.election.trichotomous_ballot.AbstractTrichotomousBallot" title="trivoting.election.trichotomous_ballot.AbstractTrichotomousBallot"><em>AbstractTrichotomousBallot</em></a><em>]</em>) – The ballots to add.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="trivoting.election.trichotomous_profile.AbstractTrichotomousProfile.approval_disapproval_score">
+<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">approval_disapproval_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alternative</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#trivoting.election.alternative.Alternative" title="trivoting.election.alternative.Alternative"><span class="pre">Alternative</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">mpq</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">mpq</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/trivoting/election/trichotomous_profile.html#AbstractTrichotomousProfile.approval_disapproval_score"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile.approval_disapproval_score" title="Link to this definition">#</a></dt>
+<dd><p>Returns the approval and the disapproval scores of an alternative.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>alternative</strong> (<a class="reference internal" href="#trivoting.election.alternative.Alternative" title="trivoting.election.alternative.Alternative"><em>Alternative</em></a>) – The alternative to consider.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="trivoting.election.trichotomous_profile.AbstractTrichotomousProfile.approval_disapproval_score_dict">
+<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">approval_disapproval_score_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#trivoting.election.alternative.Alternative" title="trivoting.election.alternative.Alternative"><span class="pre">Alternative</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">mpq</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#trivoting.election.alternative.Alternative" title="trivoting.election.alternative.Alternative"><span class="pre">Alternative</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">mpq</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/trivoting/election/trichotomous_profile.html#AbstractTrichotomousProfile.approval_disapproval_score_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile.approval_disapproval_score_dict" title="Link to this definition">#</a></dt>
+<dd><p>Returns the approval and the disapproval scores of the alternatives of the profile as a dictionary.
+Alternatives not appearing in any ballot will not be present in the dictionary. The method returns a
+defaultdict so querying it for absent alternatives will succeed and return 0.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="trivoting.election.trichotomous_profile.AbstractTrichotomousProfile.approval_score">
+<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">approval_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alternative</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#trivoting.election.alternative.Alternative" title="trivoting.election.alternative.Alternative"><span class="pre">Alternative</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">mpq</span></span></span><a class="reference internal" href="../../_modules/trivoting/election/trichotomous_profile.html#AbstractTrichotomousProfile.approval_score"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile.approval_score" title="Link to this definition">#</a></dt>
+<dd><p>Returns the approval score of an alternative, i.e., the number of voters approving of it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>alternative</strong> (<a class="reference internal" href="#trivoting.election.alternative.Alternative" title="trivoting.election.alternative.Alternative"><em>Alternative</em></a>) – The alternative to consider.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="trivoting.election.trichotomous_profile.AbstractTrichotomousProfile.approval_score_dict">
+<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">approval_score_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">defaultdict</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#trivoting.election.alternative.Alternative" title="trivoting.election.alternative.Alternative"><span class="pre">Alternative</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">mpq</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/trivoting/election/trichotomous_profile.html#AbstractTrichotomousProfile.approval_score_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile.approval_score_dict" title="Link to this definition">#</a></dt>
+<dd><p>Returns the approval scores of the alternatives of the profile as a dictionary. Never approved alternatives
+will not be present in the dictionary. The method returns a defaultdict so querying it for
+non-approved alternatives will succeed and return 0.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="trivoting.election.trichotomous_profile.AbstractTrichotomousProfile.disapproval_score">
+<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">disapproval_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alternative</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#trivoting.election.alternative.Alternative" title="trivoting.election.alternative.Alternative"><span class="pre">Alternative</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">mpq</span></span></span><a class="reference internal" href="../../_modules/trivoting/election/trichotomous_profile.html#AbstractTrichotomousProfile.disapproval_score"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile.disapproval_score" title="Link to this definition">#</a></dt>
+<dd><p>Returns the disapproval score of an alternative, i.e., the number of voters disapproving of it. Never
+disapproved alternatives will not be present in the dictionary. The method returns a defaultdict so querying
+it for non-disapproved alternatives will succeed and return 0.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>alternative</strong> (<a class="reference internal" href="#trivoting.election.alternative.Alternative" title="trivoting.election.alternative.Alternative"><em>Alternative</em></a>) – The alternative to consider.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="trivoting.election.trichotomous_profile.AbstractTrichotomousProfile.disapproval_score_dict">
+<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">disapproval_score_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">defaultdict</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#trivoting.election.alternative.Alternative" title="trivoting.election.alternative.Alternative"><span class="pre">Alternative</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">mpq</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/trivoting/election/trichotomous_profile.html#AbstractTrichotomousProfile.disapproval_score_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile.disapproval_score_dict" title="Link to this definition">#</a></dt>
+<dd><p>Returns the disapproval scores of the alternatives of the profile as a dictionary.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="trivoting.election.trichotomous_profile.AbstractTrichotomousProfile.multiplicity">
+<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">multiplicity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ballot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#trivoting.election.trichotomous_ballot.AbstractTrichotomousBallot" title="trivoting.election.trichotomous_ballot.AbstractTrichotomousBallot"><span class="pre">AbstractTrichotomousBallot</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="../../_modules/trivoting/election/trichotomous_profile.html#AbstractTrichotomousProfile.multiplicity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile.multiplicity" title="Link to this definition">#</a></dt>
+<dd><p>Returns the multiplicity of a ballot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ballot</strong> (<a class="reference internal" href="#trivoting.election.trichotomous_ballot.AbstractTrichotomousBallot" title="trivoting.election.trichotomous_ballot.AbstractTrichotomousBallot"><em>AbstractTrichotomousBallot</em></a>) – The ballot whose multiplicity is inquired.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The multiplicity of the ballots.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>int</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="trivoting.election.trichotomous_profile.AbstractTrichotomousProfile.num_ballots">
+<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_ballots</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="../../_modules/trivoting/election/trichotomous_profile.html#AbstractTrichotomousProfile.num_ballots"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile.num_ballots" title="Link to this definition">#</a></dt>
+<dd><p>Returns the number of ballots in the profile.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The multiplicity of the ballots.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>int</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="trivoting.election.trichotomous_profile.AbstractTrichotomousProfile.support">
+<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">support</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alternative</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#trivoting.election.alternative.Alternative" title="trivoting.election.alternative.Alternative"><span class="pre">Alternative</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">mpq</span></span></span><a class="reference internal" href="../../_modules/trivoting/election/trichotomous_profile.html#AbstractTrichotomousProfile.support"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile.support" title="Link to this definition">#</a></dt>
+<dd><p>Returns the support of an alternative. The support is a cummulative measure over all ballots of the
+profile. Each ballot approving of an alternative increases its support by one and each ballot disapproving of
+an alternative decreases its support by 1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>alternative</strong> (<a class="reference internal" href="#trivoting.election.alternative.Alternative" title="trivoting.election.alternative.Alternative"><em>Alternative</em></a>) – The alternative to consider.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="trivoting.election.trichotomous_profile.AbstractTrichotomousProfile.support_dict">
+<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">support_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">defaultdict</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#trivoting.election.alternative.Alternative" title="trivoting.election.alternative.Alternative"><span class="pre">Alternative</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">mpq</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/trivoting/election/trichotomous_profile.html#AbstractTrichotomousProfile.support_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile.support_dict" title="Link to this definition">#</a></dt>
+<dd><p>Returns the support of the alternatives of the instance as a dictionary. Alternatives not appearing in
+any ballot will not be present in the dictionary. The method returns a defaultdict so querying it for
+absent alternatives will succeed and return 0.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="trivoting.election.trichotomous_profile.TrichotomousProfile">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">TrichotomousProfile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">init</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#trivoting.election.trichotomous_ballot.TrichotomousBallot" title="trivoting.election.trichotomous_ballot.TrichotomousBallot"><span class="pre">TrichotomousBallot</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">alternatives</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#trivoting.election.alternative.Alternative" title="trivoting.election.alternative.Alternative"><span class="pre">Alternative</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_size_selection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/trivoting/election/trichotomous_profile.html#TrichotomousProfile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.election.trichotomous_profile.TrichotomousProfile" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile" title="trivoting.election.trichotomous_profile.AbstractTrichotomousProfile"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractTrichotomousProfile</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">MutableSequence</span></code>[<a class="reference internal" href="#trivoting.election.trichotomous_ballot.TrichotomousBallot" title="trivoting.election.trichotomous_ballot.TrichotomousBallot"><code class="xref py py-class docutils literal notranslate"><span class="pre">TrichotomousBallot</span></code></a>]</p>
+<p>Represents a trichotomous profile, i.e., a collection of trichotomous ballots, one per voter.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="trivoting.election.trichotomous_profile.TrichotomousProfile.add_ballot">
+<span class="sig-name descname"><span class="pre">add_ballot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ballot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#trivoting.election.trichotomous_ballot.TrichotomousBallot" title="trivoting.election.trichotomous_ballot.TrichotomousBallot"><span class="pre">TrichotomousBallot</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/trivoting/election/trichotomous_profile.html#TrichotomousProfile.add_ballot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.add_ballot" title="Link to this definition">#</a></dt>
+<dd><p>Adds a ballot to the profile.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ballot</strong> (<a class="reference internal" href="#trivoting.election.trichotomous_ballot.AbstractTrichotomousBallot" title="trivoting.election.trichotomous_ballot.AbstractTrichotomousBallot"><em>AbstractTrichotomousBallot</em></a>) – The ballot to add.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="trivoting.election.trichotomous_profile.TrichotomousProfile.append">
+<span class="sig-name descname"><span class="pre">append</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/trivoting/election/trichotomous_profile.html#TrichotomousProfile.append"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.append" title="Link to this definition">#</a></dt>
+<dd><p>S.append(value) – append value to the end of the sequence</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="trivoting.election.trichotomous_profile.TrichotomousProfile.approval_disapproval_score">
+<span class="sig-name descname"><span class="pre">approval_disapproval_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alternative</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#trivoting.election.alternative.Alternative" title="trivoting.election.alternative.Alternative"><span class="pre">Alternative</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">mpq</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">mpq</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/trivoting/election/trichotomous_profile.html#TrichotomousProfile.approval_disapproval_score"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.approval_disapproval_score" title="Link to this definition">#</a></dt>
+<dd><p>Returns the approval and the disapproval scores of an alternative.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>alternative</strong> (<a class="reference internal" href="#trivoting.election.alternative.Alternative" title="trivoting.election.alternative.Alternative"><em>Alternative</em></a>) – The alternative to consider.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="trivoting.election.trichotomous_profile.TrichotomousProfile.approval_disapproval_score_dict">
+<span class="sig-name descname"><span class="pre">approval_disapproval_score_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#trivoting.election.alternative.Alternative" title="trivoting.election.alternative.Alternative"><span class="pre">Alternative</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">mpq</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#trivoting.election.alternative.Alternative" title="trivoting.election.alternative.Alternative"><span class="pre">Alternative</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">mpq</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/trivoting/election/trichotomous_profile.html#TrichotomousProfile.approval_disapproval_score_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.approval_disapproval_score_dict" title="Link to this definition">#</a></dt>
+<dd><p>Returns the approval and the disapproval scores of the alternatives of the profile as a dictionary.
+Alternatives not appearing in any ballot will not be present in the dictionary. The method returns a
+defaultdict so querying it for absent alternatives will succeed and return 0.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="trivoting.election.trichotomous_profile.TrichotomousProfile.approval_score">
+<span class="sig-name descname"><span class="pre">approval_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alternative</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#trivoting.election.alternative.Alternative" title="trivoting.election.alternative.Alternative"><span class="pre">Alternative</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">mpq</span></span></span><a class="reference internal" href="../../_modules/trivoting/election/trichotomous_profile.html#TrichotomousProfile.approval_score"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.approval_score" title="Link to this definition">#</a></dt>
+<dd><p>Returns the approval score of an alternative, i.e., the number of voters approving of it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>alternative</strong> (<a class="reference internal" href="#trivoting.election.alternative.Alternative" title="trivoting.election.alternative.Alternative"><em>Alternative</em></a>) – The alternative to consider.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="trivoting.election.trichotomous_profile.TrichotomousProfile.approval_score_dict">
+<span class="sig-name descname"><span class="pre">approval_score_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#trivoting.election.alternative.Alternative" title="trivoting.election.alternative.Alternative"><span class="pre">Alternative</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">mpq</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/trivoting/election/trichotomous_profile.html#TrichotomousProfile.approval_score_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.approval_score_dict" title="Link to this definition">#</a></dt>
+<dd><p>Returns the approval scores of the alternatives of the profile as a dictionary. Never approved alternatives
+will not be present in the dictionary. The method returns a defaultdict so querying it for
+non-approved alternatives will succeed and return 0.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="trivoting.election.trichotomous_profile.TrichotomousProfile.as_multiprofile">
+<span class="sig-name descname"><span class="pre">as_multiprofile</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#trivoting.election.trichotomous_profile.TrichotomousMultiProfile" title="trivoting.election.trichotomous_profile.TrichotomousMultiProfile"><span class="pre">TrichotomousMultiProfile</span></a></span></span><a class="reference internal" href="../../_modules/trivoting/election/trichotomous_profile.html#TrichotomousProfile.as_multiprofile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.as_multiprofile" title="Link to this definition">#</a></dt>
+<dd><p>Returns the multiprofile corresponding to this profile. Ballots are frozen to make them unmutable.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The multiprofile.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#trivoting.election.trichotomous_profile.TrichotomousMultiProfile" title="trivoting.election.trichotomous_profile.TrichotomousMultiProfile"><em>TrichotomousMultiProfile</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="trivoting.election.trichotomous_profile.TrichotomousProfile.clear">
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span> <span class="pre">--</span> <span class="pre">remove</span> <span class="pre">all</span> <span class="pre">items</span> <span class="pre">from</span> <span class="pre">S</span></span></span><a class="reference internal" href="../../_modules/trivoting/election/trichotomous_profile.html#TrichotomousProfile.clear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.clear" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="trivoting.election.trichotomous_profile.TrichotomousProfile.count">
+<span class="sig-name descname"><span class="pre">count</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">integer</span> <span class="pre">--</span> <span class="pre">return</span> <span class="pre">number</span> <span class="pre">of</span> <span class="pre">occurrences</span> <span class="pre">of</span> <span class="pre">value</span></span></span><a class="reference internal" href="../../_modules/trivoting/election/trichotomous_profile.html#TrichotomousProfile.count"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.count" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="trivoting.election.trichotomous_profile.TrichotomousProfile.disapproval_score">
+<span class="sig-name descname"><span class="pre">disapproval_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alternative</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#trivoting.election.alternative.Alternative" title="trivoting.election.alternative.Alternative"><span class="pre">Alternative</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">mpq</span></span></span><a class="reference internal" href="../../_modules/trivoting/election/trichotomous_profile.html#TrichotomousProfile.disapproval_score"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.disapproval_score" title="Link to this definition">#</a></dt>
+<dd><p>Returns the disapproval score of an alternative, i.e., the number of voters disapproving of it. Never
+disapproved alternatives will not be present in the dictionary. The method returns a defaultdict so querying
+it for non-disapproved alternatives will succeed and return 0.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>alternative</strong> (<a class="reference internal" href="#trivoting.election.alternative.Alternative" title="trivoting.election.alternative.Alternative"><em>Alternative</em></a>) – The alternative to consider.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="trivoting.election.trichotomous_profile.TrichotomousProfile.disapproval_score_dict">
+<span class="sig-name descname"><span class="pre">disapproval_score_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#trivoting.election.alternative.Alternative" title="trivoting.election.alternative.Alternative"><span class="pre">Alternative</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">mpq</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/trivoting/election/trichotomous_profile.html#TrichotomousProfile.disapproval_score_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.disapproval_score_dict" title="Link to this definition">#</a></dt>
+<dd><p>Returns the disapproval scores of the alternatives of the profile as a dictionary.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="trivoting.election.trichotomous_profile.TrichotomousProfile.extend">
+<span class="sig-name descname"><span class="pre">extend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterable</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/trivoting/election/trichotomous_profile.html#TrichotomousProfile.extend"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.extend" title="Link to this definition">#</a></dt>
+<dd><p>S.extend(iterable) – extend sequence by appending elements from the iterable</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="trivoting.election.trichotomous_profile.TrichotomousProfile.index">
+<span class="sig-name descname"><span class="pre">index</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="optional">[</span>, <em class="sig-param"><span class="n"><span class="pre">start</span></span></em><span class="optional">[</span>, <em class="sig-param"><span class="n"><span class="pre">stop</span></span></em><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">integer</span> <span class="pre">--</span> <span class="pre">return</span> <span class="pre">first</span> <span class="pre">index</span> <span class="pre">of</span> <span class="pre">value.</span></span></span><a class="reference internal" href="../../_modules/trivoting/election/trichotomous_profile.html#TrichotomousProfile.index"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.index" title="Link to this definition">#</a></dt>
+<dd><p>Raises ValueError if the value is not present.</p>
+<p>Supporting start and stop arguments is optional, but
+recommended.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="trivoting.election.trichotomous_profile.TrichotomousProfile.insert">
+<span class="sig-name descname"><span class="pre">insert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/trivoting/election/trichotomous_profile.html#TrichotomousProfile.insert"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.insert" title="Link to this definition">#</a></dt>
+<dd><p>S.insert(index, value) – insert value before index</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="trivoting.election.trichotomous_profile.TrichotomousProfile.multiplicity">
+<span class="sig-name descname"><span class="pre">multiplicity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ballot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#trivoting.election.trichotomous_ballot.TrichotomousBallot" title="trivoting.election.trichotomous_ballot.TrichotomousBallot"><span class="pre">TrichotomousBallot</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="../../_modules/trivoting/election/trichotomous_profile.html#TrichotomousProfile.multiplicity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.multiplicity" title="Link to this definition">#</a></dt>
+<dd><p>Returns 1 regardless of the input; even if the ballot does not appear in the profile (to save up computation).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ballot</strong> (<a class="reference internal" href="#trivoting.election.trichotomous_ballot.TrichotomousBallot" title="trivoting.election.trichotomous_ballot.TrichotomousBallot"><em>TrichotomousBallot</em></a>) – The ballot whose multiplicity is inquired.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>1</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>int</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="trivoting.election.trichotomous_profile.TrichotomousProfile.num_ballots">
+<span class="sig-name descname"><span class="pre">num_ballots</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="../../_modules/trivoting/election/trichotomous_profile.html#TrichotomousProfile.num_ballots"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.num_ballots" title="Link to this definition">#</a></dt>
+<dd><p>Returns the number of ballots in the profile.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The multiplicity of the ballots.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>int</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="trivoting.election.trichotomous_profile.TrichotomousProfile.pop">
+<span class="sig-name descname"><span class="pre">pop</span></span><span class="sig-paren">(</span><span class="optional">[</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em><span class="optional">]</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">item</span> <span class="pre">--</span> <span class="pre">remove</span> <span class="pre">and</span> <span class="pre">return</span> <span class="pre">item</span> <span class="pre">at</span> <span class="pre">index</span> <span class="pre">(default</span> <span class="pre">last).</span></span></span><a class="reference internal" href="../../_modules/trivoting/election/trichotomous_profile.html#TrichotomousProfile.pop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.pop" title="Link to this definition">#</a></dt>
+<dd><p>Raise IndexError if list is empty or index is out of range.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="trivoting.election.trichotomous_profile.TrichotomousProfile.remove">
+<span class="sig-name descname"><span class="pre">remove</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/trivoting/election/trichotomous_profile.html#TrichotomousProfile.remove"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.remove" title="Link to this definition">#</a></dt>
+<dd><p>S.remove(value) – remove first occurrence of value.
+Raise ValueError if the value is not present.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="trivoting.election.trichotomous_profile.TrichotomousProfile.reverse">
+<span class="sig-name descname"><span class="pre">reverse</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/trivoting/election/trichotomous_profile.html#TrichotomousProfile.reverse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.reverse" title="Link to this definition">#</a></dt>
+<dd><p>S.reverse() – reverse <em>IN PLACE</em></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="trivoting.election.trichotomous_profile.TrichotomousProfile.support">
+<span class="sig-name descname"><span class="pre">support</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alternative</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#trivoting.election.alternative.Alternative" title="trivoting.election.alternative.Alternative"><span class="pre">Alternative</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">mpq</span></span></span><a class="reference internal" href="../../_modules/trivoting/election/trichotomous_profile.html#TrichotomousProfile.support"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.support" title="Link to this definition">#</a></dt>
+<dd><p>Returns the support of an alternative. The support is a cummulative measure over all ballots of the
+profile. Each ballot approving of an alternative increases its support by one and each ballot disapproving of
+an alternative decreases its support by 1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>alternative</strong> (<a class="reference internal" href="#trivoting.election.alternative.Alternative" title="trivoting.election.alternative.Alternative"><em>Alternative</em></a>) – The alternative to consider.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="trivoting.election.trichotomous_profile.TrichotomousProfile.support_dict">
+<span class="sig-name descname"><span class="pre">support_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#trivoting.election.alternative.Alternative" title="trivoting.election.alternative.Alternative"><span class="pre">Alternative</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">mpq</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/trivoting/election/trichotomous_profile.html#TrichotomousProfile.support_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.support_dict" title="Link to this definition">#</a></dt>
+<dd><p>Returns the support of the alternatives of the instance as a dictionary. Alternatives not appearing in
+any ballot will not be present in the dictionary. The method returns a defaultdict so querying it for
+absent alternatives will succeed and return 0.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="trivoting.election.trichotomous_profile.TrichotomousMultiProfile">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">TrichotomousMultiProfile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">init</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#trivoting.election.trichotomous_ballot.FrozenTrichotomousBallot" title="trivoting.election.trichotomous_ballot.FrozenTrichotomousBallot"><span class="pre">FrozenTrichotomousBallot</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">alternatives</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#trivoting.election.alternative.Alternative" title="trivoting.election.alternative.Alternative"><span class="pre">Alternative</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_size_selection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/trivoting/election/trichotomous_profile.html#TrichotomousMultiProfile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.election.trichotomous_profile.TrichotomousMultiProfile" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile" title="trivoting.election.trichotomous_profile.AbstractTrichotomousProfile"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractTrichotomousProfile</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">MutableMapping</span></code>[<a class="reference internal" href="#trivoting.election.trichotomous_ballot.FrozenTrichotomousBallot" title="trivoting.election.trichotomous_ballot.FrozenTrichotomousBallot"><code class="xref py py-class docutils literal notranslate"><span class="pre">FrozenTrichotomousBallot</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]</p>
+<p>Represents a trichotomous multi-profile, i.e., a collection of trichotomous ballots in which identical ballots
+are stored one together with their multiplicity.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="trivoting.election.trichotomous_profile.TrichotomousMultiProfile.add_ballot">
+<span class="sig-name descname"><span class="pre">add_ballot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ballot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#trivoting.election.trichotomous_ballot.FrozenTrichotomousBallot" title="trivoting.election.trichotomous_ballot.FrozenTrichotomousBallot"><span class="pre">FrozenTrichotomousBallot</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/trivoting/election/trichotomous_profile.html#TrichotomousMultiProfile.add_ballot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.add_ballot" title="Link to this definition">#</a></dt>
+<dd><p>Adds a ballot to the profile.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="trivoting.election.trichotomous_profile.TrichotomousMultiProfile.approval_disapproval_score">
+<span class="sig-name descname"><span class="pre">approval_disapproval_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alternative</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#trivoting.election.alternative.Alternative" title="trivoting.election.alternative.Alternative"><span class="pre">Alternative</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">mpq</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">mpq</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/trivoting/election/trichotomous_profile.html#TrichotomousMultiProfile.approval_disapproval_score"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.approval_disapproval_score" title="Link to this definition">#</a></dt>
+<dd><p>Returns the approval and the disapproval scores of an alternative.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>alternative</strong> (<a class="reference internal" href="#trivoting.election.alternative.Alternative" title="trivoting.election.alternative.Alternative"><em>Alternative</em></a>) – The alternative to consider.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="trivoting.election.trichotomous_profile.TrichotomousMultiProfile.approval_disapproval_score_dict">
+<span class="sig-name descname"><span class="pre">approval_disapproval_score_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#trivoting.election.alternative.Alternative" title="trivoting.election.alternative.Alternative"><span class="pre">Alternative</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">mpq</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#trivoting.election.alternative.Alternative" title="trivoting.election.alternative.Alternative"><span class="pre">Alternative</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">mpq</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/trivoting/election/trichotomous_profile.html#TrichotomousMultiProfile.approval_disapproval_score_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.approval_disapproval_score_dict" title="Link to this definition">#</a></dt>
+<dd><p>Returns the approval and the disapproval scores of the alternatives of the profile as a dictionary.
+Alternatives not appearing in any ballot will not be present in the dictionary. The method returns a
+defaultdict so querying it for absent alternatives will succeed and return 0.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="trivoting.election.trichotomous_profile.TrichotomousMultiProfile.approval_score">
+<span class="sig-name descname"><span class="pre">approval_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alternative</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#trivoting.election.alternative.Alternative" title="trivoting.election.alternative.Alternative"><span class="pre">Alternative</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">mpq</span></span></span><a class="reference internal" href="../../_modules/trivoting/election/trichotomous_profile.html#TrichotomousMultiProfile.approval_score"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.approval_score" title="Link to this definition">#</a></dt>
+<dd><p>Returns the approval score of an alternative, i.e., the number of voters approving of it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>alternative</strong> (<a class="reference internal" href="#trivoting.election.alternative.Alternative" title="trivoting.election.alternative.Alternative"><em>Alternative</em></a>) – The alternative to consider.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="trivoting.election.trichotomous_profile.TrichotomousMultiProfile.approval_score_dict">
+<span class="sig-name descname"><span class="pre">approval_score_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#trivoting.election.alternative.Alternative" title="trivoting.election.alternative.Alternative"><span class="pre">Alternative</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">mpq</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/trivoting/election/trichotomous_profile.html#TrichotomousMultiProfile.approval_score_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.approval_score_dict" title="Link to this definition">#</a></dt>
+<dd><p>Returns the approval scores of the alternatives of the profile as a dictionary. Never approved alternatives
+will not be present in the dictionary. The method returns a defaultdict so querying it for
+non-approved alternatives will succeed and return 0.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="trivoting.election.trichotomous_profile.TrichotomousMultiProfile.clear">
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None.</span>&#160; <span class="pre">Remove</span> <span class="pre">all</span> <span class="pre">items</span> <span class="pre">from</span> <span class="pre">D.</span></span></span><a class="reference internal" href="../../_modules/trivoting/election/trichotomous_profile.html#TrichotomousMultiProfile.clear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.clear" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="trivoting.election.trichotomous_profile.TrichotomousMultiProfile.disapproval_score">
+<span class="sig-name descname"><span class="pre">disapproval_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alternative</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#trivoting.election.alternative.Alternative" title="trivoting.election.alternative.Alternative"><span class="pre">Alternative</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">mpq</span></span></span><a class="reference internal" href="../../_modules/trivoting/election/trichotomous_profile.html#TrichotomousMultiProfile.disapproval_score"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.disapproval_score" title="Link to this definition">#</a></dt>
+<dd><p>Returns the disapproval score of an alternative, i.e., the number of voters disapproving of it. Never
+disapproved alternatives will not be present in the dictionary. The method returns a defaultdict so querying
+it for non-disapproved alternatives will succeed and return 0.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>alternative</strong> (<a class="reference internal" href="#trivoting.election.alternative.Alternative" title="trivoting.election.alternative.Alternative"><em>Alternative</em></a>) – The alternative to consider.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="trivoting.election.trichotomous_profile.TrichotomousMultiProfile.disapproval_score_dict">
+<span class="sig-name descname"><span class="pre">disapproval_score_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#trivoting.election.alternative.Alternative" title="trivoting.election.alternative.Alternative"><span class="pre">Alternative</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">mpq</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/trivoting/election/trichotomous_profile.html#TrichotomousMultiProfile.disapproval_score_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.disapproval_score_dict" title="Link to this definition">#</a></dt>
+<dd><p>Returns the disapproval scores of the alternatives of the profile as a dictionary.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="trivoting.election.trichotomous_profile.TrichotomousMultiProfile.multiplicity">
+<span class="sig-name descname"><span class="pre">multiplicity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ballot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#trivoting.election.trichotomous_ballot.FrozenTrichotomousBallot" title="trivoting.election.trichotomous_ballot.FrozenTrichotomousBallot"><span class="pre">FrozenTrichotomousBallot</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="../../_modules/trivoting/election/trichotomous_profile.html#TrichotomousMultiProfile.multiplicity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.multiplicity" title="Link to this definition">#</a></dt>
+<dd><p>Returns the multiplicity of a ballot in the profile.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ballot</strong> (<a class="reference internal" href="#trivoting.election.trichotomous_ballot.TrichotomousBallot" title="trivoting.election.trichotomous_ballot.TrichotomousBallot"><em>TrichotomousBallot</em></a>) – The ballot whose multiplicity is inquired.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The multiplicity of the ballot.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>int</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="trivoting.election.trichotomous_profile.TrichotomousMultiProfile.num_ballots">
+<span class="sig-name descname"><span class="pre">num_ballots</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="../../_modules/trivoting/election/trichotomous_profile.html#TrichotomousMultiProfile.num_ballots"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.num_ballots" title="Link to this definition">#</a></dt>
+<dd><p>Returns the number of ballots in the profile.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The multiplicity of the ballots.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>int</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="trivoting.election.trichotomous_profile.TrichotomousMultiProfile.support">
+<span class="sig-name descname"><span class="pre">support</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alternative</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#trivoting.election.alternative.Alternative" title="trivoting.election.alternative.Alternative"><span class="pre">Alternative</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">mpq</span></span></span><a class="reference internal" href="../../_modules/trivoting/election/trichotomous_profile.html#TrichotomousMultiProfile.support"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.support" title="Link to this definition">#</a></dt>
+<dd><p>Returns the support of an alternative. The support is a cummulative measure over all ballots of the
+profile. Each ballot approving of an alternative increases its support by one and each ballot disapproving of
+an alternative decreases its support by 1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>alternative</strong> (<a class="reference internal" href="#trivoting.election.alternative.Alternative" title="trivoting.election.alternative.Alternative"><em>Alternative</em></a>) – The alternative to consider.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="trivoting.election.trichotomous_profile.TrichotomousMultiProfile.support_dict">
+<span class="sig-name descname"><span class="pre">support_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#trivoting.election.alternative.Alternative" title="trivoting.election.alternative.Alternative"><span class="pre">Alternative</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">mpq</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/trivoting/election/trichotomous_profile.html#TrichotomousMultiProfile.support_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.support_dict" title="Link to this definition">#</a></dt>
+<dd><p>Returns the support of the alternatives of the instance as a dictionary. Alternatives not appearing in
+any ballot will not be present in the dictionary. The method returns a defaultdict so querying it for
+absent alternatives will succeed and return 0.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="trivoting.election.trichotomous_profile.TrichotomousMultiProfile.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="optional">[</span><em class="sig-param"><span class="n"><span class="pre">E</span></span></em>, <span class="optional">]</span><em class="sig-param"><span class="n"><span class="pre">**F</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None.</span>&#160; <span class="pre">Update</span> <span class="pre">D</span> <span class="pre">from</span> <span class="pre">mapping/iterable</span> <span class="pre">E</span> <span class="pre">and</span> <span class="pre">F.</span></span></span><a class="reference internal" href="../../_modules/trivoting/election/trichotomous_profile.html#TrichotomousMultiProfile.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.update" title="Link to this definition">#</a></dt>
+<dd><p>If E present and has a .keys() method, does:     for k in E: D[k] = E[k]
+If E present and lacks .keys() method, does:     for (k, v) in E: D[k] = v
+In either case, this is followed by: for k, v in F.items(): D[k] = v</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="abc-voting">
+<h2>ABC Voting<a class="headerlink" href="#abc-voting" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="trivoting.election.abcvoting.abcvoting_to_trichotomous_profile">
+<span class="sig-name descname"><span class="pre">abcvoting_to_trichotomous_profile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">abc_profile</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Profile</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#trivoting.election.trichotomous_profile.TrichotomousProfile" title="trivoting.election.trichotomous_profile.TrichotomousProfile"><span class="pre">TrichotomousProfile</span></a></span></span><a class="reference internal" href="../../_modules/trivoting/election/abcvoting.html#abcvoting_to_trichotomous_profile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.election.abcvoting.abcvoting_to_trichotomous_profile" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="trivoting.election.abcvoting.parse_abcvoting_yaml">
+<span class="sig-name descname"><span class="pre">parse_abcvoting_yaml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/trivoting/election/abcvoting.html#parse_abcvoting_yaml"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.election.abcvoting.parse_abcvoting_yaml" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="pabulib">
+<h2>Pabulib<a class="headerlink" href="#pabulib" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="trivoting.election.pabulib.parse_pabulib">
+<span class="sig-name descname"><span class="pre">parse_pabulib</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#trivoting.election.trichotomous_profile.TrichotomousProfile" title="trivoting.election.trichotomous_profile.TrichotomousProfile"><span class="pre">TrichotomousProfile</span></a></span></span><a class="reference internal" href="../../_modules/trivoting/election/pabulib.html#parse_pabulib"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.election.pabulib.parse_pabulib" title="Link to this definition">#</a></dt>
+<dd><p>Parses a PaBuLib file and returns the corresponding trichotomous profile.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file_path</strong> (<em>str</em>) – Path to the PaBuLib file to be parsed.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The profile corresponding to the file.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#trivoting.election.trichotomous_profile.TrichotomousProfile" title="trivoting.election.trichotomous_profile.TrichotomousProfile"><em>TrichotomousProfile</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="trivoting.election.pabulib.pb_approval_profile_to_trichotomous_profile">
+<span class="sig-name descname"><span class="pre">pb_approval_profile_to_trichotomous_profile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">app_profile</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">AbstractApprovalProfile</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/trivoting/election/pabulib.html#pb_approval_profile_to_trichotomous_profile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.election.pabulib.pb_approval_profile_to_trichotomous_profile" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="trivoting.election.pabulib.pb_approval_ballot_to_trichotomous_ballot">
+<span class="sig-name descname"><span class="pre">pb_approval_ballot_to_trichotomous_ballot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">app_ballot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">AbstractApprovalBallot</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alt_map</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">Project</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#trivoting.election.alternative.Alternative" title="trivoting.election.alternative.Alternative"><span class="pre">Alternative</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/trivoting/election/pabulib.html#pb_approval_ballot_to_trichotomous_ballot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.election.pabulib.pb_approval_ballot_to_trichotomous_ballot" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="preflib">
+<h2>PrefLib<a class="headerlink" href="#preflib" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="trivoting.election.preflib.parse_preflib">
+<span class="sig-name descname"><span class="pre">parse_preflib</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#trivoting.election.trichotomous_profile.TrichotomousProfile" title="trivoting.election.trichotomous_profile.TrichotomousProfile"><span class="pre">TrichotomousProfile</span></a></span></span><a class="reference internal" href="../../_modules/trivoting/election/preflib.html#parse_preflib"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.election.preflib.parse_preflib" title="Link to this definition">#</a></dt>
+<dd><p>Parses a PrefLib file and returns the corresponding trichotomous profile.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file_path</strong> (<em>str</em>) – Path to the PrefLib file to be parsed.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The profile corresponding to the file.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#trivoting.election.trichotomous_profile.TrichotomousProfile" title="trivoting.election.trichotomous_profile.TrichotomousProfile"><em>TrichotomousProfile</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="trivoting.election.preflib.cat_instance_to_trichotomous_profile">
+<span class="sig-name descname"><span class="pre">cat_instance_to_trichotomous_profile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cat_instance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">CategoricalInstance</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#trivoting.election.trichotomous_profile.TrichotomousProfile" title="trivoting.election.trichotomous_profile.TrichotomousProfile"><span class="pre">TrichotomousProfile</span></a></span></span><a class="reference internal" href="../../_modules/trivoting/election/preflib.html#cat_instance_to_trichotomous_profile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.election.preflib.cat_instance_to_trichotomous_profile" title="Link to this definition">#</a></dt>
+<dd><p>Converts a PrefLib Categorical instance into a Trichotomous Profile.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="trivoting.election.preflib.cat_preferences_to_trichotomous_ballot">
+<span class="sig-name descname"><span class="pre">cat_preferences_to_trichotomous_ballot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pref</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alt_map</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#trivoting.election.alternative.Alternative" title="trivoting.election.alternative.Alternative"><span class="pre">Alternative</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#trivoting.election.trichotomous_ballot.TrichotomousBallot" title="trivoting.election.trichotomous_ballot.TrichotomousBallot"><span class="pre">TrichotomousBallot</span></a></span></span><a class="reference internal" href="../../_modules/trivoting/election/preflib.html#cat_preferences_to_trichotomous_ballot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.election.preflib.cat_preferences_to_trichotomous_ballot" title="Link to this definition">#</a></dt>
+<dd><p>Converts a categorical preference as defined in the PrefLib standard into a trichotomous ballot.
+The first category is mapped to the “approved alternatives”. The second category is mapped to the “neutral
+alternatives”. The last category is mapped to the “disapproved alternatives”.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pref</strong> (<em>tuple</em><em>[</em><em>tuple</em><em>[</em><em>int</em><em>]</em><em>]</em>) – The preferences as represented in the preflibtools’ CategoricalInstance.</p></li>
+<li><p><strong>alt_map</strong> (<em>dict</em><em>[</em><em>int</em><em>, </em><a class="reference internal" href="#trivoting.election.alternative.Alternative" title="trivoting.election.alternative.Alternative"><em>Alternative</em></a><em>]</em>) – A dictionary mapping alternative names in PrefLib (int) to Alternative objects.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The trichotomous ballot.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#trivoting.election.trichotomous_ballot.TrichotomousBallot" title="trivoting.election.trichotomous_ballot.TrichotomousBallot"><em>TrichotomousBallot</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="generate-random-profile">
+<h2>Generate Random Profile<a class="headerlink" href="#generate-random-profile" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="trivoting.election.generate.generate_random_ballot">
+<span class="sig-name descname"><span class="pre">generate_random_ballot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alternatives</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#trivoting.election.alternative.Alternative" title="trivoting.election.alternative.Alternative"><span class="pre">Alternative</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">approve_disapproved_sampler</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">approved_sampler</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disapproved_sampler</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#trivoting.election.trichotomous_ballot.TrichotomousBallot" title="trivoting.election.trichotomous_ballot.TrichotomousBallot"><span class="pre">TrichotomousBallot</span></a></span></span><a class="reference internal" href="../../_modules/trivoting/election/generate.html#generate_random_ballot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.election.generate.generate_random_ballot" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="trivoting.election.generate.generate_random_profile">
+<span class="sig-name descname"><span class="pre">generate_random_profile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_alternatives</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_voters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">approve_disapproved_sampler</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">approved_sampler</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disapproved_sampler</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#trivoting.election.trichotomous_profile.TrichotomousProfile" title="trivoting.election.trichotomous_profile.TrichotomousProfile"><span class="pre">TrichotomousProfile</span></a></span></span><a class="reference internal" href="../../_modules/trivoting/election/generate.html#generate_random_profile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.election.generate.generate_random_profile" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../index.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Reference</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../rules/index.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Rules module</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#alternative">Alternative</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.alternative.Alternative"><code class="docutils literal notranslate"><span class="pre">Alternative</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#trichotomous-ballot">Trichotomous Ballot</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_ballot.AbstractTrichotomousBallot"><code class="docutils literal notranslate"><span class="pre">AbstractTrichotomousBallot</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_ballot.TrichotomousBallot"><code class="docutils literal notranslate"><span class="pre">TrichotomousBallot</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_ballot.FrozenTrichotomousBallot"><code class="docutils literal notranslate"><span class="pre">FrozenTrichotomousBallot</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#trichotomous-profile">Trichotomous Profile</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile"><code class="docutils literal notranslate"><span class="pre">AbstractTrichotomousProfile</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile.add_ballot"><code class="docutils literal notranslate"><span class="pre">AbstractTrichotomousProfile.add_ballot()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile.add_ballots"><code class="docutils literal notranslate"><span class="pre">AbstractTrichotomousProfile.add_ballots()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile.approval_disapproval_score"><code class="docutils literal notranslate"><span class="pre">AbstractTrichotomousProfile.approval_disapproval_score()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile.approval_disapproval_score_dict"><code class="docutils literal notranslate"><span class="pre">AbstractTrichotomousProfile.approval_disapproval_score_dict()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile.approval_score"><code class="docutils literal notranslate"><span class="pre">AbstractTrichotomousProfile.approval_score()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile.approval_score_dict"><code class="docutils literal notranslate"><span class="pre">AbstractTrichotomousProfile.approval_score_dict()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile.disapproval_score"><code class="docutils literal notranslate"><span class="pre">AbstractTrichotomousProfile.disapproval_score()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile.disapproval_score_dict"><code class="docutils literal notranslate"><span class="pre">AbstractTrichotomousProfile.disapproval_score_dict()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile.multiplicity"><code class="docutils literal notranslate"><span class="pre">AbstractTrichotomousProfile.multiplicity()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile.num_ballots"><code class="docutils literal notranslate"><span class="pre">AbstractTrichotomousProfile.num_ballots()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile.support"><code class="docutils literal notranslate"><span class="pre">AbstractTrichotomousProfile.support()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile.support_dict"><code class="docutils literal notranslate"><span class="pre">AbstractTrichotomousProfile.support_dict()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousProfile"><code class="docutils literal notranslate"><span class="pre">TrichotomousProfile</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.add_ballot"><code class="docutils literal notranslate"><span class="pre">TrichotomousProfile.add_ballot()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.append"><code class="docutils literal notranslate"><span class="pre">TrichotomousProfile.append()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.approval_disapproval_score"><code class="docutils literal notranslate"><span class="pre">TrichotomousProfile.approval_disapproval_score()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.approval_disapproval_score_dict"><code class="docutils literal notranslate"><span class="pre">TrichotomousProfile.approval_disapproval_score_dict()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.approval_score"><code class="docutils literal notranslate"><span class="pre">TrichotomousProfile.approval_score()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.approval_score_dict"><code class="docutils literal notranslate"><span class="pre">TrichotomousProfile.approval_score_dict()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.as_multiprofile"><code class="docutils literal notranslate"><span class="pre">TrichotomousProfile.as_multiprofile()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.clear"><code class="docutils literal notranslate"><span class="pre">TrichotomousProfile.clear()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.count"><code class="docutils literal notranslate"><span class="pre">TrichotomousProfile.count()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.disapproval_score"><code class="docutils literal notranslate"><span class="pre">TrichotomousProfile.disapproval_score()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.disapproval_score_dict"><code class="docutils literal notranslate"><span class="pre">TrichotomousProfile.disapproval_score_dict()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.extend"><code class="docutils literal notranslate"><span class="pre">TrichotomousProfile.extend()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.index"><code class="docutils literal notranslate"><span class="pre">TrichotomousProfile.index()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.insert"><code class="docutils literal notranslate"><span class="pre">TrichotomousProfile.insert()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.multiplicity"><code class="docutils literal notranslate"><span class="pre">TrichotomousProfile.multiplicity()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.num_ballots"><code class="docutils literal notranslate"><span class="pre">TrichotomousProfile.num_ballots()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.pop"><code class="docutils literal notranslate"><span class="pre">TrichotomousProfile.pop()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.remove"><code class="docutils literal notranslate"><span class="pre">TrichotomousProfile.remove()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.reverse"><code class="docutils literal notranslate"><span class="pre">TrichotomousProfile.reverse()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.support"><code class="docutils literal notranslate"><span class="pre">TrichotomousProfile.support()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.support_dict"><code class="docutils literal notranslate"><span class="pre">TrichotomousProfile.support_dict()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousMultiProfile"><code class="docutils literal notranslate"><span class="pre">TrichotomousMultiProfile</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.add_ballot"><code class="docutils literal notranslate"><span class="pre">TrichotomousMultiProfile.add_ballot()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.approval_disapproval_score"><code class="docutils literal notranslate"><span class="pre">TrichotomousMultiProfile.approval_disapproval_score()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.approval_disapproval_score_dict"><code class="docutils literal notranslate"><span class="pre">TrichotomousMultiProfile.approval_disapproval_score_dict()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.approval_score"><code class="docutils literal notranslate"><span class="pre">TrichotomousMultiProfile.approval_score()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.approval_score_dict"><code class="docutils literal notranslate"><span class="pre">TrichotomousMultiProfile.approval_score_dict()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.clear"><code class="docutils literal notranslate"><span class="pre">TrichotomousMultiProfile.clear()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.disapproval_score"><code class="docutils literal notranslate"><span class="pre">TrichotomousMultiProfile.disapproval_score()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.disapproval_score_dict"><code class="docutils literal notranslate"><span class="pre">TrichotomousMultiProfile.disapproval_score_dict()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.multiplicity"><code class="docutils literal notranslate"><span class="pre">TrichotomousMultiProfile.multiplicity()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.num_ballots"><code class="docutils literal notranslate"><span class="pre">TrichotomousMultiProfile.num_ballots()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.support"><code class="docutils literal notranslate"><span class="pre">TrichotomousMultiProfile.support()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.support_dict"><code class="docutils literal notranslate"><span class="pre">TrichotomousMultiProfile.support_dict()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.update"><code class="docutils literal notranslate"><span class="pre">TrichotomousMultiProfile.update()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#abc-voting">ABC Voting</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.abcvoting.abcvoting_to_trichotomous_profile"><code class="docutils literal notranslate"><span class="pre">abcvoting_to_trichotomous_profile()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.abcvoting.parse_abcvoting_yaml"><code class="docutils literal notranslate"><span class="pre">parse_abcvoting_yaml()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pabulib">Pabulib</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.pabulib.parse_pabulib"><code class="docutils literal notranslate"><span class="pre">parse_pabulib()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.pabulib.pb_approval_profile_to_trichotomous_profile"><code class="docutils literal notranslate"><span class="pre">pb_approval_profile_to_trichotomous_profile()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.pabulib.pb_approval_ballot_to_trichotomous_ballot"><code class="docutils literal notranslate"><span class="pre">pb_approval_ballot_to_trichotomous_ballot()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#preflib">PrefLib</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.preflib.parse_preflib"><code class="docutils literal notranslate"><span class="pre">parse_preflib()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.preflib.cat_instance_to_trichotomous_profile"><code class="docutils literal notranslate"><span class="pre">cat_instance_to_trichotomous_profile()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.preflib.cat_preferences_to_trichotomous_ballot"><code class="docutils literal notranslate"><span class="pre">cat_preferences_to_trichotomous_ballot()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#generate-random-profile">Generate Random Profile</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.generate.generate_random_ballot"><code class="docutils literal notranslate"><span class="pre">generate_random_ballot()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.generate.generate_random_profile"><code class="docutils literal notranslate"><span class="pre">generate_random_profile()</span></code></a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Simon Rey
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025, Simon Rey.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

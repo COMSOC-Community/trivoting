@@ -2,8 +2,8 @@ from abcvoting.fileio import read_abcvoting_yaml_file
 from abcvoting.preferences import Profile
 
 from trivoting.election.alternative import Alternative
-from trivoting.election.trichotomours_ballot import TrichotomousBallot
-from trivoting.election.trichotomours_profile import TrichotomousProfile
+from trivoting.election.trichotomous_ballot import TrichotomousBallot
+from trivoting.election.trichotomous_profile import TrichotomousProfile
 
 
 def abcvoting_to_trichotomous_profile(abc_profile: Profile) -> TrichotomousProfile:

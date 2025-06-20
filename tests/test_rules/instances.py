@@ -1,6 +1,6 @@
 from trivoting.election.alternative import Alternative
-from trivoting.election.trichotomours_ballot import TrichotomousBallot
-from trivoting.election.trichotomours_profile import TrichotomousProfile
+from trivoting.election.trichotomous_ballot import TrichotomousBallot
+from trivoting.election.trichotomous_profile import TrichotomousProfile
 
 
 def example_1_KPPS():

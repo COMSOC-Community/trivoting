@@ -4,8 +4,8 @@ from collections.abc import Collection
 from copy import deepcopy
 
 from trivoting.election.alternative import Alternative
-from trivoting.election.trichotomours_ballot import AbstractTrichotomousBallot
-from trivoting.election.trichotomours_profile import AbstractTrichotomousProfile
+from trivoting.election.trichotomous_ballot import AbstractTrichotomousBallot
+from trivoting.election.trichotomous_profile import AbstractTrichotomousProfile
 from trivoting.fractions import Numeric, frac
 from trivoting.tiebreaking import TieBreakingRule, lexico_tie_breaking
 
@@ -54,7 +54,7 @@ def sequential_phragmen(
     resoluteness: bool = True,
 ) -> list[Alternative] | list[list[Alternative]]:
     """
-
+    Sequential Phragmén.
 
     Parameters
     ----------

@@ -5,7 +5,7 @@ from collections import Counter, defaultdict
 from collections.abc import Iterable, MutableSequence, MutableMapping
 
 from trivoting.election.alternative import Alternative
-from trivoting.election.trichotomours_ballot import TrichotomousBallot, AbstractTrichotomousBallot, \
+from trivoting.election.trichotomous_ballot import TrichotomousBallot, AbstractTrichotomousBallot, \
     FrozenTrichotomousBallot
 from trivoting.fractions import Numeric
 

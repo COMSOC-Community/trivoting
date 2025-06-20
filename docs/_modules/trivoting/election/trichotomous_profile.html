@@ -1,0 +1,1079 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" data-theme="light">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>trivoting.election.trichotomous_profile &#8212; Trivoting</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "light";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../../_static/documentation_options.js?v=e645c8fa"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/trivoting/election/trichotomous_profile';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="light">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Trivoting</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Trivoting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Quick Start</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../reference/index.html">Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../reference/election/index.html">Election module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../reference/rules/index.html">Rules module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../reference/tiebreaking.html">Tie-Breaking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../reference/fractions.html">Fractions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../reference/utils.html">Utils</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/Simon-Rey/trivoting" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1></h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for trivoting.election.trichotomous_profile</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">Counter</span><span class="p">,</span> <span class="n">defaultdict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">MutableSequence</span><span class="p">,</span> <span class="n">MutableMapping</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.election.alternative</span><span class="w"> </span><span class="kn">import</span> <span class="n">Alternative</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.election.trichotomous_ballot</span><span class="w"> </span><span class="kn">import</span> <span class="n">TrichotomousBallot</span><span class="p">,</span> <span class="n">AbstractTrichotomousBallot</span><span class="p">,</span> \
+    <span class="n">FrozenTrichotomousBallot</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.fractions</span><span class="w"> </span><span class="kn">import</span> <span class="n">Numeric</span>
+
+<div class="viewcode-block" id="AbstractTrichotomousProfile">
+<a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">AbstractTrichotomousProfile</span><span class="p">(</span><span class="n">ABC</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">AbstractTrichotomousBallot</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Abstract class representing a profile, that is, a collection of ballots. This class is only meant to be inherited.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alternatives</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Alternative</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">max_size_selection</span> <span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">alternatives</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">alternatives</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">alternatives</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">alternatives</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_size_selection</span> <span class="o">=</span> <span class="n">max_size_selection</span>
+
+<div class="viewcode-block" id="AbstractTrichotomousProfile.multiplicity">
+<a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile.multiplicity">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">multiplicity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ballot</span><span class="p">:</span> <span class="n">AbstractTrichotomousBallot</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the multiplicity of a ballot.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">            ballot : AbstractTrichotomousBallot</span>
+<span class="sd">                The ballot whose multiplicity is inquired.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            int</span>
+<span class="sd">                The multiplicity of the ballots.</span>
+<span class="sd">        &quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="AbstractTrichotomousProfile.num_ballots">
+<a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile.num_ballots">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">num_ballots</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the number of ballots in the profile.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            int</span>
+<span class="sd">                The multiplicity of the ballots.</span>
+<span class="sd">        &quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="AbstractTrichotomousProfile.add_ballot">
+<a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile.add_ballot">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_ballot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ballot</span><span class="p">:</span> <span class="n">AbstractTrichotomousBallot</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Adds a ballot to the profile.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">            ballot : AbstractTrichotomousBallot</span>
+<span class="sd">                The ballot to add.</span>
+<span class="sd">        &quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="AbstractTrichotomousProfile.add_ballots">
+<a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile.add_ballots">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_ballots</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ballots</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">AbstractTrichotomousBallot</span><span class="p">]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Adds multiple ballots to the profile.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">            ballots : Iterable[AbstractTrichotomousBallot]</span>
+<span class="sd">                The ballots to add.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">ballot</span> <span class="ow">in</span> <span class="n">ballots</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_ballot</span><span class="p">(</span><span class="n">ballot</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="AbstractTrichotomousProfile.support">
+<a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile.support">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">support</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alternative</span><span class="p">:</span> <span class="n">Alternative</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Numeric</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns the support of an alternative. The support is a cummulative measure over all ballots of the</span>
+<span class="sd">        profile. Each ballot approving of an alternative increases its support by one and each ballot disapproving of</span>
+<span class="sd">        an alternative decreases its support by 1.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">            alternative : Alternative</span>
+<span class="sd">                The alternative to consider.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="AbstractTrichotomousProfile.support_dict">
+<a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile.support_dict">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">support_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">defaultdict</span><span class="p">[</span><span class="n">Alternative</span><span class="p">,</span> <span class="n">Numeric</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns the support of the alternatives of the instance as a dictionary. Alternatives not appearing in</span>
+<span class="sd">        any ballot will not be present in the dictionary. The method returns a defaultdict so querying it for</span>
+<span class="sd">        absent alternatives will succeed and return 0.</span>
+<span class="sd">        &quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="AbstractTrichotomousProfile.approval_score">
+<a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile.approval_score">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">approval_score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alternative</span><span class="p">:</span> <span class="n">Alternative</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Numeric</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns the approval score of an alternative, i.e., the number of voters approving of it.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">            alternative : Alternative</span>
+<span class="sd">                The alternative to consider.</span>
+<span class="sd">        &quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="AbstractTrichotomousProfile.approval_score_dict">
+<a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile.approval_score_dict">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">approval_score_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">defaultdict</span><span class="p">[</span><span class="n">Alternative</span><span class="p">,</span> <span class="n">Numeric</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns the approval scores of the alternatives of the profile as a dictionary. Never approved alternatives</span>
+<span class="sd">        will not be present in the dictionary. The method returns a defaultdict so querying it for</span>
+<span class="sd">        non-approved alternatives will succeed and return 0.</span>
+<span class="sd">        &quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="AbstractTrichotomousProfile.disapproval_score">
+<a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile.disapproval_score">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">disapproval_score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alternative</span><span class="p">:</span> <span class="n">Alternative</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Numeric</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns the disapproval score of an alternative, i.e., the number of voters disapproving of it. Never</span>
+<span class="sd">        disapproved alternatives will not be present in the dictionary. The method returns a defaultdict so querying</span>
+<span class="sd">        it for non-disapproved alternatives will succeed and return 0.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">            alternative : Alternative</span>
+<span class="sd">                The alternative to consider.</span>
+<span class="sd">        &quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="AbstractTrichotomousProfile.disapproval_score_dict">
+<a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile.disapproval_score_dict">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">disapproval_score_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">defaultdict</span><span class="p">[</span><span class="n">Alternative</span><span class="p">,</span> <span class="n">Numeric</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns the disapproval scores of the alternatives of the profile as a dictionary.</span>
+<span class="sd">        &quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="AbstractTrichotomousProfile.approval_disapproval_score">
+<a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile.approval_disapproval_score">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">approval_disapproval_score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alternative</span><span class="p">:</span> <span class="n">Alternative</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Numeric</span><span class="p">,</span> <span class="n">Numeric</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns the approval and the disapproval scores of an alternative.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">            alternative : Alternative</span>
+<span class="sd">                The alternative to consider.</span>
+<span class="sd">        &quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="AbstractTrichotomousProfile.approval_disapproval_score_dict">
+<a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile.approval_disapproval_score_dict">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">approval_disapproval_score_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="n">Alternative</span><span class="p">,</span> <span class="n">Numeric</span><span class="p">],</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Alternative</span><span class="p">,</span> <span class="n">Numeric</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns the approval and the disapproval scores of the alternatives of the profile as a dictionary.</span>
+<span class="sd">        Alternatives not appearing in any ballot will not be present in the dictionary. The method returns a</span>
+<span class="sd">        defaultdict so querying it for absent alternatives will succeed and return 0.</span>
+<span class="sd">        &quot;&quot;&quot;</span></div>
+</div>
+
+
+<div class="viewcode-block" id="TrichotomousProfile">
+<a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousProfile">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TrichotomousProfile</span><span class="p">(</span><span class="n">AbstractTrichotomousProfile</span><span class="p">,</span> <span class="n">MutableSequence</span><span class="p">[</span><span class="n">TrichotomousBallot</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represents a trichotomous profile, i.e., a collection of trichotomous ballots, one per voter.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">init</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">TrichotomousBallot</span><span class="p">]</span> <span class="o">=</span> <span class="p">(),</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">alternatives</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Alternative</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">max_size_selection</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ballots_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">init</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">alternatives</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">init</span><span class="p">,</span> <span class="n">AbstractTrichotomousProfile</span><span class="p">):</span>
+            <span class="n">alternatives</span> <span class="o">=</span> <span class="n">init</span><span class="o">.</span><span class="n">alternatives</span>
+        <span class="k">if</span> <span class="n">max_size_selection</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">init</span><span class="p">,</span> <span class="n">AbstractTrichotomousProfile</span><span class="p">):</span>
+            <span class="n">max_size_selection</span> <span class="o">=</span> <span class="n">init</span><span class="o">.</span><span class="n">max_size_selection</span>
+        <span class="n">AbstractTrichotomousProfile</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alternatives</span><span class="p">,</span> <span class="n">max_size_selection</span><span class="p">)</span>
+
+<div class="viewcode-block" id="TrichotomousProfile.support">
+<a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousProfile.support">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">support</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alternative</span><span class="p">:</span> <span class="n">Alternative</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Numeric</span><span class="p">:</span>
+        <span class="n">score</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">ballot</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">alternative</span> <span class="ow">in</span> <span class="n">ballot</span><span class="o">.</span><span class="n">approved</span><span class="p">:</span>
+                <span class="n">score</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">elif</span> <span class="n">alternative</span> <span class="ow">in</span> <span class="n">ballot</span><span class="o">.</span><span class="n">disapproved</span><span class="p">:</span>
+                <span class="n">score</span> <span class="o">-=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">score</span></div>
+
+
+<div class="viewcode-block" id="TrichotomousProfile.support_dict">
+<a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousProfile.support_dict">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">support_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Alternative</span><span class="p">,</span> <span class="n">Numeric</span><span class="p">]:</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">ballot</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">alt</span> <span class="ow">in</span> <span class="n">ballot</span><span class="o">.</span><span class="n">approved</span><span class="p">:</span>
+                <span class="n">res</span><span class="p">[</span><span class="n">alt</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">for</span> <span class="n">alt</span> <span class="ow">in</span> <span class="n">ballot</span><span class="o">.</span><span class="n">disapproved</span><span class="p">:</span>
+                <span class="n">res</span><span class="p">[</span><span class="n">alt</span><span class="p">]</span> <span class="o">-=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">res</span></div>
+
+
+<div class="viewcode-block" id="TrichotomousProfile.approval_score">
+<a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousProfile.approval_score">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">approval_score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alternative</span><span class="p">:</span> <span class="n">Alternative</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Numeric</span><span class="p">:</span>
+        <span class="n">score</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">ballot</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">alternative</span> <span class="ow">in</span> <span class="n">ballot</span><span class="o">.</span><span class="n">approved</span><span class="p">:</span>
+                <span class="n">score</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">score</span></div>
+
+
+<div class="viewcode-block" id="TrichotomousProfile.approval_score_dict">
+<a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousProfile.approval_score_dict">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">approval_score_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Alternative</span><span class="p">,</span> <span class="n">Numeric</span><span class="p">]:</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">ballot</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">alt</span> <span class="ow">in</span> <span class="n">ballot</span><span class="o">.</span><span class="n">approved</span><span class="p">:</span>
+                <span class="n">res</span><span class="p">[</span><span class="n">alt</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">res</span></div>
+
+
+<div class="viewcode-block" id="TrichotomousProfile.disapproval_score">
+<a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousProfile.disapproval_score">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">disapproval_score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alternative</span><span class="p">:</span> <span class="n">Alternative</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Numeric</span><span class="p">:</span>
+        <span class="n">score</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">ballot</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">alternative</span> <span class="ow">in</span> <span class="n">ballot</span><span class="o">.</span><span class="n">disapproved</span><span class="p">:</span>
+                <span class="n">score</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">score</span></div>
+
+
+<div class="viewcode-block" id="TrichotomousProfile.disapproval_score_dict">
+<a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousProfile.disapproval_score_dict">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">disapproval_score_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Alternative</span><span class="p">,</span> <span class="n">Numeric</span><span class="p">]:</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">ballot</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">alt</span> <span class="ow">in</span> <span class="n">ballot</span><span class="o">.</span><span class="n">disapproved</span><span class="p">:</span>
+                <span class="n">res</span><span class="p">[</span><span class="n">alt</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">res</span></div>
+
+
+<div class="viewcode-block" id="TrichotomousProfile.approval_disapproval_score">
+<a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousProfile.approval_disapproval_score">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">approval_disapproval_score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alternative</span><span class="p">:</span> <span class="n">Alternative</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Numeric</span><span class="p">,</span> <span class="n">Numeric</span><span class="p">]:</span>
+        <span class="n">app_score</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">disapp_score</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">ballot</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">alternative</span> <span class="ow">in</span> <span class="n">ballot</span><span class="o">.</span><span class="n">approved</span><span class="p">:</span>
+                <span class="n">app_score</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">alternative</span> <span class="ow">in</span> <span class="n">ballot</span><span class="o">.</span><span class="n">disapproved</span><span class="p">:</span>
+                <span class="n">disapp_score</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">app_score</span><span class="p">,</span> <span class="n">disapp_score</span></div>
+
+
+<div class="viewcode-block" id="TrichotomousProfile.approval_disapproval_score_dict">
+<a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousProfile.approval_disapproval_score_dict">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">approval_disapproval_score_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="n">Alternative</span><span class="p">,</span> <span class="n">Numeric</span><span class="p">],</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Alternative</span><span class="p">,</span> <span class="n">Numeric</span><span class="p">]]:</span>
+        <span class="n">app_scores</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+        <span class="n">disapp_scores</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">ballot</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">alt</span> <span class="ow">in</span> <span class="n">ballot</span><span class="o">.</span><span class="n">approved</span><span class="p">:</span>
+                <span class="n">app_scores</span><span class="p">[</span><span class="n">alt</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">for</span> <span class="n">alt</span> <span class="ow">in</span> <span class="n">ballot</span><span class="o">.</span><span class="n">disapproved</span><span class="p">:</span>
+                <span class="n">disapp_scores</span><span class="p">[</span><span class="n">alt</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">app_scores</span><span class="p">,</span> <span class="n">disapp_scores</span></div>
+
+
+<div class="viewcode-block" id="TrichotomousProfile.num_ballots">
+<a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousProfile.num_ballots">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">num_ballots</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TrichotomousProfile.add_ballot">
+<a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousProfile.add_ballot">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_ballot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ballot</span><span class="p">:</span> <span class="n">TrichotomousBallot</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ballot</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TrichotomousProfile.multiplicity">
+<a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousProfile.multiplicity">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">multiplicity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ballot</span><span class="p">:</span> <span class="n">TrichotomousBallot</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns 1 regardless of the input; even if the ballot does not appear in the profile (to save up computation).</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">            ballot : TrichotomousBallot</span>
+<span class="sd">                The ballot whose multiplicity is inquired.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            int</span>
+<span class="sd">                1</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="mi">1</span></div>
+
+
+<div class="viewcode-block" id="TrichotomousProfile.as_multiprofile">
+<a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousProfile.as_multiprofile">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">as_multiprofile</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TrichotomousMultiProfile</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the multiprofile corresponding to this profile. Ballots are frozen to make them unmutable.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            TrichotomousMultiProfile</span>
+<span class="sd">                The multiprofile.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">TrichotomousMultiProfile</span><span class="p">([</span><span class="n">ballot</span><span class="o">.</span><span class="n">freeze</span><span class="p">()</span> <span class="k">for</span> <span class="n">ballot</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">],</span> <span class="n">alternatives</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">alternatives</span><span class="p">,</span> <span class="n">max_size_selection</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_size_selection</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="nb">slice</span><span class="p">):</span>
+            <span class="n">new_obj</span> <span class="o">=</span> <span class="n">TrichotomousProfile</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+            <span class="n">new_obj</span><span class="o">.</span><span class="n">_ballots_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ballots_list</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">new_obj</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ballots_list</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ballots_list</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__delitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ballots_list</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ballots_list</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ballots_list</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ballots_list</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__reversed__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">reversed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ballots_list</span><span class="p">)</span>
+
+<div class="viewcode-block" id="TrichotomousProfile.append">
+<a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousProfile.append">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">append</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ballots_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TrichotomousProfile.extend">
+<a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousProfile.extend">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">extend</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iterable</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ballots_list</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">iterable</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TrichotomousProfile.insert">
+<a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousProfile.insert">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">insert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ballots_list</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TrichotomousProfile.remove">
+<a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousProfile.remove">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ballots_list</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TrichotomousProfile.pop">
+<a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousProfile.pop">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">pop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ballots_list</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">index</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TrichotomousProfile.clear">
+<a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousProfile.clear">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ballots_list</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="TrichotomousProfile.index">
+<a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousProfile.index">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">end</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">end</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ballots_list</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ballots_list</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TrichotomousProfile.count">
+<a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousProfile.count">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">count</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ballots_list</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">sort</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ballots_list</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="n">reverse</span><span class="p">)</span>
+
+<div class="viewcode-block" id="TrichotomousProfile.reverse">
+<a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousProfile.reverse">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reverse</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ballots_list</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">TrichotomousProfile</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="n">new_profile</span> <span class="o">=</span> <span class="n">TrichotomousProfile</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">TrichotomousProfile</span><span class="p">):</span>
+            <span class="n">new_profile</span><span class="o">.</span><span class="n">_ballots_list</span> <span class="o">+=</span> <span class="n">other</span><span class="o">.</span><span class="n">_ballots_list</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">new_profile</span><span class="o">.</span><span class="n">_ballots_list</span> <span class="o">+=</span> <span class="n">other</span>
+        <span class="k">return</span> <span class="n">new_profile</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__iadd__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">TrichotomousProfile</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_ballots_list</span> <span class="o">+=</span> <span class="n">other</span><span class="o">.</span><span class="n">_ballots_list</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_ballots_list</span> <span class="o">+=</span> <span class="n">other</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="k">return</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Cannot multiply profiles with non-int.&quot;</span><span class="p">)</span>
+        <span class="n">new_profile</span> <span class="o">=</span> <span class="n">TrichotomousProfile</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">new_profile</span><span class="o">.</span><span class="n">_ballots_list</span> <span class="o">*=</span> <span class="n">n</span>
+        <span class="k">return</span> <span class="n">new_profile</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__imul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="k">return</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Cannot multiply profiles with non-int.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ballots_list</span> <span class="o">*=</span> <span class="n">n</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ballots_list</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ballots_list</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="TrichotomousMultiProfile">
+<a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousMultiProfile">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TrichotomousMultiProfile</span><span class="p">(</span><span class="n">AbstractTrichotomousProfile</span><span class="p">,</span> <span class="n">MutableMapping</span><span class="p">[</span><span class="n">FrozenTrichotomousBallot</span><span class="p">,</span> <span class="nb">int</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represents a trichotomous multi-profile, i.e., a collection of trichotomous ballots in which identical ballots</span>
+<span class="sd">    are stored one together with their multiplicity.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">init</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">FrozenTrichotomousBallot</span><span class="p">]</span> <span class="o">=</span> <span class="p">(),</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">alternatives</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Alternative</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">max_size_selection</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ballots_counter</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="n">init</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">alternatives</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">init</span><span class="p">,</span> <span class="n">AbstractTrichotomousProfile</span><span class="p">):</span>
+            <span class="n">alternatives</span> <span class="o">=</span> <span class="n">init</span><span class="o">.</span><span class="n">alternatives</span>
+        <span class="k">if</span> <span class="n">max_size_selection</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">init</span><span class="p">,</span> <span class="n">AbstractTrichotomousProfile</span><span class="p">):</span>
+            <span class="n">max_size_selection</span> <span class="o">=</span> <span class="n">init</span><span class="o">.</span><span class="n">max_size_selection</span>
+        <span class="n">AbstractTrichotomousProfile</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alternatives</span><span class="p">,</span> <span class="n">max_size_selection</span><span class="p">)</span>
+
+<div class="viewcode-block" id="TrichotomousMultiProfile.support">
+<a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.support">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">support</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alternative</span><span class="p">:</span> <span class="n">Alternative</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Numeric</span><span class="p">:</span>
+        <span class="n">score</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">ballot</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">alternative</span> <span class="ow">in</span> <span class="n">ballot</span><span class="o">.</span><span class="n">approved</span><span class="p">:</span>
+                <span class="n">score</span> <span class="o">+=</span> <span class="n">count</span>
+            <span class="k">elif</span> <span class="n">alternative</span> <span class="ow">in</span> <span class="n">ballot</span><span class="o">.</span><span class="n">disapproved</span><span class="p">:</span>
+                <span class="n">score</span> <span class="o">-=</span> <span class="n">count</span>
+        <span class="k">return</span> <span class="n">score</span></div>
+
+
+<div class="viewcode-block" id="TrichotomousMultiProfile.support_dict">
+<a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.support_dict">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">support_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Alternative</span><span class="p">,</span> <span class="n">Numeric</span><span class="p">]:</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">ballot</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">alt</span> <span class="ow">in</span> <span class="n">ballot</span><span class="o">.</span><span class="n">approved</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">alt</span> <span class="ow">in</span> <span class="n">res</span><span class="p">:</span>
+                    <span class="n">res</span><span class="p">[</span><span class="n">alt</span><span class="p">]</span> <span class="o">+=</span> <span class="n">count</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">res</span><span class="p">[</span><span class="n">alt</span><span class="p">]</span> <span class="o">=</span> <span class="n">count</span>
+            <span class="k">for</span> <span class="n">alt</span> <span class="ow">in</span> <span class="n">ballot</span><span class="o">.</span><span class="n">disapproved</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">alt</span> <span class="ow">in</span> <span class="n">res</span><span class="p">:</span>
+                    <span class="n">res</span><span class="p">[</span><span class="n">alt</span><span class="p">]</span> <span class="o">-=</span> <span class="n">count</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">res</span><span class="p">[</span><span class="n">alt</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">count</span>
+        <span class="k">return</span> <span class="n">res</span></div>
+
+
+<div class="viewcode-block" id="TrichotomousMultiProfile.approval_score">
+<a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.approval_score">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">approval_score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alternative</span><span class="p">:</span> <span class="n">Alternative</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Numeric</span><span class="p">:</span>
+        <span class="n">score</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">ballot</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">alternative</span> <span class="ow">in</span> <span class="n">ballot</span><span class="o">.</span><span class="n">approved</span><span class="p">:</span>
+                <span class="n">score</span> <span class="o">+=</span> <span class="n">count</span>
+        <span class="k">return</span> <span class="n">score</span></div>
+
+
+<div class="viewcode-block" id="TrichotomousMultiProfile.approval_score_dict">
+<a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.approval_score_dict">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">approval_score_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Alternative</span><span class="p">,</span> <span class="n">Numeric</span><span class="p">]:</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">ballot</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">alt</span> <span class="ow">in</span> <span class="n">ballot</span><span class="o">.</span><span class="n">approved</span><span class="p">:</span>
+                <span class="n">res</span><span class="p">[</span><span class="n">alt</span><span class="p">]</span> <span class="o">+=</span> <span class="n">count</span>
+        <span class="k">return</span> <span class="n">res</span></div>
+
+<div class="viewcode-block" id="TrichotomousMultiProfile.disapproval_score">
+<a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.disapproval_score">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">disapproval_score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alternative</span><span class="p">:</span> <span class="n">Alternative</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Numeric</span><span class="p">:</span>
+        <span class="n">score</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">ballot</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">alternative</span> <span class="ow">in</span> <span class="n">ballot</span><span class="o">.</span><span class="n">disapproved</span><span class="p">:</span>
+                <span class="n">score</span> <span class="o">+=</span> <span class="n">count</span>
+        <span class="k">return</span> <span class="n">score</span></div>
+
+
+<div class="viewcode-block" id="TrichotomousMultiProfile.disapproval_score_dict">
+<a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.disapproval_score_dict">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">disapproval_score_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Alternative</span><span class="p">,</span> <span class="n">Numeric</span><span class="p">]:</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">ballot</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">alt</span> <span class="ow">in</span> <span class="n">ballot</span><span class="o">.</span><span class="n">disapproved</span><span class="p">:</span>
+                <span class="n">res</span><span class="p">[</span><span class="n">alt</span><span class="p">]</span> <span class="o">+=</span> <span class="n">count</span>
+        <span class="k">return</span> <span class="n">res</span></div>
+
+
+<div class="viewcode-block" id="TrichotomousMultiProfile.approval_disapproval_score">
+<a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.approval_disapproval_score">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">approval_disapproval_score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alternative</span><span class="p">:</span> <span class="n">Alternative</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Numeric</span><span class="p">,</span> <span class="n">Numeric</span><span class="p">]:</span>
+        <span class="n">app_score</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">disapp_score</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">ballot</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">alternative</span> <span class="ow">in</span> <span class="n">ballot</span><span class="o">.</span><span class="n">approved</span><span class="p">:</span>
+                <span class="n">app_score</span> <span class="o">+=</span> <span class="n">count</span>
+            <span class="k">if</span> <span class="n">alternative</span> <span class="ow">in</span> <span class="n">ballot</span><span class="o">.</span><span class="n">disapproved</span><span class="p">:</span>
+                <span class="n">disapp_score</span> <span class="o">+=</span> <span class="n">count</span>
+        <span class="k">return</span> <span class="n">app_score</span><span class="p">,</span> <span class="n">disapp_score</span></div>
+
+
+<div class="viewcode-block" id="TrichotomousMultiProfile.approval_disapproval_score_dict">
+<a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.approval_disapproval_score_dict">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">approval_disapproval_score_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="n">Alternative</span><span class="p">,</span> <span class="n">Numeric</span><span class="p">],</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Alternative</span><span class="p">,</span> <span class="n">Numeric</span><span class="p">]]:</span>
+        <span class="n">app_scores</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+        <span class="n">disapp_scores</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">ballot</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">alt</span> <span class="ow">in</span> <span class="n">ballot</span><span class="o">.</span><span class="n">approved</span><span class="p">:</span>
+                <span class="n">app_scores</span><span class="p">[</span><span class="n">alt</span><span class="p">]</span> <span class="o">+=</span> <span class="n">count</span>
+            <span class="k">for</span> <span class="n">alt</span> <span class="ow">in</span> <span class="n">ballot</span><span class="o">.</span><span class="n">disapproved</span><span class="p">:</span>
+                <span class="n">disapp_scores</span><span class="p">[</span><span class="n">alt</span><span class="p">]</span> <span class="o">+=</span> <span class="n">count</span>
+        <span class="k">return</span> <span class="n">app_scores</span><span class="p">,</span> <span class="n">disapp_scores</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">total</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Re-implemented as it is not available in Python &lt;3.10</span>
+        <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+
+<div class="viewcode-block" id="TrichotomousMultiProfile.num_ballots">
+<a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.num_ballots">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">num_ballots</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">total</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="TrichotomousMultiProfile.add_ballot">
+<a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.add_ballot">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_ballot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ballot</span><span class="p">:</span> <span class="n">FrozenTrichotomousBallot</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Adds a ballot to the profile.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ballot</span><span class="p">,</span> <span class="n">TrichotomousBallot</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;You are trying to add a non-frozen ballot to a multiprofile. This is not possible, &quot;</span>
+                             <span class="s2">&quot;please freeze the ballot via ballot.freeze() before adding it.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">[</span><span class="n">ballot</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span></div>
+
+
+<div class="viewcode-block" id="TrichotomousMultiProfile.multiplicity">
+<a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.multiplicity">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">multiplicity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ballot</span><span class="p">:</span> <span class="n">FrozenTrichotomousBallot</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the multiplicity of a ballot in the profile.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">            ballot : TrichotomousBallot</span>
+<span class="sd">                The ballot whose multiplicity is inquired.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            int</span>
+<span class="sd">                The multiplicity of the ballot.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="p">[</span><span class="n">ballot</span><span class="p">]</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ballots_counter</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ballots_counter</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_ballots_counter</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__delitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ballots_counter</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ballots_counter</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ballots_counter</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ballots_counter</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ballots_counter</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ballots_counter</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="n">new_profile</span> <span class="o">=</span> <span class="n">TrichotomousMultiProfile</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">TrichotomousMultiProfile</span><span class="p">):</span>
+            <span class="n">new_profile</span><span class="o">.</span><span class="n">_ballots_counter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ballots_counter</span> <span class="o">+</span> <span class="n">other</span><span class="o">.</span><span class="n">_ballots_counter</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">new_profile</span><span class="o">.</span><span class="n">_ballots_counter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ballots_counter</span> <span class="o">+</span> <span class="n">other</span>
+        <span class="k">return</span> <span class="n">new_profile</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__iadd__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">TrichotomousMultiProfile</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_ballots_counter</span> <span class="o">+=</span> <span class="n">other</span><span class="o">.</span><span class="n">_ballots_counter</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_ballots_counter</span> <span class="o">+=</span> <span class="n">other</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__sub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="n">new_profile</span> <span class="o">=</span> <span class="n">TrichotomousMultiProfile</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">TrichotomousMultiProfile</span><span class="p">):</span>
+            <span class="n">new_profile</span><span class="o">.</span><span class="n">_ballots_counter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ballots_counter</span> <span class="o">-</span> <span class="n">other</span><span class="o">.</span><span class="n">_ballots_counter</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">new_profile</span><span class="o">.</span><span class="n">_ballots_counter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ballots_counter</span> <span class="o">-</span> <span class="n">other</span>
+        <span class="k">return</span> <span class="n">new_profile</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__isub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">TrichotomousMultiProfile</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_ballots_counter</span> <span class="o">-=</span> <span class="n">other</span><span class="o">.</span><span class="n">_ballots_counter</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_ballots_counter</span> <span class="o">-=</span> <span class="n">other</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__or__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="n">new_profile</span> <span class="o">=</span> <span class="n">TrichotomousMultiProfile</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">TrichotomousMultiProfile</span><span class="p">):</span>
+            <span class="n">new_profile</span><span class="o">.</span><span class="n">_ballots_counter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ballots_counter</span> <span class="o">|</span> <span class="n">other</span><span class="o">.</span><span class="n">_ballots_counter</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">new_profile</span><span class="o">.</span><span class="n">_ballots_counter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ballots_counter</span> <span class="o">|</span> <span class="n">other</span>
+        <span class="k">return</span> <span class="n">new_profile</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__ior__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">TrichotomousMultiProfile</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_ballots_counter</span> <span class="o">|=</span> <span class="n">other</span><span class="o">.</span><span class="n">_ballots_counter</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_ballots_counter</span> <span class="o">|=</span> <span class="n">other</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__and__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="n">new_profile</span> <span class="o">=</span> <span class="n">TrichotomousMultiProfile</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">TrichotomousMultiProfile</span><span class="p">):</span>
+            <span class="n">new_profile</span><span class="o">.</span><span class="n">_ballots_counter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ballots_counter</span> <span class="o">&amp;</span> <span class="n">other</span><span class="o">.</span><span class="n">_ballots_counter</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">new_profile</span><span class="o">.</span><span class="n">_ballots_counter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ballots_counter</span> <span class="o">&amp;</span> <span class="n">other</span>
+        <span class="k">return</span> <span class="n">new_profile</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__iand__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">TrichotomousMultiProfile</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_ballots_counter</span> <span class="o">&amp;=</span> <span class="n">other</span><span class="o">.</span><span class="n">_ballots_counter</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_ballots_counter</span> <span class="o">&amp;=</span> <span class="n">other</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">elements</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ballots_counter</span><span class="o">.</span><span class="n">elements</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">most_common</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ballots_counter</span><span class="o">.</span><span class="n">most_common</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">subtract</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ballots_counter</span><span class="o">.</span><span class="n">subtract</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+
+<div class="viewcode-block" id="TrichotomousMultiProfile.update">
+<a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.update">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iterable</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ballots_counter</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">iterable</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TrichotomousMultiProfile.clear">
+<a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.clear">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ballots_counter</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">TrichotomousMultiProfile</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+</pre></div>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Simon Rey
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025, Simon Rey.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

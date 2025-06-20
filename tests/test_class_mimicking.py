@@ -7,8 +7,8 @@ from copy import deepcopy
 from unittest import TestCase
 
 from trivoting.election.alternative import Alternative
-from trivoting.election.trichotomours_ballot import TrichotomousBallot
-from trivoting.election.trichotomours_profile import TrichotomousProfile
+from trivoting.election.trichotomous_ballot import TrichotomousBallot
+from trivoting.election.trichotomous_profile import TrichotomousProfile
 
 
 def check_members_equality(obj1, obj2, verbose: bool = False, omitted_attributes: list = None):

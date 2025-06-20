@@ -3,8 +3,8 @@ from __future__ import annotations
 from preflibtools.instances import CategoricalInstance, get_parsed_instance
 
 from trivoting.election.alternative import Alternative
-from trivoting.election.trichotomours_ballot import TrichotomousBallot
-from trivoting.election.trichotomours_profile import TrichotomousProfile
+from trivoting.election.trichotomous_ballot import TrichotomousBallot
+from trivoting.election.trichotomous_profile import TrichotomousProfile
 
 
 def cat_preferences_to_trichotomous_ballot(pref: tuple[tuple[int]], alt_map: dict[int, Alternative]) -> TrichotomousBallot:

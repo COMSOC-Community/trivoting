@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 from trivoting.election.alternative import Alternative
-from trivoting.election.trichotomours_ballot import TrichotomousBallot
-from trivoting.election.trichotomours_profile import TrichotomousProfile
+from trivoting.election.trichotomous_ballot import TrichotomousBallot
+from trivoting.election.trichotomous_profile import TrichotomousProfile
 
 from pabutools.election import AbstractApprovalProfile, AbstractApprovalBallot, Instance, Project
 from pabutools.election import parse_pabulib as pabutools_parse_pabulib

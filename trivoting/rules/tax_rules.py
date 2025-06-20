@@ -6,7 +6,7 @@ import pabutools.election as pb_election
 import pabutools.rules as pb_rules
 
 from trivoting.election.alternative import Alternative
-from trivoting.election.trichotomours_profile import AbstractTrichotomousProfile
+from trivoting.election.trichotomous_profile import AbstractTrichotomousProfile
 from trivoting.fractions import frac
 from trivoting.tiebreaking import TieBreakingRule
 
@@ -88,30 +88,29 @@ def tax_method_of_equal_shares(
     """
     Tax method of equal shares.
 
+    Parameters
+    ----------
+        profile : AbstractTrichotomousProfile
+            The profile.
+        max_size_selection : int
+            The maximum number of alternatives that can be selected.
+        force_selected : Iterable[Alternative], optional
+            A set of alternatives initially selected.
+        force_not_selected : Iterable[Alternative], optional
+            A set of alternatives initially not selected.
+        tie_breaking : TieBreakingRule, optional
+            The tie-breaking rule used.
+            Defaults to the lexicographic tie-breaking.
+        resoluteness : bool, optional
+            Set to `False` to obtain an irresolute outcome, where all tied budget allocations are returned.
+            Defaults to True.
 
-        Parameters
-        ----------
-            profile : AbstractTrichotomousProfile
-                The profile.
-            max_size_selection : int
-                The maximum number of alternatives that can be selected.
-            force_selected : Iterable[Alternative], optional
-                A set of alternatives initially selected.
-            force_not_selected : Iterable[Alternative], optional
-                A set of alternatives initially not selected.
-            tie_breaking : TieBreakingRule, optional
-                The tie-breaking rule used.
-                Defaults to the lexicographic tie-breaking.
-            resoluteness : bool, optional
-                Set to `False` to obtain an irresolute outcome, where all tied budget allocations are returned.
-                Defaults to True.
-
-        Returns
-        -------
-            list[Alternative] | list[list[Alternative]]
-                The selected alternatives if resolute (:code:`resoluteness == True`), or the set of selected alternatives
-                if irresolute (:code:`resoluteness == False`).
-        """
+    Returns
+    -------
+        list[Alternative] | list[list[Alternative]]
+            The selected alternatives if resolute (:code:`resoluteness == True`), or the set of selected alternatives
+            if irresolute (:code:`resoluteness == False`).
+    """
 
     def pb_mes(instance, profile, tie_breaking=None, resoluteness=True):
         return pb_rules.method_of_equal_shares(
@@ -143,30 +142,29 @@ def tax_sequential_phragmen(
     """
     Tax sequential Phragmén.
 
+    Parameters
+    ----------
+        profile : AbstractTrichotomousProfile
+            The profile.
+        max_size_selection : int
+            The maximum number of alternatives that can be selected.
+        force_selected : Iterable[Alternative], optional
+            A set of alternatives initially selected.
+        force_not_selected : Iterable[Alternative], optional
+            A set of alternatives initially not selected.
+        tie_breaking : TieBreakingRule, optional
+            The tie-breaking rule used.
+            Defaults to the lexicographic tie-breaking.
+        resoluteness : bool, optional
+            Set to `False` to obtain an irresolute outcome, where all tied budget allocations are returned.
+            Defaults to True.
 
-        Parameters
-        ----------
-            profile : AbstractTrichotomousProfile
-                The profile.
-            max_size_selection : int
-                The maximum number of alternatives that can be selected.
-            force_selected : Iterable[Alternative], optional
-                A set of alternatives initially selected.
-            force_not_selected : Iterable[Alternative], optional
-                A set of alternatives initially not selected.
-            tie_breaking : TieBreakingRule, optional
-                The tie-breaking rule used.
-                Defaults to the lexicographic tie-breaking.
-            resoluteness : bool, optional
-                Set to `False` to obtain an irresolute outcome, where all tied budget allocations are returned.
-                Defaults to True.
-
-        Returns
-        -------
-            list[Alternative] | list[list[Alternative]]
-                The selected alternatives if resolute (:code:`resoluteness == True`), or the set of selected alternatives
-                if irresolute (:code:`resoluteness == False`).
-        """
+    Returns
+    -------
+        list[Alternative] | list[list[Alternative]]
+            The selected alternatives if resolute (:code:`resoluteness == True`), or the set of selected alternatives
+            if irresolute (:code:`resoluteness == False`).
+    """
 
     return tax_pb_rule_scheme(
         profile,

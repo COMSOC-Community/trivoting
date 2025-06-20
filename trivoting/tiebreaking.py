@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Callable, Iterable
 
-from trivoting.election.trichotomours_profile import TrichotomousProfile, AbstractTrichotomousProfile
+from trivoting.election.trichotomous_profile import TrichotomousProfile, AbstractTrichotomousProfile
 from trivoting.election.alternative import Alternative
 from trivoting.fractions import Numeric
 

@@ -3,7 +3,7 @@ from __future__ import annotations
 from collections.abc import Collection
 
 from trivoting.election.alternative import Alternative
-from trivoting.election.trichotomours_profile import AbstractTrichotomousProfile
+from trivoting.election.trichotomous_profile import AbstractTrichotomousProfile
 
 from pulp import LpProblem, LpMaximize, LpBinary, LpVariable, lpSum, LpStatusOptimal, value, PULP_CBC_CMD
 

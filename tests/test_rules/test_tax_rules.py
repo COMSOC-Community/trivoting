@@ -6,8 +6,8 @@ from unittest import TestCase
 from tests.random_instances import get_random_profile
 from tests.test_rules.instances import example_1_KPPS
 from trivoting.election.alternative import Alternative
-from trivoting.election.trichotomours_ballot import TrichotomousBallot
-from trivoting.election.trichotomours_profile import TrichotomousProfile
+from trivoting.election.trichotomous_ballot import TrichotomousBallot
+from trivoting.election.trichotomous_profile import TrichotomousProfile
 from trivoting.rules.tax_rules import tax_method_of_equal_shares
 
 from trivoting.rules.tax_rules import tax_sequential_phragmen
