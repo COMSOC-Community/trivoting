@@ -76,14 +76,14 @@ class TestOnABCVoting(TestCase):
                 potential_results_repr = expected_result[rule_id]
                 try:
                     selection = rule(profile, profile.max_size_selection, resoluteness=True)
-                    selection_repr = resolute_res_representation(selection, profile)
+                    selection_repr = resolute_res_representation(selection.selected, profile)
                     self.assertIn(selection_repr, potential_results_repr)
                 except NotImplementedError:
                     pass
 
                 try:
                     selections = rule(profile, profile.max_size_selection, resoluteness=False)
-                    selections_repr = irresolute_res_representation(selections, profile)
+                    selections_repr = irresolute_res_representation([s.selected for s in selections], profile)
                     self.assertEqual(selections_repr, potential_results_repr)
                 except NotImplementedError:
                     pass

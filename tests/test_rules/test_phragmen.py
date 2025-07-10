@@ -7,6 +7,7 @@ from trivoting.election.alternative import Alternative
 from trivoting.election.trichotomous_ballot import TrichotomousBallot
 from trivoting.election.trichotomous_profile import TrichotomousProfile
 from trivoting.rules.phragmen import sequential_phragmen
+from trivoting.rules.selection import Selection
 
 
 class TestPhragmen(TestCase):
@@ -22,7 +23,7 @@ class TestPhragmen(TestCase):
     def test_phragmen_on_trivial_instances(self):
         # Empty profile
         profile = TrichotomousProfile()
-        self.assertEqual(sequential_phragmen(profile, 0), [])
+        self.assertEqual(sequential_phragmen(profile, 0), Selection())
 
         # Only disapproved
         alternatives = [Alternative(i) for i in range(10)]

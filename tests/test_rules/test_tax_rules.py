@@ -1,5 +1,4 @@
 import random
-from collections import defaultdict
 
 from unittest import TestCase
 
@@ -8,6 +7,7 @@ from tests.test_rules.instances import example_1_KPPS
 from trivoting.election.alternative import Alternative
 from trivoting.election.trichotomous_ballot import TrichotomousBallot
 from trivoting.election.trichotomous_profile import TrichotomousProfile
+from trivoting.rules.selection import Selection
 from trivoting.rules.tax_rules import tax_method_of_equal_shares
 
 from trivoting.rules.tax_rules import tax_sequential_phragmen
@@ -28,7 +28,7 @@ class TestMES(TestCase):
         for rule in [tax_method_of_equal_shares, tax_sequential_phragmen]:
             # Empty profile
             profile = TrichotomousProfile()
-            self.assertEqual(rule(profile, 0), [])
+            self.assertEqual(rule(profile, 0), Selection())
 
             # Only disapproved
             alternatives = [Alternative(i) for i in range(10)]
@@ -51,7 +51,7 @@ class TestMES(TestCase):
 
         selection = tax_method_of_equal_shares(profile, max_size)
         categorised_selection = [[], [], []]
-        for alt in selection:
+        for alt in selection.selected:
             if alt.name < 11:
                 categorised_selection[0].append(alt)
             if 10 < alt.name < 21:

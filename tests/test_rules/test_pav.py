@@ -7,6 +7,7 @@ from trivoting.election.alternative import Alternative
 from trivoting.election.trichotomous_ballot import TrichotomousBallot
 from trivoting.election.trichotomous_profile import TrichotomousProfile
 from trivoting.rules.pav import proportional_approval_voting
+from trivoting.rules.selection import Selection
 
 
 class TestPAV(TestCase):
@@ -22,7 +23,7 @@ class TestPAV(TestCase):
     def test_pav_on_trivial_instances(self):
         # Empty profile
         profile = TrichotomousProfile()
-        self.assertEqual(proportional_approval_voting(profile, 0), [])
+        self.assertEqual(proportional_approval_voting(profile, 0), Selection())
 
         # Only disapproved
         alternatives = [Alternative(i) for i in range(10)]
