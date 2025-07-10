@@ -68,7 +68,7 @@ class TestMES(TestCase):
 
         selection = tax_sequential_phragmen(profile, max_size)
         categorised_selection = [[], [], []]
-        for alt in selection:
+        for alt in selection.selected:
             if alt.name < 11:
                 categorised_selection[0].append(alt)
             if 10 < alt.name < 21:
