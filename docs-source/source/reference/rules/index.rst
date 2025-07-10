@@ -3,6 +3,13 @@ Rules module
 
 .. automodule:: trivoting.rules
 
+Selection
+---------
+
+.. autoclass:: trivoting.rules.selection.Selection
+    :members:
+    :show-inheritance:
+
 Proportional Approval Voting
 ----------------------------
 

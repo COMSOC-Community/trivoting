@@ -279,12 +279,11 @@ document.write(`
   <h1>Source code for trivoting.rules.pav</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Collection</span>
-
-<span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.election.alternative</span><span class="w"> </span><span class="kn">import</span> <span class="n">Alternative</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.election.trichotomous_profile</span><span class="w"> </span><span class="kn">import</span> <span class="n">AbstractTrichotomousProfile</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">pulp</span><span class="w"> </span><span class="kn">import</span> <span class="n">LpProblem</span><span class="p">,</span> <span class="n">LpMaximize</span><span class="p">,</span> <span class="n">LpBinary</span><span class="p">,</span> <span class="n">LpVariable</span><span class="p">,</span> <span class="n">lpSum</span><span class="p">,</span> <span class="n">LpStatusOptimal</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">PULP_CBC_CMD</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.rules.selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">Selection</span>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">PAVMipVoter</span><span class="p">:</span>
@@ -300,15 +299,40 @@ document.write(`
 <span class="k">def</span><span class="w"> </span><span class="nf">proportional_approval_voting</span><span class="p">(</span>
     <span class="n">profile</span><span class="p">:</span> <span class="n">AbstractTrichotomousProfile</span><span class="p">,</span>
     <span class="n">max_size_selection</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-    <span class="n">force_selected</span><span class="p">:</span> <span class="n">Collection</span><span class="p">[</span><span class="n">Alternative</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">force_not_selected</span><span class="p">:</span> <span class="n">Collection</span><span class="p">[</span><span class="n">Alternative</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">initial_selection</span><span class="p">:</span> <span class="n">Selection</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">resoluteness</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">max_seconds</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">600</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Alternative</span><span class="p">]</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Alternative</span><span class="p">]]:</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Selection</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="n">Selection</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Proportional Approval Voting via ILP solver.</span>
+<span class="sd">    Proportional Approval via ILP solver.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">        profile : AbstractTrichotomousProfile</span>
+<span class="sd">            The profile.</span>
+<span class="sd">        max_size_selection : int</span>
+<span class="sd">            The maximum number of alternatives that can be selected.</span>
+<span class="sd">        initial_selection: Selection, optional</span>
+<span class="sd">            An initial selection, fixed some alternatives has being either selected of not-selected. If the</span>
+<span class="sd">            selection has implicit_reject set to `True`, then no alternative is forced not-selected.</span>
+<span class="sd">        resoluteness : bool, optional</span>
+<span class="sd">            Set to `False` to obtain an irresolute outcome, where all tied budget allocations are returned.</span>
+<span class="sd">            Defaults to True.</span>
+<span class="sd">        verbose: bool, optional</span>
+<span class="sd">            Set to `True` to activate the display of the messages from the ILP solver.</span>
+<span class="sd">            Defaults to False.</span>
+<span class="sd">        max_seconds: int, optional</span>
+<span class="sd">            The maximum number of seconds allocated to the ILP solver.</span>
+<span class="sd">            Defaults to 600.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">        Selection | list[Selection]</span>
+<span class="sd">            The selection if resolute (:code:`resoluteness == True`), or a list of selections</span>
+<span class="sd">            if irresolute (:code:`resoluteness == False`).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
 
     <span class="n">mip_model</span> <span class="o">=</span> <span class="n">LpProblem</span><span class="p">(</span><span class="s2">&quot;pav&quot;</span><span class="p">,</span> <span class="n">LpMaximize</span><span class="p">)</span>
 
@@ -328,12 +352,12 @@ document.write(`
     <span class="k">for</span> <span class="n">voter</span> <span class="ow">in</span> <span class="n">pav_voters</span><span class="p">:</span>
         <span class="n">mip_model</span> <span class="o">+=</span> <span class="n">lpSum</span><span class="p">(</span><span class="n">voter</span><span class="o">.</span><span class="n">x_vars</span><span class="o">.</span><span class="n">values</span><span class="p">())</span> <span class="o">==</span> <span class="n">lpSum</span><span class="p">(</span><span class="n">y_vars</span><span class="p">[</span><span class="n">alt</span><span class="p">]</span> <span class="k">for</span> <span class="n">alt</span> <span class="ow">in</span> <span class="n">voter</span><span class="o">.</span><span class="n">ballot</span><span class="o">.</span><span class="n">approved</span><span class="p">)</span> <span class="o">+</span> <span class="n">lpSum</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">y_vars</span><span class="p">[</span><span class="n">alt</span><span class="p">]</span> <span class="k">for</span> <span class="n">alt</span> <span class="ow">in</span> <span class="n">voter</span><span class="o">.</span><span class="n">ballot</span><span class="o">.</span><span class="n">disapproved</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">force_selected</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">alt</span> <span class="ow">in</span> <span class="n">force_selected</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">initial_selection</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">alt</span> <span class="ow">in</span> <span class="n">initial_selection</span><span class="o">.</span><span class="n">selected</span><span class="p">:</span>
             <span class="n">mip_model</span> <span class="o">+=</span> <span class="n">y_vars</span><span class="p">[</span><span class="n">alt</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span>
-    <span class="k">if</span> <span class="n">force_not_selected</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">alt</span> <span class="ow">in</span> <span class="n">force_not_selected</span><span class="p">:</span>
-            <span class="n">mip_model</span> <span class="o">+=</span> <span class="n">y_vars</span><span class="p">[</span><span class="n">alt</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">initial_selection</span><span class="o">.</span><span class="n">implicit_reject</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">alt</span> <span class="ow">in</span> <span class="n">initial_selection</span><span class="o">.</span><span class="n">rejected</span><span class="p">:</span>
+                <span class="n">mip_model</span> <span class="o">+=</span> <span class="n">y_vars</span><span class="p">[</span><span class="n">alt</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span>
 
     <span class="c1"># Objective: max PAV score</span>
     <span class="n">mip_model</span> <span class="o">+=</span> <span class="n">lpSum</span><span class="p">(</span><span class="n">lpSum</span><span class="p">(</span><span class="n">v</span> <span class="o">/</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">voter</span><span class="o">.</span><span class="n">x_vars</span><span class="o">.</span><span class="n">items</span><span class="p">())</span> <span class="k">for</span> <span class="n">voter</span> <span class="ow">in</span> <span class="n">pav_voters</span><span class="p">)</span>
@@ -343,10 +367,10 @@ document.write(`
     <span class="n">all_selections</span> <span class="o">=</span> <span class="p">[]</span>
 
     <span class="k">if</span> <span class="n">status</span> <span class="o">==</span> <span class="n">LpStatusOptimal</span><span class="p">:</span>
-        <span class="n">selection</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">selection</span> <span class="o">=</span> <span class="n">Selection</span><span class="p">(</span><span class="n">implicit_reject</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">alt</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">y_vars</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">if</span> <span class="n">value</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mf">0.9</span><span class="p">:</span>
-                <span class="n">selection</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">alt</span><span class="p">)</span>
+                <span class="n">selection</span><span class="o">.</span><span class="n">add_selected</span><span class="p">(</span><span class="n">alt</span><span class="p">)</span>
         <span class="n">all_selections</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">selection</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Solver did not find an optimal solution.&quot;</span><span class="p">)</span>
@@ -361,12 +385,12 @@ document.write(`
     <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
         <span class="c1"># See http://yetanothermathprogrammingconsultant.blogspot.com/2011/10/integer-cuts.html</span>
         <span class="n">mip_model</span> <span class="o">+=</span> <span class="p">(</span>
-                             <span class="n">lpSum</span><span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="n">y_vars</span><span class="p">[</span><span class="n">a</span><span class="p">])</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">previous_selection</span><span class="p">)</span> <span class="o">+</span>
+                             <span class="n">lpSum</span><span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="n">y_vars</span><span class="p">[</span><span class="n">a</span><span class="p">])</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">previous_selection</span><span class="o">.</span><span class="n">selected</span><span class="p">)</span> <span class="o">+</span>
                              <span class="n">lpSum</span><span class="p">(</span><span class="n">y_vars</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">y_vars</span> <span class="k">if</span> <span class="n">a</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">previous_selection</span><span class="p">)</span>
                      <span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">1</span>
 
         <span class="n">mip_model</span> <span class="o">+=</span> <span class="p">(</span>
-                             <span class="n">lpSum</span><span class="p">(</span><span class="n">y_vars</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">previous_selection</span><span class="p">)</span> <span class="o">-</span>
+                             <span class="n">lpSum</span><span class="p">(</span><span class="n">y_vars</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">previous_selection</span><span class="o">.</span><span class="n">selected</span><span class="p">)</span> <span class="o">-</span>
                              <span class="n">lpSum</span><span class="p">(</span><span class="n">y_vars</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">y_vars</span> <span class="k">if</span> <span class="n">a</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">previous_selection</span><span class="p">)</span>
                      <span class="p">)</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">previous_selection</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
 
@@ -375,7 +399,7 @@ document.write(`
         <span class="k">if</span> <span class="n">status</span> <span class="o">!=</span> <span class="n">LpStatusOptimal</span><span class="p">:</span>
             <span class="k">break</span>
 
-        <span class="n">previous_selection</span> <span class="o">=</span> <span class="p">[</span><span class="n">a</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">y_vars</span> <span class="k">if</span> <span class="n">value</span><span class="p">(</span><span class="n">y_vars</span><span class="p">[</span><span class="n">a</span><span class="p">])</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">value</span><span class="p">(</span><span class="n">y_vars</span><span class="p">[</span><span class="n">a</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="mf">0.9</span><span class="p">]</span>
+        <span class="n">previous_selection</span> <span class="o">=</span> <span class="n">Selection</span><span class="p">([</span><span class="n">a</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">y_vars</span> <span class="k">if</span> <span class="n">value</span><span class="p">(</span><span class="n">y_vars</span><span class="p">[</span><span class="n">a</span><span class="p">])</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">value</span><span class="p">(</span><span class="n">y_vars</span><span class="p">[</span><span class="n">a</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="mf">0.9</span><span class="p">],</span> <span class="n">implicit_reject</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">previous_selection</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">all_selections</span><span class="p">:</span>
             <span class="n">all_selections</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">previous_selection</span><span class="p">)</span>
 

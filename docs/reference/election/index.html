@@ -339,6 +339,7 @@ document.write(`
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.alternatives"><code class="docutils literal notranslate"><span class="pre">TrichotomousProfile.alternatives</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.max_size_selection"><code class="docutils literal notranslate"><span class="pre">TrichotomousProfile.max_size_selection</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.add_ballot"><code class="docutils literal notranslate"><span class="pre">TrichotomousProfile.add_ballot()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.all_sub_profiles"><code class="docutils literal notranslate"><span class="pre">TrichotomousProfile.all_sub_profiles()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.append"><code class="docutils literal notranslate"><span class="pre">TrichotomousProfile.append()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.approval_disapproval_score"><code class="docutils literal notranslate"><span class="pre">TrichotomousProfile.approval_disapproval_score()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.approval_disapproval_score_dict"><code class="docutils literal notranslate"><span class="pre">TrichotomousProfile.approval_disapproval_score_dict()</span></code></a></li>
@@ -363,6 +364,7 @@ document.write(`
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousMultiProfile"><code class="docutils literal notranslate"><span class="pre">TrichotomousMultiProfile</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.add_ballot"><code class="docutils literal notranslate"><span class="pre">TrichotomousMultiProfile.add_ballot()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.all_sub_profiles"><code class="docutils literal notranslate"><span class="pre">TrichotomousMultiProfile.all_sub_profiles()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.approval_disapproval_score"><code class="docutils literal notranslate"><span class="pre">TrichotomousMultiProfile.approval_disapproval_score()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.approval_disapproval_score_dict"><code class="docutils literal notranslate"><span class="pre">TrichotomousMultiProfile.approval_disapproval_score_dict()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.approval_score"><code class="docutils literal notranslate"><span class="pre">TrichotomousMultiProfile.approval_score()</span></code></a></li>
@@ -501,6 +503,20 @@ Used notably when reading files from preference libraries.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>ballot</strong> (<a class="reference internal" href="#trivoting.election.trichotomous_ballot.AbstractTrichotomousBallot" title="trivoting.election.trichotomous_ballot.AbstractTrichotomousBallot"><em>AbstractTrichotomousBallot</em></a>) – The ballot to add.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="trivoting.election.trichotomous_profile.TrichotomousProfile.all_sub_profiles">
+<span class="sig-name descname"><span class="pre">all_sub_profiles</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterator</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#trivoting.election.trichotomous_profile.TrichotomousProfile" title="trivoting.election.trichotomous_profile.TrichotomousProfile"><span class="pre">TrichotomousProfile</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/trivoting/election/trichotomous_profile.html#TrichotomousProfile.all_sub_profiles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.all_sub_profiles" title="Link to this definition">#</a></dt>
+<dd><p>Returns an iterator that yields all possible sub-profiles.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>An iterator that yields all possible sub-profiles.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Iterator</em>[<a class="reference internal" href="#trivoting.election.trichotomous_profile.TrichotomousProfile" title="trivoting.election.trichotomous_profile.TrichotomousProfile"><em>TrichotomousProfile</em></a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -748,6 +764,20 @@ are stored one together with their multiplicity.</p>
 <dt class="sig sig-object py" id="trivoting.election.trichotomous_profile.TrichotomousMultiProfile.add_ballot">
 <span class="sig-name descname"><span class="pre">add_ballot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ballot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#trivoting.election.trichotomous_ballot.FrozenTrichotomousBallot" title="trivoting.election.trichotomous_ballot.FrozenTrichotomousBallot"><span class="pre">FrozenTrichotomousBallot</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/trivoting/election/trichotomous_profile.html#TrichotomousMultiProfile.add_ballot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.add_ballot" title="Link to this definition">#</a></dt>
 <dd><p>Adds a ballot to the profile.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="trivoting.election.trichotomous_profile.TrichotomousMultiProfile.all_sub_profiles">
+<span class="sig-name descname"><span class="pre">all_sub_profiles</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterator</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#trivoting.election.trichotomous_profile.TrichotomousMultiProfile" title="trivoting.election.trichotomous_profile.TrichotomousMultiProfile"><span class="pre">TrichotomousMultiProfile</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/trivoting/election/trichotomous_profile.html#TrichotomousMultiProfile.all_sub_profiles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.all_sub_profiles" title="Link to this definition">#</a></dt>
+<dd><p>Returns an iterator that yields all possible sub-profiles.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>An iterator that yields all possible sub-profiles.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Iterator</em>[<a class="reference internal" href="#trivoting.election.trichotomous_profile.TrichotomousMultiProfile" title="trivoting.election.trichotomous_profile.TrichotomousMultiProfile"><em>TrichotomousMultiProfile</em></a>]</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -1119,6 +1149,7 @@ alternatives”. The last category is mapped to the “disapproved alternatives�
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.alternatives"><code class="docutils literal notranslate"><span class="pre">TrichotomousProfile.alternatives</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.max_size_selection"><code class="docutils literal notranslate"><span class="pre">TrichotomousProfile.max_size_selection</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.add_ballot"><code class="docutils literal notranslate"><span class="pre">TrichotomousProfile.add_ballot()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.all_sub_profiles"><code class="docutils literal notranslate"><span class="pre">TrichotomousProfile.all_sub_profiles()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.append"><code class="docutils literal notranslate"><span class="pre">TrichotomousProfile.append()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.approval_disapproval_score"><code class="docutils literal notranslate"><span class="pre">TrichotomousProfile.approval_disapproval_score()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousProfile.approval_disapproval_score_dict"><code class="docutils literal notranslate"><span class="pre">TrichotomousProfile.approval_disapproval_score_dict()</span></code></a></li>
@@ -1143,6 +1174,7 @@ alternatives”. The last category is mapped to the “disapproved alternatives�
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousMultiProfile"><code class="docutils literal notranslate"><span class="pre">TrichotomousMultiProfile</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.add_ballot"><code class="docutils literal notranslate"><span class="pre">TrichotomousMultiProfile.add_ballot()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.all_sub_profiles"><code class="docutils literal notranslate"><span class="pre">TrichotomousMultiProfile.all_sub_profiles()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.approval_disapproval_score"><code class="docutils literal notranslate"><span class="pre">TrichotomousMultiProfile.approval_disapproval_score()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.approval_disapproval_score_dict"><code class="docutils literal notranslate"><span class="pre">TrichotomousMultiProfile.approval_disapproval_score_dict()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.approval_score"><code class="docutils literal notranslate"><span class="pre">TrichotomousMultiProfile.approval_score()</span></code></a></li>

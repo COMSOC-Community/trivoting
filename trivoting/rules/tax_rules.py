@@ -8,19 +8,22 @@ import pabutools.rules as pb_rules
 from trivoting.election.alternative import Alternative
 from trivoting.election.trichotomous_profile import AbstractTrichotomousProfile
 from trivoting.fractions import frac
+from trivoting.rules.selection import Selection
 from trivoting.tiebreaking import TieBreakingRule
 
 
 def tax_pb_instance(
         profile: AbstractTrichotomousProfile,
         max_size_selection: int,
-        force_selected: Collection[Alternative],
-        force_not_selected: Collection[Alternative],
+        initial_selection: Selection | None = None,
 ):
     """
     Returns a Participatory Budgeting instance and profile based on the given trichotomous profile.
     """
     app_scores, disapp_scores = profile.approval_disapproval_score_dict()
+
+    if initial_selection is None:
+        initial_selection = Selection()
 
     alt_to_project = dict()
     project_to_alt = dict()
@@ -28,7 +31,7 @@ def tax_pb_instance(
     pb_instance = pb_election.Instance(budget_limit=max_size_selection)
     for alt, app_score in app_scores.items():
         support = app_score - disapp_scores[alt]
-        if support > 0 and alt not in force_selected and alt not in force_not_selected:
+        if support > 0 and alt not in initial_selection:
             project = pb_election.Project(alt.name, cost=frac(app_score, support))
             pb_instance.add(project)
             running_alternatives.add(alt)
@@ -46,45 +49,82 @@ def tax_pb_rule_scheme(
     profile: AbstractTrichotomousProfile,
     max_size_selection: int,
     pb_rule: Callable,
-    force_selected: Collection[Alternative] | None = None,
-    force_not_selected: Collection[Alternative] | None = None,
+    initial_selection: Selection | None = None,
     tie_breaking: TieBreakingRule | None = None,
     resoluteness: bool = True,
-):
-    if force_selected is None:
-        force_selected = list()
-    else:
-        force_selected = list(force_selected)
-    if force_not_selected is None:
-        force_not_selected = list()
-    else:
-        force_not_selected = list(force_not_selected)
+    pb_rule_kwargs: dict = None,
+) -> Selection | list[Selection]:
+    """
+    Runs the tax rule scheme. Defined the appropriate Participatory Budgeting (PB) instance and apply the required PB
+    rule to that instance. Makes use of the pabutools package for the PB side.
+
+    Parameters
+    ----------
+        profile : AbstractTrichotomousProfile
+            The profile.
+        max_size_selection : int
+            The maximum number of alternatives that can be selected.
+        pb_rule : Callable
+            The PB rule to apply.
+        initial_selection: Selection, optional
+            An initial selection, fixed some alternatives has being either selected of not-selected. If the
+            selection has implicit_reject set to `True`, then no alternative is forced not-selected.
+        tie_breaking : TieBreakingRule, optional
+            The tie-breaking rule used.
+            Defaults to the lexicographic tie-breaking.
+        resoluteness : bool, optional
+            Set to `False` to obtain an irresolute outcome, where all tied budget allocations are returned.
+            Defaults to True.
+        pb_rule_kwargs: dict, optional
+            Additional keyword arguments to pass to the PB rule.
+
+    Returns
+    -------
+        Selection | list[Selection]
+            The selection if resolute (:code:`resoluteness == True`), or a list of selections
+            if irresolute (:code:`resoluteness == False`).
+    """
+    if pb_rule_kwargs is None:
+        pb_rule_kwargs = dict()
+
+    if initial_selection is None:
+        initial_selection = Selection(implicit_reject=True)
 
     if profile.num_ballots() == 0:
-        return force_selected if resoluteness else [force_selected]
+        return initial_selection if resoluteness else [initial_selection]
 
-    pb_instance, pb_profile, project_to_alt = tax_pb_instance(profile, max_size_selection, force_selected, force_not_selected)
+    pb_instance, pb_profile, project_to_alt = tax_pb_instance(profile, max_size_selection, initial_selection)
 
     budget_allocation = pb_rule(
         pb_instance,
         pb_profile,
         tie_breaking=tie_breaking,
-        resoluteness=resoluteness
+        resoluteness=resoluteness,
+        **pb_rule_kwargs
     )
 
     if resoluteness:
-        return [project_to_alt[p] for p in budget_allocation]
+        initial_selection.extend_selected(project_to_alt[p] for p in budget_allocation)
+        if not initial_selection.implicit_reject:
+            initial_selection.extend_rejected(project_to_alt[p] for p in pb_instance if p not in budget_allocation)
+        return initial_selection
     else:
-        return [[project_to_alt[p] for p in a] for a in budget_allocation]
+        all_selections = []
+        for alloc in budget_allocation:
+            selection = initial_selection.copy()
+            selection.extend_selected(project_to_alt[p] for p in alloc)
+            if not selection.implicit_reject:
+                selection.extend_rejected(project_to_alt[p] for p in pb_instance if p not in alloc)
+            all_selections.append(selection)
+        return all_selections
 
 def tax_method_of_equal_shares(
     profile: AbstractTrichotomousProfile,
     max_size_selection: int,
-    force_selected: Collection[Alternative] | None = None,
-    force_not_selected: Collection[Alternative] | None = None,
+    initial_selection: Selection | None = None,
     tie_breaking: TieBreakingRule | None = None,
     resoluteness: bool = True,
-) -> list[Alternative] | list[list[Alternative]]:
+) -> Selection | list[Selection]:
     """
     Tax method of equal shares.
 
@@ -94,10 +134,9 @@ def tax_method_of_equal_shares(
             The profile.
         max_size_selection : int
             The maximum number of alternatives that can be selected.
-        force_selected : Iterable[Alternative], optional
-            A set of alternatives initially selected.
-        force_not_selected : Iterable[Alternative], optional
-            A set of alternatives initially not selected.
+        initial_selection: Selection, optional
+            An initial selection, fixed some alternatives has being either selected of not-selected. If the
+            selection has implicit_reject set to `True`, then no alternative is forced not-selected.
         tie_breaking : TieBreakingRule, optional
             The tie-breaking rule used.
             Defaults to the lexicographic tie-breaking.
@@ -107,38 +146,27 @@ def tax_method_of_equal_shares(
 
     Returns
     -------
-        list[Alternative] | list[list[Alternative]]
-            The selected alternatives if resolute (:code:`resoluteness == True`), or the set of selected alternatives
+        Selection | list[Selection]
+            The selection if resolute (:code:`resoluteness == True`), or a list of selections
             if irresolute (:code:`resoluteness == False`).
     """
-
-    def pb_mes(instance, profile, tie_breaking=None, resoluteness=True):
-        return pb_rules.method_of_equal_shares(
-            instance,
-            profile,
-            sat_class=pb_election.Cardinality_Sat,
-            tie_breaking=tie_breaking,
-            resoluteness=resoluteness,
-        )
-
     return tax_pb_rule_scheme(
         profile,
         max_size_selection,
-        pb_mes,
-        force_selected=force_selected,
-        force_not_selected=force_not_selected,
+        pb_rules.method_of_equal_shares,
+        initial_selection=initial_selection,
         tie_breaking=tie_breaking,
         resoluteness=resoluteness,
+        pb_rule_kwargs={"sat_class": pb_election.Cardinality_Sat}
     )
 
 def tax_sequential_phragmen(
     profile: AbstractTrichotomousProfile,
     max_size_selection: int,
-    force_selected: Collection[Alternative] | None = None,
-    force_not_selected: Collection[Alternative] | None = None,
+    initial_selection: Selection | None = None,
     tie_breaking: TieBreakingRule | None = None,
     resoluteness: bool = True,
-) -> list[Alternative] | list[list[Alternative]]:
+) -> Selection | list[Selection]:
     """
     Tax sequential Phragmén.
 
@@ -148,10 +176,9 @@ def tax_sequential_phragmen(
             The profile.
         max_size_selection : int
             The maximum number of alternatives that can be selected.
-        force_selected : Iterable[Alternative], optional
-            A set of alternatives initially selected.
-        force_not_selected : Iterable[Alternative], optional
-            A set of alternatives initially not selected.
+        initial_selection: Selection, optional
+            An initial selection, fixed some alternatives has being either selected of not-selected. If the
+            selection has implicit_reject set to `True`, then no alternative is forced not-selected.
         tie_breaking : TieBreakingRule, optional
             The tie-breaking rule used.
             Defaults to the lexicographic tie-breaking.
@@ -161,8 +188,8 @@ def tax_sequential_phragmen(
 
     Returns
     -------
-        list[Alternative] | list[list[Alternative]]
-            The selected alternatives if resolute (:code:`resoluteness == True`), or the set of selected alternatives
+        Selection | list[Selection]
+            The selection if resolute (:code:`resoluteness == True`), or a list of selections
             if irresolute (:code:`resoluteness == False`).
     """
 
@@ -170,9 +197,8 @@ def tax_sequential_phragmen(
         profile,
         max_size_selection,
         pb_rules.sequential_phragmen,
-        force_selected=force_selected,
-        force_not_selected=force_not_selected,
+        initial_selection=initial_selection,
         tie_breaking=tie_breaking,
         resoluteness=resoluteness,
+        pb_rule_kwargs={"global_max_load": frac(max_size_selection, profile.num_ballots())}
     )
-

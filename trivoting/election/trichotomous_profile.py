@@ -2,12 +2,16 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from collections import Counter, defaultdict
-from collections.abc import Iterable, MutableSequence, MutableMapping
+from collections.abc import Iterable, MutableSequence, MutableMapping, Iterator
+from itertools import product
 
 from trivoting.election.alternative import Alternative
 from trivoting.election.trichotomous_ballot import TrichotomousBallot, AbstractTrichotomousBallot, \
     FrozenTrichotomousBallot
 from trivoting.fractions import Numeric
+from trivoting.rules.selection import Selection
+from trivoting.utils import generate_subsets, generate_two_list_partitions
+
 
 class AbstractTrichotomousProfile(ABC, Iterable[AbstractTrichotomousBallot]):
     """
@@ -190,6 +194,36 @@ class AbstractTrichotomousProfile(ABC, Iterable[AbstractTrichotomousBallot]):
                 The approval score and the disapproval score dictionaries.
         """
 
+    def all_feasible_selections(self, max_size_selection: int) -> Iterator[Selection]:
+        """
+        Returns an iterator that yields all feasible (partial) selections.
+
+        Parameters
+        ----------
+            max_size_selection: int
+                Maximum number of alternatives that can be selected in a selection.
+
+        Returns
+        -------
+            Iterator[Selection]
+                An iterator that yields all feasible (partial) selections.
+
+        """
+        for l1, l2 in generate_two_list_partitions(self.alternatives, first_list_max_size=max_size_selection):
+            yield Selection(selected=l1, rejected=l2, implicit_reject=False)
+
+    @abstractmethod
+    def all_sub_profiles(self) -> Iterator[AbstractTrichotomousProfile]:
+        """
+        Returns an iterator that yields all possible subprofiles of the profile.
+
+        Returns
+        -------
+            Iterator[AbstractTrichotomousProfile]
+                An iterator that yields all possible subprofiles of the profile.
+
+        """
+
 class TrichotomousProfile(AbstractTrichotomousProfile, MutableSequence[TrichotomousBallot]):
     """
     Represents a trichotomous profile, i.e., a collection of trichotomous ballots, one per voter.
@@ -325,6 +359,19 @@ class TrichotomousProfile(AbstractTrichotomousProfile, MutableSequence[Trichotom
                 The multiprofile.
         """
         return TrichotomousMultiProfile([ballot.freeze() for ballot in self], alternatives=self.alternatives, max_size_selection=self.max_size_selection)
+
+    def all_sub_profiles(self) -> Iterator[TrichotomousProfile]:
+        """
+        Returns an iterator that yields all possible sub-profiles.
+
+        Returns
+        -------
+            Iterator[TrichotomousProfile]
+                An iterator that yields all possible sub-profiles.
+
+        """
+        for subset in generate_subsets(self._ballots_list):
+            yield TrichotomousProfile(subset, alternatives=self.alternatives, max_size_selection=self.max_size_selection)
 
     def __getitem__(self, index):
         if isinstance(index, slice):
@@ -543,6 +590,23 @@ class TrichotomousMultiProfile(AbstractTrichotomousProfile, MutableMapping[Froze
                 The multiplicity of the ballot.
         """
         return self[ballot]
+
+    def all_sub_profiles(self) -> Iterator[TrichotomousMultiProfile]:
+        """
+        Returns an iterator that yields all possible sub-profiles.
+
+        Returns
+        -------
+            Iterator[TrichotomousMultiProfile]
+                An iterator that yields all possible sub-profiles.
+
+        """
+        items = list(self._ballots_counter.items())
+        for counts in product(*(range(count + 1) for _, count in items)):
+            sub_profile = TrichotomousMultiProfile({key: count for (key, _), count in zip(items, counts) if count > 0},
+                                              alternatives=self.alternatives,
+                                              max_size_selection=self.max_size_selection,)
+            yield sub_profile
 
     def __getitem__(self, key):
         return self._ballots_counter[key]

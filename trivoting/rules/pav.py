@@ -1,11 +1,10 @@
 from __future__ import annotations
 
-from collections.abc import Collection
-
-from trivoting.election.alternative import Alternative
 from trivoting.election.trichotomous_profile import AbstractTrichotomousProfile
 
 from pulp import LpProblem, LpMaximize, LpBinary, LpVariable, lpSum, LpStatusOptimal, value, PULP_CBC_CMD
+
+from trivoting.rules.selection import Selection
 
 
 class PAVMipVoter:
@@ -19,15 +18,40 @@ class PAVMipVoter:
 def proportional_approval_voting(
     profile: AbstractTrichotomousProfile,
     max_size_selection: int,
-    force_selected: Collection[Alternative] | None = None,
-    force_not_selected: Collection[Alternative] | None = None,
+    initial_selection: Selection | None = None,
     resoluteness: bool = True,
     verbose: bool = False,
     max_seconds: int = 600
-) -> list[Alternative] | list[list[Alternative]]:
+) -> Selection | list[Selection]:
     """
-    Proportional Approval Voting via ILP solver.
+    Proportional Approval via ILP solver.
+
+    Parameters
+    ----------
+        profile : AbstractTrichotomousProfile
+            The profile.
+        max_size_selection : int
+            The maximum number of alternatives that can be selected.
+        initial_selection: Selection, optional
+            An initial selection, fixed some alternatives has being either selected of not-selected. If the
+            selection has implicit_reject set to `True`, then no alternative is forced not-selected.
+        resoluteness : bool, optional
+            Set to `False` to obtain an irresolute outcome, where all tied budget allocations are returned.
+            Defaults to True.
+        verbose: bool, optional
+            Set to `True` to activate the display of the messages from the ILP solver.
+            Defaults to False.
+        max_seconds: int, optional
+            The maximum number of seconds allocated to the ILP solver.
+            Defaults to 600.
+
+    Returns
+    -------
+        Selection | list[Selection]
+            The selection if resolute (:code:`resoluteness == True`), or a list of selections
+            if irresolute (:code:`resoluteness == False`).
     """
+
 
     mip_model = LpProblem("pav", LpMaximize)
 
@@ -47,12 +71,12 @@ def proportional_approval_voting(
     for voter in pav_voters:
         mip_model += lpSum(voter.x_vars.values()) == lpSum(y_vars[alt] for alt in voter.ballot.approved) + lpSum(1 - y_vars[alt] for alt in voter.ballot.disapproved)
 
-    if force_selected is not None:
-        for alt in force_selected:
+    if initial_selection is not None:
+        for alt in initial_selection.selected:
             mip_model += y_vars[alt] == 1
-    if force_not_selected is not None:
-        for alt in force_not_selected:
-            mip_model += y_vars[alt] == 0
+        if not initial_selection.implicit_reject:
+            for alt in initial_selection.rejected:
+                mip_model += y_vars[alt] == 0
 
     # Objective: max PAV score
     mip_model += lpSum(lpSum(v / i for i, v in voter.x_vars.items()) for voter in pav_voters)
@@ -62,10 +86,10 @@ def proportional_approval_voting(
     all_selections = []
 
     if status == LpStatusOptimal:
-        selection = []
+        selection = Selection(implicit_reject=True)
         for alt, v in y_vars.items():
             if value(v) >= 0.9:
-                selection.append(alt)
+                selection.add_selected(alt)
         all_selections.append(selection)
     else:
         raise ValueError("Solver did not find an optimal solution.")
@@ -80,12 +104,12 @@ def proportional_approval_voting(
     while True:
         # See http://yetanothermathprogrammingconsultant.blogspot.com/2011/10/integer-cuts.html
         mip_model += (
-                             lpSum((1 - y_vars[a]) for a in previous_selection) +
+                             lpSum((1 - y_vars[a]) for a in previous_selection.selected) +
                              lpSum(y_vars[a] for a in y_vars if a not in previous_selection)
                      ) >= 1
 
         mip_model += (
-                             lpSum(y_vars[a] for a in previous_selection) -
+                             lpSum(y_vars[a] for a in previous_selection.selected) -
                              lpSum(y_vars[a] for a in y_vars if a not in previous_selection)
                      ) <= len(previous_selection) - 1
 
@@ -94,7 +118,7 @@ def proportional_approval_voting(
         if status != LpStatusOptimal:
             break
 
-        previous_selection = [a for a in y_vars if value(y_vars[a]) is not None and value(y_vars[a]) >= 0.9]
+        previous_selection = Selection([a for a in y_vars if value(y_vars[a]) is not None and value(y_vars[a]) >= 0.9], implicit_reject=True)
         if previous_selection not in all_selections:
             all_selections.append(previous_selection)
 

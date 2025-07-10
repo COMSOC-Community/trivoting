@@ -74,7 +74,7 @@ class TrichotomousBallot(AbstractTrichotomousBallot):
         return len(self.approved) + len(self.disapproved)
 
     def __str__(self):
-        return f"[{self.approved} // {self.disapproved}]"
+        return f"{{{self.approved}}} // {{{self.disapproved}}}"
 
     def __repr__(self):
         return self.__str__()

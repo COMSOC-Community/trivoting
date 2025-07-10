@@ -1,12 +1,12 @@
 from __future__ import annotations
 
-from collections.abc import Collection
 from copy import deepcopy
 
 from trivoting.election.alternative import Alternative
 from trivoting.election.trichotomous_ballot import AbstractTrichotomousBallot
 from trivoting.election.trichotomous_profile import AbstractTrichotomousProfile
 from trivoting.fractions import Numeric, frac
+from trivoting.rules.selection import Selection
 from trivoting.tiebreaking import TieBreakingRule, lexico_tie_breaking
 
 
@@ -48,11 +48,10 @@ def sequential_phragmen(
     profile: AbstractTrichotomousProfile,
     max_size_selection: int,
     initial_loads: list[Numeric] | None = None,
-    force_selected: Collection[Alternative] | None = None,
-    force_not_selected: Collection[Alternative] | None = None,
+    initial_selection: Selection | None = None,
     tie_breaking: TieBreakingRule | None = None,
     resoluteness: bool = True,
-) -> list[Alternative] | list[list[Alternative]]:
+) -> Selection | list[Selection]:
     """
     Sequential Phragmén.
 
@@ -64,10 +63,9 @@ def sequential_phragmen(
             The maximum number of alternatives that can be selected.
         initial_loads: list[Numeric], optional
             A list of initial load, one per ballot in `profile`. By defaults, the initial load is `0`.
-        force_selected : Iterable[Alternative], optional
-            A set of alternatives initially selected.
-        force_not_selected : Iterable[Alternative], optional
-            A set of alternatives initially not selected.
+        initial_selection: Selection, optional
+            An initial selection, fixed some alternatives has being either selected of not-selected. If the
+            selection has implicit_reject set to `True`, then no alternative is forced not-selected.
         tie_breaking : TieBreakingRule, optional
             The tie-breaking rule used.
             Defaults to the lexicographic tie-breaking.
@@ -77,15 +75,18 @@ def sequential_phragmen(
 
     Returns
     -------
-        list[Alternative] | list[list[Alternative]]
-            The selected alternatives if resolute (:code:`resoluteness == True`), or the set of selected alternatives
+        Selection | list[Selection]
+            The selection if resolute (:code:`resoluteness == True`), or a list of selections
             if irresolute (:code:`resoluteness == False`).
     """
 
-    def _sequential_phragmen_rec(alternatives, voters, selection):
+    def _sequential_phragmen_rec(alternatives: set[Alternative], voters: list[PhragmenVoter], selection: Selection):
         if len(alternatives) == 0 or len(selection) == max_size_selection:
-            selection.sort()
-            if selection not in all_selections:
+            if not resoluteness:
+                selection.sort()
+                if selection not in all_selections:
+                    all_selections.append(selection)
+            else:
                 all_selections.append(selection)
         else:
             min_new_maxload = None
@@ -112,7 +113,7 @@ def sequential_phragmen(
                     elif vetoed and selected_alternative in voter.ballot.disapproved:
                         voter.load = min_new_maxload
                 if not vetoed:
-                    selection.append(selected_alternative)
+                    selection.add_selected(selected_alternative)
                 alternatives.remove(selected_alternative)
                 _sequential_phragmen_rec(alternatives, voters, selection)
             else:
@@ -125,7 +126,7 @@ def sequential_phragmen(
                             voter.load = min_new_maxload
                     new_selection = deepcopy(selection)
                     if not vetoed:
-                        new_selection.append(selected_alternative)
+                        new_selection.add_selected(selected_alternative)
                     new_alternatives = deepcopy(alternatives)
                     new_alternatives.remove(selected_alternative)
                     _sequential_phragmen_rec(new_alternatives, new_voters, new_selection)
@@ -137,16 +138,11 @@ def sequential_phragmen(
 
     if tie_breaking is None:
         tie_breaking = lexico_tie_breaking
-    if force_selected is None:
-        force_selected = list()
-    else:
-        force_selected = list(force_selected)
-    if force_not_selected is None:
-        force_not_selected = list()
-    else:
-        force_not_selected = list(force_not_selected)
 
-    max_size_selection -= len(force_selected)
+    if initial_selection is not None:
+        max_size_selection -= len(initial_selection)
+    else:
+        initial_selection = Selection(implicit_reject=True)
 
     if initial_loads is None:
         initial_voters = [PhragmenVoter(b, 0, profile.multiplicity(b)) for b in profile]
@@ -160,7 +156,7 @@ def sequential_phragmen(
     opposants = {}
     initial_alternatives = set()
     for alt in profile.alternatives:
-        if alt not in force_not_selected:
+        if alt not in initial_selection.rejected:
             supps = [i for i, v in enumerate(initial_voters) if alt in v.ballot.approved]
             opps = [i for i, v in enumerate(initial_voters) if alt in v.ballot.disapproved]
             if supps or opps:
@@ -168,9 +164,10 @@ def sequential_phragmen(
                 opposants[alt] = opps
                 initial_alternatives.add(alt)
 
-    all_selections : list[list[Alternative]] = []
+    all_selections = []
 
-    _sequential_phragmen_rec(initial_alternatives, initial_voters, force_selected)
+    _sequential_phragmen_rec(initial_alternatives, initial_voters, initial_selection)
+
     if resoluteness:
         return all_selections[0]
     return all_selections
