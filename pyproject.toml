@@ -42,5 +42,5 @@ dev = [
 ]
 
 [project.urls]
-"Homepage" = "tbd"
-"Bug Tracker" = "tbd"
+"Homepage" = "https://github.com/COMSOC-Community/trivoting"
+"Bug Tracker" = "https://github.com/COMSOC-Community/trivoting/issues"
