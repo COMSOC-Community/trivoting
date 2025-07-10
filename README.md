@@ -2,6 +2,14 @@
 
 Python library for trichotomous voting.
 
+## Documentation
+
+The complete documentation is available [here](https://comsoc-community.github.io/trivoting/).
+It includes
+* [installation instructions](https://comsoc-community.github.io/trivoting/installation.html),
+* a [short guide](https://comsoc-community.github.io/trivoting/quickstart.html) for a quick start,
+* a [reference guide](https://comsoc-community.github.io/trivoting/reference/index.html) to get all the details.
+
 ## Development
 
 We are more than happy to receive help with the development of the package.
@@ -46,13 +54,13 @@ to add they yourself using to autodoc directives (take inspiration from the file
 
 The pipeline between GitHub and PyPI is automatised. To push a new version do the following:
 - Update the `pyproject.toml` with the new version number.
-- Update the `pabutools/__init__.py` with the new version number.
-- On GitHub, create a new release tagged with the new version number (only admins can do that), on [this page](https://github.com/COMSOC-Community/pabutools/releases/new).
+- Update the `trivoting/__init__.py` with the new version number.
+- On GitHub, create a new release tagged with the new version number (only admins can do that), on [this page](https://github.com/COMSOC-Community/trivoting/releases/new).
 - You're done, the new version of the package is automatically pushed to PyPI after the creation of a GitHub release.
 
 ### Building the Docs
 
 If the docs-source has been updated but the `docs/` folder has not, you can build the docs via
-a GitHub action here: https://github.com/COMSOC-Community/pabutools/actions/workflows/docs.yml.
+a GitHub action here: https://github.com/COMSOC-Community/trivoting/actions/workflows/docs.yml.
 Simply click "Run workflow" and the docs will be built and the built files will be pushed back to
 the server.
