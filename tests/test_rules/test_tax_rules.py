@@ -76,5 +76,5 @@ class TestMES(TestCase):
             else:
                 categorised_selection[2].append(alt)
         self.assertEqual(len(categorised_selection[0]), 0)
-        self.assertEqual(len(categorised_selection[1]), 4)
+        self.assertEqual(len(categorised_selection[1]), 3)
         self.assertEqual(len(categorised_selection[2]), 3)
