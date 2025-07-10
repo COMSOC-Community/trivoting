@@ -1,4 +1,5 @@
 import os
+from multiprocessing import Pool
 
 import yaml
 
@@ -57,33 +58,38 @@ RULE_MAPPING = {
     "pav": proportional_approval_voting,
 }
 
+def process_yaml_file(yaml_file_path: str):
+    profile = parse_abcvoting_yaml(yaml_file_path)
+
+    print(f"Testing on {os.path.basename(yaml_file_path)}: {len(profile.alternatives)} alternatives and {profile.num_ballots()} voters")
+
+    expected_result = read_abcvoting_expected_result(yaml_file_path, profile)
+
+    for rule_id, rule in RULE_MAPPING.items():
+        potential_results_repr = expected_result[rule_id]
+        try:
+            selection = rule(profile, profile.max_size_selection, resoluteness=True)
+            selection_repr = resolute_res_representation(selection.selected, profile)
+            assert selection_repr in potential_results_repr
+        except NotImplementedError:
+            pass
+
+        try:
+            selections = rule(profile, profile.max_size_selection, resoluteness=False)
+            selections_repr = irresolute_res_representation([s.selected for s in selections], profile)
+            assert selections_repr == potential_results_repr
+        except NotImplementedError:
+            pass
+
+    return True
+
 class TestOnABCVoting(TestCase):
     def test_rules_on_abcvoting(self):
         current_file_path = os.path.dirname(os.path.realpath(__file__))
         yaml_dir_path = os.path.join(current_file_path, "abcvoting_test_instances")
         all_yaml_files = os.listdir(yaml_dir_path)
-        for yaml_file_index, yaml_file in enumerate(all_yaml_files):
-            yaml_file_path = os.path.join(yaml_dir_path, yaml_file)
+        yaml_paths = [os.path.join(yaml_dir_path, f) for f in all_yaml_files]
 
-            profile = parse_abcvoting_yaml(yaml_file_path)
-
-            print(f"{yaml_file_index + 1}/{len(all_yaml_files)} Testing on {yaml_file}: {len(profile.alternatives)} alternatives and {profile.num_ballots()} voters")
-
-            expected_result = read_abcvoting_expected_result(yaml_file_path, profile)
-
-            for rule_id, rule in RULE_MAPPING.items():
-                print(f"\t{rule_id}")
-                potential_results_repr = expected_result[rule_id]
-                try:
-                    selection = rule(profile, profile.max_size_selection, resoluteness=True)
-                    selection_repr = resolute_res_representation(selection.selected, profile)
-                    self.assertIn(selection_repr, potential_results_repr)
-                except NotImplementedError:
-                    pass
-
-                try:
-                    selections = rule(profile, profile.max_size_selection, resoluteness=False)
-                    selections_repr = irresolute_res_representation([s.selected for s in selections], profile)
-                    self.assertEqual(selections_repr, potential_results_repr)
-                except NotImplementedError:
-                    pass
+        with Pool() as pool:
+            for res in pool.imap_unordered(process_yaml_file, yaml_paths):
+                self.assertTrue(res)
