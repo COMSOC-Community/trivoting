@@ -200,5 +200,5 @@ def tax_sequential_phragmen(
         initial_selection=initial_selection,
         tie_breaking=tie_breaking,
         resoluteness=resoluteness,
-        pb_rule_kwargs={"global_max_load": frac(max_size_selection, profile.num_ballots())}
+        pb_rule_kwargs={"global_max_load": frac(max_size_selection, profile.num_ballots()) if profile.num_ballots() else None}
     )
