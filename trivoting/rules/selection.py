@@ -1,3 +1,4 @@
+import warnings
 from collections.abc import Iterable
 
 from trivoting.election.alternative import Alternative
@@ -16,6 +17,9 @@ class Selection:
         self.implicit_reject = implicit_reject
 
     def is_selected(self, a: Alternative):
+        return a in self.selected
+
+    def is_rejected(self, a: Alternative):
         if self.implicit_reject:
             return a not in self.selected
         return a in self.rejected
@@ -27,9 +31,15 @@ class Selection:
         self.selected.extend(alts)
 
     def add_rejected(self, alt: Alternative):
+        if self.implicit_reject:
+            warnings.warn("You are adding rejected alternatives to a selection that has implicit_reject=True. The "
+                          "selection may not behave as you think it does.")
         self.rejected.append(alt)
 
     def extend_rejected(self, alts: Iterable[Alternative]):
+        if self.implicit_reject:
+            warnings.warn("You are adding rejected alternatives to a selection that has implicit_reject=True. The "
+                          "selection may not behave as you think it does.")
         self.rejected.extend(alts)
 
     def sort(self):
@@ -49,7 +59,10 @@ class Selection:
         return len(self.selected) + len(self.rejected)
 
     def __str__(self):
-        return f"{{{self.selected}}} // {{{self.rejected}}}"
+        if self.implicit_reject:
+            return f"{{{self.selected}}} // {{implicit}}"
+        else:
+            return f"{{{self.selected}}} // {{{self.rejected}}}"
 
     def __repr__(self):
         return self.__str__()

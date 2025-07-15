@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from collections import Counter, defaultdict
-from collections.abc import Iterable, MutableSequence, MutableMapping, Iterator
+from collections.abc import Iterable, MutableSequence, MutableMapping, Iterator, Collection
 from itertools import product
 
 from trivoting.election.alternative import Alternative
@@ -26,8 +26,27 @@ class AbstractTrichotomousProfile(ABC, Iterable[AbstractTrichotomousBallot]):
             self.alternatives = set(alternatives)
         self.max_size_selection = max_size_selection
 
+    def get_alternative_by_name(self, alt_name) -> Alternative | None:
+        """
+        Retrieves an alternative by its name.
+
+        Parameters
+        ----------
+            alt_name
+                The name of the alternative.
+
+        Returns
+        -------
+            Alternative | None
+                The alternative with the given name. None if there is no such alternative.
+        """
+        for alt in self.alternatives:
+            if alt.name == alt_name:
+                return alt
+
+    @property
     @abstractmethod
-    def _ballot_container(self) -> Iterable[AbstractTrichotomousBallot]:
+    def _ballot_container(self) -> Collection[AbstractTrichotomousBallot]:
         """
         Returns the inner object used to collect ballots.
         """
@@ -250,6 +269,8 @@ class AbstractTrichotomousProfile(ABC, Iterable[AbstractTrichotomousBallot]):
             set[Alternative]
                 The set of alternatives commonly disapproved by all ballots.
         """
+        if len(self._ballot_container) == 0:
+            return set()
         return set.intersection(*(set(ballot.disapproved) for ballot in self._ballot_container))
 
 class TrichotomousProfile(AbstractTrichotomousProfile, MutableSequence[TrichotomousBallot]):

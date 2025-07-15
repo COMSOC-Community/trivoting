@@ -76,7 +76,7 @@ def is_base_ejr_brute_force(
         group_satisfied = False
         for ballot in group:
             satisfaction = sum(1 for a in ballot.approved if selection.is_selected(a))
-            satisfaction += sum(1 for a in ballot.disapproved if not selection.is_selected(a))
+            satisfaction += sum(1 for a in ballot.disapproved if selection.is_rejected(a))
             if satisfaction >= l:
                 group_satisfied = True
                 break
@@ -122,7 +122,7 @@ def is_base_ejr(
         exists_i = False
         for ballot in group:
             satisfaction = sum(1 for a in ballot.approved if selection.is_selected(a))
-            satisfaction += sum(1 for a in ballot.disapproved if not selection.is_selected(a))
+            satisfaction += sum(1 for a in ballot.disapproved if selection.is_rejected(a))
             if satisfaction >= group_claim(group):
                 exists_i = True
         if not exists_i:
@@ -144,7 +144,7 @@ def is_base_pjr(
         coincident_alternatives = set()
         for ballot in group:
             coincident_alternatives.update(a for a in ballot.approved if selection.is_selected(a))
-            coincident_alternatives.update(a for a in ballot.disapproved if not selection.is_selected(a))
+            coincident_alternatives.update(a for a in ballot.disapproved if selection.is_rejected(a))
         if len(coincident_alternatives) < l:
             return False
     return True
@@ -176,7 +176,7 @@ def is_positively_cohesive_for_l(
     for alt_subset in commonly_approved_alts_subsets:
         suitable_subset = True
         for alt in alt_subset:
-            num_disapprovers = group.disapproval_score(alt)
+            num_disapprovers = profile.disapproval_score(alt)
             if group.num_ballots() - num_disapprovers < l * frac(profile.num_ballots(), max_size_selection):
                 suitable_subset = False
                 break
@@ -231,12 +231,11 @@ def is_group_veto(
     selection: Selection
 ) -> bool:
     """
-    Tests whether the given selection satisfies Extended Justified Positive Representation (EJPR) for the given
-    profile.
+    Tests whether the given selection satisfies group veto for the given profile.
     """
-
     for group in profile.all_sub_profiles():
-        for alt_set in generate_subsets(profile.alternatives, min_size=1):
+        commonly_disapproved_alts = group.commonly_disapproved_alternatives()
+        for alt_set in generate_subsets(commonly_disapproved_alts, min_size=1):
             for l in range(1, len(profile.alternatives) + 1):
                 if is_negatively_cohesive_for_l_t(profile, max_size_selection, l, alt_set, group):
                     if sum(1 for a in alt_set if selection.is_selected(a)) > l:
