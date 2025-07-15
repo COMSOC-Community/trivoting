@@ -2,7 +2,7 @@ from collections.abc import Iterable, Iterator
 from itertools import combinations
 
 
-def generate_subsets(it: Iterable, *, min_size: int = None, max_size: int = None) -> Iterator:
+def generate_subsets(it: Iterable, *, min_size: int = None, max_size: int = None) -> Iterator[Iterable]:
     elements = tuple(it)
     if min_size is None:
         min_size = 0

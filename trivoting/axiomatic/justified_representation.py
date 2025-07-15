@@ -1,7 +1,6 @@
-from collections.abc import Iterable, Iterator
+from collections.abc import Iterable, Iterator, Callable
 
 from trivoting.election.alternative import Alternative
-from trivoting.election.trichotomous_ballot import AbstractTrichotomousBallot
 from trivoting.election.trichotomous_profile import AbstractTrichotomousProfile
 from trivoting.fractions import frac
 from trivoting.rules.selection import Selection
@@ -24,7 +23,7 @@ def is_cohesive_for_l(
     if group.num_ballots() == 0:
         return False
 
-    commonly_approved_alts = set.intersection(*(set(ballot.approved) for ballot in group))
+    commonly_approved_alts = group.commonly_approved_alternatives()
     # Does not matter if we can find subsets with more than l
     commonly_approved_alts_subsets = list(generate_subsets(commonly_approved_alts, min_size=l, max_size=l))
 
@@ -32,7 +31,7 @@ def is_cohesive_for_l(
     if len(commonly_approved_alts_subsets) == 0:
         return l == 0
 
-    group_size = sum(group.multiplicity(b) for b in group)
+    group_size = group.num_ballots()
     relative_group_size = frac(group_size, profile.num_ballots())
     for selection in profile.all_feasible_selections(max_size_selection):
         if relative_group_size <= frac(l, selection.total_len() + l):
@@ -47,20 +46,27 @@ def is_cohesive_for_l(
             return False
     return True
 
-
-def all_cohesive_groups(profile: AbstractTrichotomousProfile, max_size_selection: int, min_l = 1, max_l = None) -> Iterator[tuple[AbstractTrichotomousProfile, int]]:
+def all_cohesive_groups(
+        profile: AbstractTrichotomousProfile,
+        max_size_selection: int,
+        min_l: int = 1,
+        max_l: int = None,
+        test_cohesive_func: Callable = is_cohesive_for_l
+) -> Iterator[tuple[AbstractTrichotomousProfile, int]]:
     if max_l is None:
         max_l = len(profile.alternatives)
     for group in profile.all_sub_profiles():
         for l in range(min_l, max_l + 1):
-            if is_cohesive_for_l(profile, max_size_selection, l, group):
+            if test_cohesive_func(profile, max_size_selection, l, group):
                 yield group, l
+            else:
+                break
 
-def is_base_ejr(
+def is_base_ejr_brute_force(
     profile: AbstractTrichotomousProfile,
     max_size_selection: int,
     selection: Selection
-):
+) -> bool:
     """
     Tests whether the given selection satisfies Base Extended Justified Representation (Base EJR) for the given
     profile.
@@ -78,11 +84,57 @@ def is_base_ejr(
             return False
     return True
 
+def is_base_ejr(
+    profile: AbstractTrichotomousProfile,
+    max_size_selection: int,
+    selection: Selection
+) -> bool:
+    """
+    Tests whether the given selection satisfies Base Extended Justified Representation (Base EJR) for the given
+    profile. This function makes use of the closed formula proposed in Lemma 1.
+    """
+    n = profile.num_ballots()
+    m = len(profile.alternatives)
+    def group_claim(sub_profile):
+        group_size = sub_profile.num_ballots()
+        relative_size = frac(n, n - group_size)
+        inverse_relative_size = frac(n - group_size, n)
+        num_commonly_approved_alts = len(sub_profile.commonly_approved_alternatives())
+        num_commonly_disapproved_alts = len(sub_profile.commonly_disapproved_alternatives())
+
+        if relative_size * max_size_selection <= num_commonly_disapproved_alts:
+            return num_commonly_disapproved_alts - max_size_selection
+        if (inverse_relative_size * max_size_selection <= num_commonly_disapproved_alts <= relative_size * max_size_selection) and \
+            (frac(2*n - group_size, n) * num_commonly_approved_alts + inverse_relative_size * num_commonly_disapproved_alts >= max_size_selection):
+            return frac(group_size, 2*n - group_size) * (num_commonly_disapproved_alts + max_size_selection)
+        if (num_commonly_disapproved_alts + num_commonly_approved_alts >= max_size_selection) and \
+                (num_commonly_disapproved_alts <= inverse_relative_size * max_size_selection) and \
+                    (num_commonly_approved_alts <= m - inverse_relative_size * max_size_selection):
+            return frac(group_size, n) * max_size_selection
+        if (num_commonly_disapproved_alts + num_commonly_approved_alts >= max_size_selection) and \
+                (num_commonly_disapproved_alts <= inverse_relative_size * max_size_selection) and \
+                    (num_commonly_approved_alts >= m - inverse_relative_size * max_size_selection) and \
+                        (num_commonly_approved_alts + max_size_selection - m <= frac(group_size, n) * (num_commonly_approved_alts + num_commonly_disapproved_alts)):
+            return num_commonly_approved_alts + max_size_selection - m
+        return frac(group_size, n) * (num_commonly_approved_alts + num_commonly_disapproved_alts)
+
+    for group in profile.all_sub_profiles():
+        exists_i = False
+        for ballot in group:
+            satisfaction = sum(1 for a in ballot.approved if selection.is_selected(a))
+            satisfaction += sum(1 for a in ballot.disapproved if not selection.is_selected(a))
+            if satisfaction >= group_claim(group):
+                exists_i = True
+        if not exists_i:
+            return False
+    return True
+
+
 def is_base_pjr(
     profile: AbstractTrichotomousProfile,
     max_size_selection: int,
     selection: Selection
-):
+) -> bool:
     """
     Tests whether the given selection satisfies Base Proportional Justified Representation (Base PJR) for the given
     profile.
@@ -92,7 +144,101 @@ def is_base_pjr(
         coincident_alternatives = set()
         for ballot in group:
             coincident_alternatives.update(a for a in ballot.approved if selection.is_selected(a))
-            coincident_alternatives.update(a for a in ballot.disapproved if not selection.is_selected())
+            coincident_alternatives.update(a for a in ballot.disapproved if not selection.is_selected(a))
         if len(coincident_alternatives) < l:
             return False
+    return True
+
+def is_positively_cohesive_for_l(
+    profile: AbstractTrichotomousProfile,
+    max_size_selection: int,
+    l: int,
+    group: AbstractTrichotomousProfile
+) -> bool:
+    """
+    Tests whether the given set of voters is positively cohesive.
+    """
+    if l > max_size_selection:
+        return False
+    if l == 0:
+        return True
+    if group.num_ballots() == 0:
+        return False
+
+    commonly_approved_alts = group.commonly_approved_alternatives()
+    # Does not matter if we can find subsets with more than l
+    commonly_approved_alts_subsets = list(generate_subsets(commonly_approved_alts, min_size=l, max_size=l))
+
+    # Shortcut if there are no commonly approved alternatives of the suitable size
+    if len(commonly_approved_alts_subsets) == 0:
+        return l == 0
+
+    for alt_subset in commonly_approved_alts_subsets:
+        suitable_subset = True
+        for alt in alt_subset:
+            num_disapprovers = group.disapproval_score(alt)
+            if group.num_ballots() - num_disapprovers < l * frac(profile.num_ballots(), max_size_selection):
+                suitable_subset = False
+                break
+        if suitable_subset:
+            return True
+    return False
+
+def is_positive_ejr(
+    profile: AbstractTrichotomousProfile,
+    max_size_selection: int,
+    selection: Selection
+) -> bool:
+    """
+    Tests whether the given selection satisfies Extended Justified Positive Representation (EJPR) for the given
+    profile.
+    """
+
+    for group, l in all_cohesive_groups(profile, max_size_selection, test_cohesive_func=is_positively_cohesive_for_l):
+        group_satisfied = False
+        for ballot in group:
+            if sum(1 for a in ballot.approved if selection.is_selected(a)) >= l:
+                group_satisfied = True
+                break
+        if not group_satisfied:
+            return False
+    return True
+
+def is_negatively_cohesive_for_l_t(
+    profile: AbstractTrichotomousProfile,
+    max_size_selection: int,
+    l: int,
+    alt_set: Iterable[Alternative],
+    group: AbstractTrichotomousProfile
+) -> bool:
+    """
+    Tests whether the given set of voters is l-T negatively cohesive.
+    """
+
+    if not group.commonly_disapproved_alternatives().issubset(alt_set):
+        return False
+
+    num_disapprovers = 0
+    for ballot in profile:
+        if len(set(ballot.disapproved).intersection(alt_set)) > 0:
+            num_disapprovers += profile.multiplicity(ballot)
+
+    return group.num_ballots() >= num_disapprovers - l * frac(profile.num_ballots(), max_size_selection)
+
+def is_group_veto(
+    profile: AbstractTrichotomousProfile,
+    max_size_selection: int,
+    selection: Selection
+) -> bool:
+    """
+    Tests whether the given selection satisfies Extended Justified Positive Representation (EJPR) for the given
+    profile.
+    """
+
+    for group in profile.all_sub_profiles():
+        for alt_set in generate_subsets(profile.alternatives, min_size=1):
+            for l in range(1, len(profile.alternatives) + 1):
+                if is_negatively_cohesive_for_l_t(profile, max_size_selection, l, alt_set, group):
+                    if sum(1 for a in alt_set if selection.is_selected(a)) > l:
+                        return False
     return True

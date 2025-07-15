@@ -25,6 +25,7 @@ class AbstractTrichotomousProfile(ABC, Iterable[AbstractTrichotomousBallot]):
         else:
             self.alternatives = set(alternatives)
         self.max_size_selection = max_size_selection
+        self._ballot_container = []
 
     @abstractmethod
     def multiplicity(self, ballot: AbstractTrichotomousBallot) -> int:
@@ -224,6 +225,28 @@ class AbstractTrichotomousProfile(ABC, Iterable[AbstractTrichotomousBallot]):
 
         """
 
+    def commonly_approved_alternatives(self) -> set[Alternative]:
+        """
+        Returns the pairwise intersection of the approved alternatives of all ballots in the profile.
+
+        Returns
+        -------
+            set[Alternative]
+                The set of alternatives commonly approved by all ballots.
+        """
+        return set.intersection(*(set(ballot.approved) for ballot in self._ballot_container))
+
+    def commonly_disapproved_alternatives(self) -> set[Alternative]:
+        """
+        Returns the pairwise intersection of the disapproved alternatives of all ballots in the profile.
+
+        Returns
+        -------
+            set[Alternative]
+                The set of alternatives commonly disapproved by all ballots.
+        """
+        return set.intersection(*(set(ballot.disapproved) for ballot in self._ballot_container))
+
 class TrichotomousProfile(AbstractTrichotomousProfile, MutableSequence[TrichotomousBallot]):
     """
     Represents a trichotomous profile, i.e., a collection of trichotomous ballots, one per voter.
@@ -260,6 +283,7 @@ class TrichotomousProfile(AbstractTrichotomousProfile, MutableSequence[Trichotom
         if max_size_selection is None and isinstance(init, AbstractTrichotomousProfile):
             max_size_selection = init.max_size_selection
         AbstractTrichotomousProfile.__init__(self, alternatives, max_size_selection)
+        self._ballot_container = self._ballots_list
 
     def support(self, alternative: Alternative) -> int:
         score = 0
@@ -487,6 +511,7 @@ class TrichotomousMultiProfile(AbstractTrichotomousProfile, MutableMapping[Froze
         if max_size_selection is None and isinstance(init, AbstractTrichotomousProfile):
             max_size_selection = init.max_size_selection
         AbstractTrichotomousProfile.__init__(self, alternatives, max_size_selection)
+        self._ballot_container = self._ballots_counter
 
     def support(self, alternative: Alternative) -> int:
         score = 0

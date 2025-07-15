@@ -1,12 +1,14 @@
+import random
 from unittest import TestCase
 
 from tests.random_instances import get_random_profile
 from trivoting.axiomatic.justified_representation import is_cohesive_for_l, all_cohesive_groups, is_base_ejr, \
-    is_base_pjr
+    is_base_pjr, is_base_ejr_brute_force
 from trivoting.election.alternative import Alternative
 from trivoting.election.trichotomous_ballot import TrichotomousBallot
 from trivoting.election.trichotomous_profile import TrichotomousProfile
 from trivoting.rules.phragmen import sequential_phragmen
+from trivoting.rules.selection import Selection
 
 
 class TestJustifiedRepresentation(TestCase):
@@ -40,7 +42,15 @@ class TestJustifiedRepresentation(TestCase):
         )
 
         selection = sequential_phragmen(profile, 3)
+        is_base_ejr_brute_force(profile, 3, selection)
         is_base_ejr(profile, 3, selection)
+
+        max_size_selection = 3
+        for _ in range(30):
+            profile = get_random_profile(4, 10)
+            selection = Selection(random.choices(profile.alternatives, k=3))
+            self.assertEqual(is_base_ejr_brute_force(profile, max_size_selection, selection),
+                             is_base_ejr(profile, max_size_selection, selection))
 
     def test_base_pjr(self):
         alternatives = [Alternative(k) for k in range(4)]
