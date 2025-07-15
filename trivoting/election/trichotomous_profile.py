@@ -25,7 +25,12 @@ class AbstractTrichotomousProfile(ABC, Iterable[AbstractTrichotomousBallot]):
         else:
             self.alternatives = set(alternatives)
         self.max_size_selection = max_size_selection
-        self._ballot_container = []
+
+    @abstractmethod
+    def _ballot_container(self) -> Iterable[AbstractTrichotomousBallot]:
+        """
+        Returns the inner object used to collect ballots.
+        """
 
     @abstractmethod
     def multiplicity(self, ballot: AbstractTrichotomousBallot) -> int:
@@ -283,7 +288,10 @@ class TrichotomousProfile(AbstractTrichotomousProfile, MutableSequence[Trichotom
         if max_size_selection is None and isinstance(init, AbstractTrichotomousProfile):
             max_size_selection = init.max_size_selection
         AbstractTrichotomousProfile.__init__(self, alternatives, max_size_selection)
-        self._ballot_container = self._ballots_list
+
+    @property
+    def _ballot_container(self) -> Iterable[AbstractTrichotomousBallot]:
+        return self._ballots_list
 
     def support(self, alternative: Alternative) -> int:
         score = 0
@@ -511,7 +519,10 @@ class TrichotomousMultiProfile(AbstractTrichotomousProfile, MutableMapping[Froze
         if max_size_selection is None and isinstance(init, AbstractTrichotomousProfile):
             max_size_selection = init.max_size_selection
         AbstractTrichotomousProfile.__init__(self, alternatives, max_size_selection)
-        self._ballot_container = self._ballots_counter
+
+    @property
+    def _ballot_container(self) -> Iterable[AbstractTrichotomousBallot]:
+        return self._ballots_counter
 
     def support(self, alternative: Alternative) -> int:
         score = 0

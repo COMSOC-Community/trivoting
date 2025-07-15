@@ -249,10 +249,10 @@ class TestClassMimicking(TestCase):
 
     def test_profile_members(self):
         profile = TrichotomousProfile(self.BALLOTS, alternatives=self.ALTERNATIVES)
-        check_list_members(profile, self.BALLOTS, self.EXTRA_BALLOTS, omitted_attributes=["_ballots_list"])
+        check_list_members(profile, self.BALLOTS, self.EXTRA_BALLOTS, omitted_attributes=["_ballots_list", "_ballot_container"])
 
     def test_multiprofile_members(self):
         profile = TrichotomousProfile(self.BALLOTS, alternatives=self.ALTERNATIVES)
         multiprofile = profile.as_multiprofile()
-        check_dict_members(multiprofile, [b.freeze() for b in self.BALLOTS], [b.freeze() for b in self.EXTRA_BALLOTS], omitted_attributes=["_ballots_counter"])
+        check_dict_members(multiprofile, [b.freeze() for b in self.BALLOTS], [b.freeze() for b in self.EXTRA_BALLOTS], omitted_attributes=["_ballots_counter", "_ballot_container"])
 

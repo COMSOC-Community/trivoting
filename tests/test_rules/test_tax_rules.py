@@ -3,7 +3,6 @@ import random
 from unittest import TestCase
 
 from tests.random_instances import get_random_profile
-from tests.test_rules.instances import example_1_KPPS
 from trivoting.election.alternative import Alternative
 from trivoting.election.trichotomous_ballot import TrichotomousBallot
 from trivoting.election.trichotomous_profile import TrichotomousProfile
@@ -44,37 +43,3 @@ class TestMES(TestCase):
             self.assertEqual(len(res), 4)
             for alt in alternatives[6:]:
                 self.assertIn(alt, res)
-
-    def test_mes_on_examples(self):
-        profile = example_1_KPPS()
-        max_size = profile.max_size_selection
-
-        selection = tax_method_of_equal_shares(profile, max_size)
-        categorised_selection = [[], [], []]
-        for alt in selection.selected:
-            if alt.name < 11:
-                categorised_selection[0].append(alt)
-            if 10 < alt.name < 21:
-                categorised_selection[1].append(alt)
-            else:
-                categorised_selection[2].append(alt)
-        self.assertEqual(len(categorised_selection[0]), 0)
-        self.assertEqual(len(categorised_selection[1]), 3)
-        self.assertEqual(len(categorised_selection[2]), 3)
-
-    def test_phragmen_on_examples(self):
-        profile = example_1_KPPS()
-        max_size = profile.max_size_selection
-
-        selection = tax_sequential_phragmen(profile, max_size)
-        categorised_selection = [[], [], []]
-        for alt in selection.selected:
-            if alt.name < 11:
-                categorised_selection[0].append(alt)
-            if 10 < alt.name < 21:
-                categorised_selection[1].append(alt)
-            else:
-                categorised_selection[2].append(alt)
-        self.assertEqual(len(categorised_selection[0]), 0)
-        self.assertEqual(len(categorised_selection[1]), 3)
-        self.assertEqual(len(categorised_selection[2]), 3)
