@@ -151,9 +151,11 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../index.html">Trivoting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Complete Guide</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../reference/index.html">Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../reference/election/index.html">Election module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../reference/rules/index.html">Rules module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../reference/axiomatic/index.html">Axiomatic module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../reference/tiebreaking.html">Tie-Breaking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../reference/fractions.html">Fractions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../reference/utils.html">Utils</a></li>
@@ -285,31 +287,31 @@ document.write(`
 <span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.election.trichotomous_ballot</span><span class="w"> </span><span class="kn">import</span> <span class="n">AbstractTrichotomousBallot</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.election.trichotomous_profile</span><span class="w"> </span><span class="kn">import</span> <span class="n">AbstractTrichotomousProfile</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.fractions</span><span class="w"> </span><span class="kn">import</span> <span class="n">Numeric</span><span class="p">,</span> <span class="n">frac</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.rules.selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">Selection</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.election.selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">Selection</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.tiebreaking</span><span class="w"> </span><span class="kn">import</span> <span class="n">TieBreakingRule</span><span class="p">,</span> <span class="n">lexico_tie_breaking</span>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">PhragmenVoter</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Class used to summarise a voter during a run of the Phragmén&#39;s sequential rule.</span>
+<span class="sd">    Represents a voter during a run of the sequential Phragmén rule.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">        ballot: AbstractTrichotomousBallot</span>
-<span class="sd">            The ballot of the voter.</span>
-<span class="sd">        load: Numeric</span>
-<span class="sd">            The initial load of the voter.</span>
-<span class="sd">        multiplicity: int</span>
-<span class="sd">            The multiplicity of the ballot.</span>
+<span class="sd">    ballot : AbstractTrichotomousBallot</span>
+<span class="sd">        The ballot of the voter.</span>
+<span class="sd">    load : Numeric</span>
+<span class="sd">        The initial load assigned to the voter.</span>
+<span class="sd">    multiplicity : int</span>
+<span class="sd">        The number of identical ballots represented by this voter.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
-<span class="sd">        ballot: AbstractTrichotomousBallot</span>
-<span class="sd">            The ballot of the voter.</span>
-<span class="sd">        load: Numeric</span>
-<span class="sd">            The initial load of the voter.</span>
-<span class="sd">        multiplicity: int</span>
-<span class="sd">            The multiplicity of the ballot.</span>
+<span class="sd">    ballot : AbstractTrichotomousBallot</span>
+<span class="sd">        The ballot of the voter.</span>
+<span class="sd">    load : Numeric</span>
+<span class="sd">        The current load of the voter.</span>
+<span class="sd">    multiplicity : int</span>
+<span class="sd">        The multiplicity of the ballot.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
@@ -334,31 +336,35 @@ document.write(`
     <span class="n">resoluteness</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Selection</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="n">Selection</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Sequential Phragmén.</span>
+<span class="sd">    Compute the selections of the sequential Phragmén&#39;s rule.</span>
+
+<span class="sd">    The definition of the sequential Phragmén&#39;s rule for the trichotomous context is taken from Section 3.2 of</span>
+<span class="sd">    ``Proportionality in Thumbs Up and Down Voting`` (Kraiczy, Papasotiropoulos, Pierczyński and Skowron, 2025).</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">        profile : AbstractTrichotomousProfile</span>
-<span class="sd">            The profile.</span>
-<span class="sd">        max_size_selection : int</span>
-<span class="sd">            The maximum number of alternatives that can be selected.</span>
-<span class="sd">        initial_loads: list[Numeric], optional</span>
-<span class="sd">            A list of initial load, one per ballot in `profile`. By defaults, the initial load is `0`.</span>
-<span class="sd">        initial_selection: Selection, optional</span>
-<span class="sd">            An initial selection, fixed some alternatives has being either selected of not-selected. If the</span>
-<span class="sd">            selection has implicit_reject set to `True`, then no alternative is forced not-selected.</span>
-<span class="sd">        tie_breaking : TieBreakingRule, optional</span>
-<span class="sd">            The tie-breaking rule used.</span>
-<span class="sd">            Defaults to the lexicographic tie-breaking.</span>
-<span class="sd">        resoluteness : bool, optional</span>
-<span class="sd">            Set to `False` to obtain an irresolute outcome, where all tied budget allocations are returned.</span>
-<span class="sd">            Defaults to True.</span>
+<span class="sd">    profile : AbstractTrichotomousProfile</span>
+<span class="sd">        The trichotomous profile.</span>
+<span class="sd">    max_size_selection : int</span>
+<span class="sd">        Maximum number of alternatives to select.</span>
+<span class="sd">    initial_loads : list of Numeric, optional</span>
+<span class="sd">        Initial loads for each ballot in the profile. Defaults to zero for all ballots.</span>
+<span class="sd">    initial_selection : Selection, optional</span>
+<span class="sd">        An initial selection that fixes some alternatives as selected or rejected.</span>
+<span class="sd">        If `implicit_reject` is True, no alternatives are fixed to be rejected.</span>
+<span class="sd">    tie_breaking : TieBreakingRule, optional</span>
+<span class="sd">        Tie-breaking rule used when multiple alternatives tie.</span>
+<span class="sd">        Defaults to lexicographic tie-breaking.</span>
+<span class="sd">    resoluteness : bool, optional</span>
+<span class="sd">        If True, returns a single selection (resolute).</span>
+<span class="sd">        If False, returns all tied optimal selections (irresolute).</span>
+<span class="sd">        Defaults to True.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">        Selection | list[Selection]</span>
-<span class="sd">            The selection if resolute (:code:`resoluteness == True`), or a list of selections</span>
-<span class="sd">            if irresolute (:code:`resoluteness == False`).</span>
+<span class="sd">    Selection | list[Selection]</span>
+<span class="sd">        The selection if resolute (:code:`resoluteness == True`), or a list of selections</span>
+<span class="sd">        if irresolute (:code:`resoluteness == False`).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_sequential_phragmen_rec</span><span class="p">(</span><span class="n">alternatives</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="n">Alternative</span><span class="p">],</span> <span class="n">voters</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">PhragmenVoter</span><span class="p">],</span> <span class="n">selection</span><span class="p">:</span> <span class="n">Selection</span><span class="p">):</span>

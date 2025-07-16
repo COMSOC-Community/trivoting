@@ -151,9 +151,11 @@
 <li class="toctree-l1"><a class="reference internal" href="index.html">Trivoting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Complete Guide</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="reference/index.html">Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="reference/election/index.html">Election module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reference/rules/index.html">Rules module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/axiomatic/index.html">Axiomatic module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reference/tiebreaking.html">Tie-Breaking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reference/fractions.html">Fractions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reference/utils.html">Utils</a></li>
@@ -280,7 +282,8 @@ document.write(`
 <h1 id="index">Index</h1>
 
 <div class="genindex-jumpbox">
- <a href="#A"><strong>A</strong></a>
+ <a href="#_"><strong>_</strong></a>
+ | <a href="#A"><strong>A</strong></a>
  | <a href="#C"><strong>C</strong></a>
  | <a href="#D"><strong>D</strong></a>
  | <a href="#E"><strong>E</strong></a>
@@ -298,6 +301,14 @@ document.write(`
  | <a href="#U"><strong>U</strong></a>
  
 </div>
+<h2 id="_">_</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousMultiProfile._ballots_counter">_ballots_counter (TrichotomousMultiProfile attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
 <h2 id="A">A</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -307,12 +318,22 @@ document.write(`
 </li>
       <li><a href="reference/election/index.html#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile">AbstractTrichotomousProfile (class in trivoting.election.trichotomous_profile)</a>
 </li>
+      <li><a href="reference/election/index.html#trivoting.election.trichotomous_ballot.TrichotomousBallot.add_approved">add_approved() (TrichotomousBallot method)</a>
+</li>
       <li><a href="reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.add_ballot">add_ballot() (TrichotomousMultiProfile method)</a>
 
       <ul>
         <li><a href="reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousProfile.add_ballot">(TrichotomousProfile method)</a>
 </li>
       </ul></li>
+      <li><a href="reference/election/index.html#trivoting.election.trichotomous_ballot.TrichotomousBallot.add_disapproved">add_disapproved() (TrichotomousBallot method)</a>
+</li>
+      <li><a href="reference/election/index.html#trivoting.election.selection.Selection.add_rejected">add_rejected() (Selection method)</a>
+</li>
+      <li><a href="reference/election/index.html#trivoting.election.selection.Selection.add_selected">add_selected() (Selection method)</a>
+</li>
+      <li><a href="reference/axiomatic/index.html#trivoting.axiomatic.justified_representation.all_cohesive_groups">all_cohesive_groups() (in module trivoting.axiomatic.justified_representation)</a>
+</li>
       <li><a href="reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.all_sub_profiles">all_sub_profiles() (TrichotomousMultiProfile method)</a>
 
       <ul>
@@ -321,12 +342,20 @@ document.write(`
       </ul></li>
       <li><a href="reference/election/index.html#trivoting.election.alternative.Alternative">Alternative (class in trivoting.election.alternative)</a>
 </li>
-      <li><a href="reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousProfile.alternatives">alternatives (TrichotomousProfile attribute)</a>
+      <li><a href="reference/election/index.html#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile.alternatives">alternatives (AbstractTrichotomousProfile attribute)</a>
+
+      <ul>
+        <li><a href="reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.alternatives">(TrichotomousMultiProfile attribute)</a>
+</li>
+        <li><a href="reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousProfile.alternatives">(TrichotomousProfile attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="reference/tiebreaking.html#trivoting.tiebreaking.app_score_tie_breaking">app_score_tie_breaking (in module trivoting.tiebreaking)</a>
 </li>
       <li><a href="reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousProfile.append">append() (TrichotomousProfile method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.approval_disapproval_score">approval_disapproval_score() (TrichotomousMultiProfile method)</a>
 
       <ul>
@@ -351,9 +380,17 @@ document.write(`
         <li><a href="reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousProfile.approval_score_dict">(TrichotomousProfile method)</a>
 </li>
       </ul></li>
-      <li><a href="reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousProfile.as_multiprofile">as_multiprofile() (TrichotomousProfile method)</a>
+      <li><a href="reference/election/index.html#trivoting.election.trichotomous_ballot.FrozenTrichotomousBallot.approved">approved (FrozenTrichotomousBallot attribute)</a>
+
+      <ul>
+        <li><a href="reference/election/index.html#id2">(FrozenTrichotomousBallot property)</a>
 </li>
-      <li><a href="reference/tiebreaking.html#trivoting.tiebreaking.asym_app_score_tie_breaking">asym_app_score_tie_breaking (in module trivoting.tiebreaking)</a>
+        <li><a href="reference/election/index.html#trivoting.election.trichotomous_ballot.TrichotomousBallot.approved">(TrichotomousBallot attribute)</a>
+</li>
+        <li><a href="reference/election/index.html#id0">(TrichotomousBallot property)</a>
+</li>
+      </ul></li>
+      <li><a href="reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousProfile.as_multiprofile">as_multiprofile() (TrichotomousProfile method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -365,14 +402,16 @@ document.write(`
 </li>
       <li><a href="reference/election/index.html#trivoting.election.preflib.cat_preferences_to_trichotomous_ballot">cat_preferences_to_trichotomous_ballot() (in module trivoting.election.preflib)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.clear">clear() (TrichotomousMultiProfile method)</a>
 
       <ul>
         <li><a href="reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousProfile.clear">(TrichotomousProfile method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="reference/election/index.html#trivoting.election.selection.Selection.copy">copy() (Selection method)</a>
+</li>
       <li><a href="reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousProfile.count">count() (TrichotomousProfile method)</a>
 </li>
   </ul></td>
@@ -387,12 +426,22 @@ document.write(`
         <li><a href="reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousProfile.disapproval_score">(TrichotomousProfile method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.disapproval_score_dict">disapproval_score_dict() (TrichotomousMultiProfile method)</a>
 
       <ul>
         <li><a href="reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousProfile.disapproval_score_dict">(TrichotomousProfile method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="reference/election/index.html#trivoting.election.trichotomous_ballot.FrozenTrichotomousBallot.disapproved">disapproved (FrozenTrichotomousBallot attribute)</a>
+
+      <ul>
+        <li><a href="reference/election/index.html#id3">(FrozenTrichotomousBallot property)</a>
+</li>
+        <li><a href="reference/election/index.html#trivoting.election.trichotomous_ballot.TrichotomousBallot.disapproved">(TrichotomousBallot attribute)</a>
+</li>
+        <li><a href="reference/election/index.html#id1">(TrichotomousBallot property)</a>
 </li>
       </ul></li>
       <li><a href="reference/utils.html#pabutools.utils.DocEnum">DocEnum (class in pabutools.utils)</a>
@@ -406,20 +455,28 @@ document.write(`
       <li><a href="reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousProfile.extend">extend() (TrichotomousProfile method)</a>
 </li>
   </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="reference/election/index.html#trivoting.election.selection.Selection.extend_rejected">extend_rejected() (Selection method)</a>
+</li>
+      <li><a href="reference/election/index.html#trivoting.election.selection.Selection.extend_selected">extend_selected() (Selection method)</a>
+</li>
+  </ul></td>
 </tr></table>
 
 <h2 id="F">F</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="reference/fractions.html#pabutools.fractions.FLOAT_FRAC">FLOAT_FRAC (in module pabutools.fractions)</a>
+      <li><a href="reference/fractions.html#trivoting.fractions.FLOAT_FRAC">FLOAT_FRAC (in module trivoting.fractions)</a>
 </li>
       <li><a href="reference/utils.html#pabutools.utils.format_table">format_table() (in module pabutools.utils)</a>
 </li>
-      <li><a href="reference/fractions.html#pabutools.fractions.frac">frac() (in module pabutools.fractions)</a>
+      <li><a href="reference/fractions.html#trivoting.fractions.frac">frac() (in module trivoting.fractions)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="reference/fractions.html#pabutools.fractions.FRACTION">FRACTION (in module pabutools.fractions)</a>
+      <li><a href="reference/fractions.html#trivoting.fractions.FRACTION">FRACTION (in module trivoting.fractions)</a>
+</li>
+      <li><a href="reference/election/index.html#trivoting.election.trichotomous_ballot.TrichotomousBallot.freeze">freeze() (TrichotomousBallot method)</a>
 </li>
       <li><a href="reference/election/index.html#trivoting.election.trichotomous_ballot.FrozenTrichotomousBallot">FrozenTrichotomousBallot (class in trivoting.election.trichotomous_ballot)</a>
 </li>
@@ -439,7 +496,7 @@ document.write(`
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="reference/utils.html#pabutools.utils.gini_coefficient">gini_coefficient() (in module pabutools.utils)</a>
 </li>
-      <li><a href="reference/fractions.html#pabutools.fractions.GMPY_FRAC">GMPY_FRAC (in module pabutools.fractions)</a>
+      <li><a href="reference/fractions.html#trivoting.fractions.GMPY_FRAC">GMPY_FRAC (in module trivoting.fractions)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -447,11 +504,33 @@ document.write(`
 <h2 id="I">I</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="reference/election/index.html#trivoting.election.selection.Selection.implicit_reject">implicit_reject (Selection attribute)</a>
+</li>
       <li><a href="reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousProfile.index">index() (TrichotomousProfile method)</a>
+</li>
+      <li><a href="reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousProfile.insert">insert() (TrichotomousProfile method)</a>
+</li>
+      <li><a href="reference/axiomatic/index.html#trivoting.axiomatic.justified_representation.is_base_ejr">is_base_ejr() (in module trivoting.axiomatic.justified_representation)</a>
+</li>
+      <li><a href="reference/axiomatic/index.html#trivoting.axiomatic.justified_representation.is_base_ejr_brute_force">is_base_ejr_brute_force() (in module trivoting.axiomatic.justified_representation)</a>
+</li>
+      <li><a href="reference/axiomatic/index.html#trivoting.axiomatic.justified_representation.is_base_pjr">is_base_pjr() (in module trivoting.axiomatic.justified_representation)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousProfile.insert">insert() (TrichotomousProfile method)</a>
+      <li><a href="reference/axiomatic/index.html#trivoting.axiomatic.justified_representation.is_cohesive_for_l">is_cohesive_for_l() (in module trivoting.axiomatic.justified_representation)</a>
+</li>
+      <li><a href="reference/axiomatic/index.html#trivoting.axiomatic.justified_representation.is_group_veto">is_group_veto() (in module trivoting.axiomatic.justified_representation)</a>
+</li>
+      <li><a href="reference/axiomatic/index.html#trivoting.axiomatic.justified_representation.is_negatively_cohesive_for_l_t">is_negatively_cohesive_for_l_t() (in module trivoting.axiomatic.justified_representation)</a>
+</li>
+      <li><a href="reference/axiomatic/index.html#trivoting.axiomatic.justified_representation.is_positive_ejr">is_positive_ejr() (in module trivoting.axiomatic.justified_representation)</a>
+</li>
+      <li><a href="reference/axiomatic/index.html#trivoting.axiomatic.justified_representation.is_positively_cohesive_for_l">is_positively_cohesive_for_l() (in module trivoting.axiomatic.justified_representation)</a>
+</li>
+      <li><a href="reference/election/index.html#trivoting.election.selection.Selection.is_rejected">is_rejected() (Selection method)</a>
+</li>
+      <li><a href="reference/election/index.html#trivoting.election.selection.Selection.is_selected">is_selected() (Selection method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -467,21 +546,53 @@ document.write(`
 <h2 id="M">M</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousProfile.max_size_selection">max_size_selection (TrichotomousProfile attribute)</a>
+      <li><a href="reference/election/index.html#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile.max_size_selection">max_size_selection (AbstractTrichotomousProfile attribute)</a>
+
+      <ul>
+        <li><a href="reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.max_size_selection">(TrichotomousMultiProfile attribute)</a>
 </li>
+        <li><a href="reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousProfile.max_size_selection">(TrichotomousProfile attribute)</a>
+</li>
+      </ul></li>
       <li><a href="reference/utils.html#pabutools.utils.mean_generator">mean_generator() (in module pabutools.utils)</a>
 </li>
       <li>
     module
 
       <ul>
-        <li><a href="reference/fractions.html#module-pabutools.fractions">pabutools.fractions</a>
-</li>
         <li><a href="reference/utils.html#module-pabutools.utils">pabutools.utils</a>
+</li>
+        <li><a href="reference/axiomatic/index.html#module-trivoting.axiomatic">trivoting.axiomatic</a>
+</li>
+        <li><a href="reference/axiomatic/index.html#module-trivoting.axiomatic.justified_representation">trivoting.axiomatic.justified_representation</a>
 </li>
         <li><a href="reference/election/index.html#module-trivoting.election">trivoting.election</a>
 </li>
+        <li><a href="reference/election/index.html#module-trivoting.election.abcvoting">trivoting.election.abcvoting</a>
+</li>
+        <li><a href="reference/election/index.html#module-trivoting.election.alternative">trivoting.election.alternative</a>
+</li>
+        <li><a href="reference/election/index.html#module-trivoting.election.generate">trivoting.election.generate</a>
+</li>
+        <li><a href="reference/election/index.html#module-trivoting.election.pabulib">trivoting.election.pabulib</a>
+</li>
+        <li><a href="reference/election/index.html#module-trivoting.election.preflib">trivoting.election.preflib</a>
+</li>
+        <li><a href="reference/election/index.html#module-trivoting.election.selection">trivoting.election.selection</a>
+</li>
+        <li><a href="reference/election/index.html#module-trivoting.election.trichotomous_ballot">trivoting.election.trichotomous_ballot</a>
+</li>
+        <li><a href="reference/election/index.html#module-trivoting.election.trichotomous_profile">trivoting.election.trichotomous_profile</a>
+</li>
+        <li><a href="reference/fractions.html#module-trivoting.fractions">trivoting.fractions</a>
+</li>
         <li><a href="reference/rules/index.html#module-trivoting.rules">trivoting.rules</a>
+</li>
+        <li><a href="reference/rules/index.html#module-trivoting.rules.phragmen">trivoting.rules.phragmen</a>
+</li>
+        <li><a href="reference/rules/index.html#module-trivoting.rules.proportional_approval_voting">trivoting.rules.proportional_approval_voting</a>
+</li>
+        <li><a href="reference/rules/index.html#module-trivoting.rules.tax_rules">trivoting.rules.tax_rules</a>
 </li>
         <li><a href="reference/tiebreaking.html#module-trivoting.tiebreaking">trivoting.tiebreaking</a>
 </li>
@@ -500,6 +611,8 @@ document.write(`
 <h2 id="N">N</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="reference/election/index.html#trivoting.election.alternative.Alternative.name">name (Alternative attribute)</a>
+</li>
       <li><a href="reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.num_ballots">num_ballots() (TrichotomousMultiProfile method)</a>
 
       <ul>
@@ -509,7 +622,11 @@ document.write(`
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="reference/utils.html#pabutools.utils.Numeric">Numeric (in module pabutools.utils)</a>
+
+      <ul>
+        <li><a href="reference/fractions.html#trivoting.fractions.Numeric">(in module trivoting.fractions)</a>
 </li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -525,13 +642,6 @@ document.write(`
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li>
-    pabutools.fractions
-
-      <ul>
-        <li><a href="reference/fractions.html#module-pabutools.fractions">module</a>
-</li>
-      </ul></li>
-      <li>
     pabutools.utils
 
       <ul>
@@ -542,10 +652,10 @@ document.write(`
 </li>
       <li><a href="reference/election/index.html#trivoting.election.pabulib.parse_pabulib">parse_pabulib() (in module trivoting.election.pabulib)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="reference/election/index.html#trivoting.election.preflib.parse_preflib">parse_preflib() (in module trivoting.election.preflib)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="reference/election/index.html#trivoting.election.pabulib.pb_approval_ballot_to_trichotomous_ballot">pb_approval_ballot_to_trichotomous_ballot() (in module trivoting.election.pabulib)</a>
 </li>
       <li><a href="reference/election/index.html#trivoting.election.pabulib.pb_approval_profile_to_trichotomous_profile">pb_approval_profile_to_trichotomous_profile() (in module trivoting.election.pabulib)</a>
@@ -564,10 +674,12 @@ document.write(`
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="reference/tiebreaking.html#trivoting.tiebreaking.refuse_tie_breaking">refuse_tie_breaking (in module trivoting.tiebreaking)</a>
 </li>
-      <li><a href="reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousProfile.remove">remove() (TrichotomousProfile method)</a>
+      <li><a href="reference/election/index.html#trivoting.election.selection.Selection.rejected">rejected (Selection attribute)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousProfile.remove">remove() (TrichotomousProfile method)</a>
+</li>
       <li><a href="reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousProfile.reverse">reverse() (TrichotomousProfile method)</a>
 </li>
       <li><a href="reference/utils.html#pabutools.utils.round_cmp">round_cmp() (in module pabutools.utils)</a>
@@ -578,27 +690,31 @@ document.write(`
 <h2 id="S">S</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="reference/rules/index.html#trivoting.rules.selection.Selection">Selection (class in trivoting.rules.selection)</a>
+      <li><a href="reference/election/index.html#trivoting.election.selection.Selection.selected">selected (Selection attribute)</a>
+</li>
+      <li><a href="reference/election/index.html#trivoting.election.selection.Selection">Selection (class in trivoting.election.selection)</a>
 </li>
       <li><a href="reference/rules/index.html#trivoting.rules.phragmen.sequential_phragmen">sequential_phragmen() (in module trivoting.rules.phragmen)</a>
 </li>
-      <li><a href="reference/fractions.html#pabutools.fractions.str_as_frac">str_as_frac() (in module pabutools.fractions)</a>
+      <li><a href="reference/election/index.html#trivoting.election.selection.Selection.sort">sort() (Selection method)</a>
 </li>
+      <li><a href="reference/fractions.html#trivoting.fractions.str_as_frac">str_as_frac() (in module trivoting.fractions)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.support">support() (TrichotomousMultiProfile method)</a>
 
       <ul>
         <li><a href="reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousProfile.support">(TrichotomousProfile method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.support_dict">support_dict() (TrichotomousMultiProfile method)</a>
 
       <ul>
         <li><a href="reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousProfile.support_dict">(TrichotomousProfile method)</a>
 </li>
       </ul></li>
-      <li><a href="reference/tiebreaking.html#trivoting.tiebreaking.sym_app_score_tie_breaking">sym_app_score_tie_breaking (in module trivoting.tiebreaking)</a>
+      <li><a href="reference/tiebreaking.html#trivoting.tiebreaking.support_tie_breaking">support_tie_breaking (in module trivoting.tiebreaking)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -610,20 +726,38 @@ document.write(`
 </li>
       <li><a href="reference/rules/index.html#trivoting.rules.tax_rules.tax_pb_instance">tax_pb_instance() (in module trivoting.rules.tax_rules)</a>
 </li>
+      <li><a href="reference/rules/index.html#trivoting.rules.tax_rules.tax_pb_rule_scheme">tax_pb_rule_scheme() (in module trivoting.rules.tax_rules)</a>
+</li>
       <li><a href="reference/rules/index.html#trivoting.rules.tax_rules.tax_sequential_phragmen">tax_sequential_phragmen() (in module trivoting.rules.tax_rules)</a>
 </li>
       <li><a href="reference/tiebreaking.html#trivoting.tiebreaking.TieBreakingException">TieBreakingException</a>
 </li>
       <li><a href="reference/tiebreaking.html#trivoting.tiebreaking.TieBreakingRule">TieBreakingRule (class in trivoting.tiebreaking)</a>
 </li>
+      <li><a href="reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.total">total() (TrichotomousMultiProfile method)</a>
+</li>
+      <li><a href="reference/election/index.html#trivoting.election.selection.Selection.total_len">total_len() (Selection method)</a>
+</li>
       <li><a href="reference/election/index.html#trivoting.election.trichotomous_ballot.TrichotomousBallot">TrichotomousBallot (class in trivoting.election.trichotomous_ballot)</a>
 </li>
       <li><a href="reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousMultiProfile">TrichotomousMultiProfile (class in trivoting.election.trichotomous_profile)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousProfile">TrichotomousProfile (class in trivoting.election.trichotomous_profile)</a>
 </li>
+      <li>
+    trivoting.axiomatic
+
+      <ul>
+        <li><a href="reference/axiomatic/index.html#module-trivoting.axiomatic">module</a>
+</li>
+      </ul></li>
+      <li>
+    trivoting.axiomatic.justified_representation
+
+      <ul>
+        <li><a href="reference/axiomatic/index.html#module-trivoting.axiomatic.justified_representation">module</a>
+</li>
+      </ul></li>
       <li>
     trivoting.election
 
@@ -632,10 +766,96 @@ document.write(`
 </li>
       </ul></li>
       <li>
+    trivoting.election.abcvoting
+
+      <ul>
+        <li><a href="reference/election/index.html#module-trivoting.election.abcvoting">module</a>
+</li>
+      </ul></li>
+      <li>
+    trivoting.election.alternative
+
+      <ul>
+        <li><a href="reference/election/index.html#module-trivoting.election.alternative">module</a>
+</li>
+      </ul></li>
+      <li>
+    trivoting.election.generate
+
+      <ul>
+        <li><a href="reference/election/index.html#module-trivoting.election.generate">module</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    trivoting.election.pabulib
+
+      <ul>
+        <li><a href="reference/election/index.html#module-trivoting.election.pabulib">module</a>
+</li>
+      </ul></li>
+      <li>
+    trivoting.election.preflib
+
+      <ul>
+        <li><a href="reference/election/index.html#module-trivoting.election.preflib">module</a>
+</li>
+      </ul></li>
+      <li>
+    trivoting.election.selection
+
+      <ul>
+        <li><a href="reference/election/index.html#module-trivoting.election.selection">module</a>
+</li>
+      </ul></li>
+      <li>
+    trivoting.election.trichotomous_ballot
+
+      <ul>
+        <li><a href="reference/election/index.html#module-trivoting.election.trichotomous_ballot">module</a>
+</li>
+      </ul></li>
+      <li>
+    trivoting.election.trichotomous_profile
+
+      <ul>
+        <li><a href="reference/election/index.html#module-trivoting.election.trichotomous_profile">module</a>
+</li>
+      </ul></li>
+      <li>
+    trivoting.fractions
+
+      <ul>
+        <li><a href="reference/fractions.html#module-trivoting.fractions">module</a>
+</li>
+      </ul></li>
+      <li>
     trivoting.rules
 
       <ul>
         <li><a href="reference/rules/index.html#module-trivoting.rules">module</a>
+</li>
+      </ul></li>
+      <li>
+    trivoting.rules.phragmen
+
+      <ul>
+        <li><a href="reference/rules/index.html#module-trivoting.rules.phragmen">module</a>
+</li>
+      </ul></li>
+      <li>
+    trivoting.rules.proportional_approval_voting
+
+      <ul>
+        <li><a href="reference/rules/index.html#module-trivoting.rules.proportional_approval_voting">module</a>
+</li>
+      </ul></li>
+      <li>
+    trivoting.rules.tax_rules
+
+      <ul>
+        <li><a href="reference/rules/index.html#module-trivoting.rules.tax_rules">module</a>
 </li>
       </ul></li>
       <li>

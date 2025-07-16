@@ -44,7 +44,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Election module" href="election/index.html" />
-    <link rel="prev" title="Quick Start" href="../quickstart.html" />
+    <link rel="prev" title="Complete Guide" href="../usage.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -152,9 +152,11 @@
 <li class="toctree-l1"><a class="reference internal" href="../index.html">Trivoting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Complete Guide</a></li>
 <li class="toctree-l1 current active has-children"><a class="current reference internal" href="#">Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="election/index.html">Election module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rules/index.html">Rules module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="axiomatic/index.html">Axiomatic module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tiebreaking.html">Tie-Breaking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="fractions.html">Fractions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="utils.html">Utils</a></li>
@@ -330,37 +332,42 @@ document.write(`
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="election/index.html">Election module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="election/index.html#alternatives">Alternatives</a></li>
-<li class="toctree-l2"><a class="reference internal" href="election/index.html#trichotomous-ballots">Trichotomous Ballots</a></li>
-<li class="toctree-l2"><a class="reference internal" href="election/index.html#trichotomous-profiles">Trichotomous Profiles</a></li>
-<li class="toctree-l2"><a class="reference internal" href="election/index.html#link-to-abcvoting">Link to abcvoting</a></li>
-<li class="toctree-l2"><a class="reference internal" href="election/index.html#link-with-pabulib-and-pabutools">Link with Pabulib and pabutools</a></li>
-<li class="toctree-l2"><a class="reference internal" href="election/index.html#link-with-preflib">Link with PrefLib</a></li>
-<li class="toctree-l2"><a class="reference internal" href="election/index.html#generate-random-profile">Generate Random Profile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="election/index.html#module-trivoting.election.alternative">Alternatives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="election/index.html#module-trivoting.election.trichotomous_ballot">Trichotomous Ballots</a></li>
+<li class="toctree-l2"><a class="reference internal" href="election/index.html#module-trivoting.election.trichotomous_profile">Trichotomous Profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="election/index.html#module-trivoting.election.abcvoting">Link to abcvoting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="election/index.html#module-trivoting.election.pabulib">Link with Pabulib and pabutools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="election/index.html#module-trivoting.election.preflib">Link with PrefLib</a></li>
+<li class="toctree-l2"><a class="reference internal" href="election/index.html#module-trivoting.election.generate">Generate Random Profile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="election/index.html#module-trivoting.election.selection">Selection</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="rules/index.html">Rules module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="rules/index.html#selection">Selection</a></li>
-<li class="toctree-l2"><a class="reference internal" href="rules/index.html#proportional-approval-voting">Proportional Approval Voting</a></li>
-<li class="toctree-l2"><a class="reference internal" href="rules/index.html#sequential-phragmen-s-rule">Sequential Phragmén’s Rule</a></li>
-<li class="toctree-l2"><a class="reference internal" href="rules/index.html#tax-based-rules">Tax-Based Rules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rules/index.html#module-trivoting.rules.proportional_approval_voting">Proportional Approval Voting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rules/index.html#module-trivoting.rules.phragmen">Sequential Phragmén’s Rule</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rules/index.html#module-trivoting.rules.tax_rules">Tax-Based Rules</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="axiomatic/index.html">Axiomatic module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="axiomatic/index.html#module-trivoting.axiomatic.justified_representation">Justified Representation</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="tiebreaking.html">Tie-Breaking</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="tiebreaking.html#trivoting.tiebreaking.TieBreakingException"><code class="docutils literal notranslate"><span class="pre">TieBreakingException</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="tiebreaking.html#trivoting.tiebreaking.TieBreakingRule"><code class="docutils literal notranslate"><span class="pre">TieBreakingRule</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="tiebreaking.html#trivoting.tiebreaking.asym_app_score_tie_breaking"><code class="docutils literal notranslate"><span class="pre">asym_app_score_tie_breaking</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiebreaking.html#trivoting.tiebreaking.app_score_tie_breaking"><code class="docutils literal notranslate"><span class="pre">app_score_tie_breaking</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="tiebreaking.html#trivoting.tiebreaking.lexico_tie_breaking"><code class="docutils literal notranslate"><span class="pre">lexico_tie_breaking</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="tiebreaking.html#trivoting.tiebreaking.refuse_tie_breaking"><code class="docutils literal notranslate"><span class="pre">refuse_tie_breaking</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="tiebreaking.html#trivoting.tiebreaking.sym_app_score_tie_breaking"><code class="docutils literal notranslate"><span class="pre">sym_app_score_tie_breaking</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiebreaking.html#trivoting.tiebreaking.support_tie_breaking"><code class="docutils literal notranslate"><span class="pre">support_tie_breaking</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="fractions.html">Fractions</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="fractions.html#pabutools.fractions.frac"><code class="docutils literal notranslate"><span class="pre">frac()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="fractions.html#pabutools.fractions.str_as_frac"><code class="docutils literal notranslate"><span class="pre">str_as_frac()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="fractions.html#pabutools.fractions.FLOAT_FRAC"><code class="docutils literal notranslate"><span class="pre">FLOAT_FRAC</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="fractions.html#pabutools.fractions.FRACTION"><code class="docutils literal notranslate"><span class="pre">FRACTION</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="fractions.html#pabutools.fractions.GMPY_FRAC"><code class="docutils literal notranslate"><span class="pre">GMPY_FRAC</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="fractions.html#trivoting.fractions.frac"><code class="docutils literal notranslate"><span class="pre">frac()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="fractions.html#trivoting.fractions.str_as_frac"><code class="docutils literal notranslate"><span class="pre">str_as_frac()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="fractions.html#trivoting.fractions.FLOAT_FRAC"><code class="docutils literal notranslate"><span class="pre">FLOAT_FRAC</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="fractions.html#trivoting.fractions.FRACTION"><code class="docutils literal notranslate"><span class="pre">FRACTION</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="fractions.html#trivoting.fractions.GMPY_FRAC"><code class="docutils literal notranslate"><span class="pre">GMPY_FRAC</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="fractions.html#trivoting.fractions.Numeric"><code class="docutils literal notranslate"><span class="pre">Numeric</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="utils.html">Utils</a><ul>
@@ -389,12 +396,12 @@ document.write(`
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="../quickstart.html"
+       href="../usage.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Quick Start</p>
+        <p class="prev-next-title">Complete Guide</p>
       </div>
     </a>
     <a class="right-next"

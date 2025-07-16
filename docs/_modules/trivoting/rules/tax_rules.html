@@ -151,9 +151,11 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../index.html">Trivoting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Complete Guide</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../reference/index.html">Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../reference/election/index.html">Election module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../reference/rules/index.html">Rules module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../reference/axiomatic/index.html">Axiomatic module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../reference/tiebreaking.html">Tie-Breaking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../reference/fractions.html">Fractions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../reference/utils.html">Utils</a></li>
@@ -279,7 +281,7 @@ document.write(`
   <h1>Source code for trivoting.rules.tax_rules</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Collection</span><span class="p">,</span> <span class="n">Callable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">pabutools.election</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pb_election</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pabutools.rules</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pb_rules</span>
@@ -287,7 +289,7 @@ document.write(`
 <span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.election.alternative</span><span class="w"> </span><span class="kn">import</span> <span class="n">Alternative</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.election.trichotomous_profile</span><span class="w"> </span><span class="kn">import</span> <span class="n">AbstractTrichotomousProfile</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.fractions</span><span class="w"> </span><span class="kn">import</span> <span class="n">frac</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.rules.selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">Selection</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.election.selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">Selection</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.tiebreaking</span><span class="w"> </span><span class="kn">import</span> <span class="n">TieBreakingRule</span>
 
 
@@ -297,9 +299,30 @@ document.write(`
         <span class="n">profile</span><span class="p">:</span> <span class="n">AbstractTrichotomousProfile</span><span class="p">,</span>
         <span class="n">max_size_selection</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">initial_selection</span><span class="p">:</span> <span class="n">Selection</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<span class="p">):</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">pb_election</span><span class="o">.</span><span class="n">Instance</span><span class="p">,</span> <span class="n">pb_election</span><span class="o">.</span><span class="n">ApprovalMultiProfile</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="n">pb_election</span><span class="o">.</span><span class="n">Project</span><span class="p">,</span> <span class="n">Alternative</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Returns a Participatory Budgeting instance and profile based on the given trichotomous profile.</span>
+<span class="sd">    Construct a Participatory Budgeting (PB) instance and PB profile from a trichotomous profile.</span>
+
+<span class="sd">    This function translates the trichotomous voting profile into a PB instance,</span>
+<span class="sd">    setting project costs inversely proportional to net support.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    profile : AbstractTrichotomousProfile</span>
+<span class="sd">        The trichotomous profile.</span>
+<span class="sd">    max_size_selection : int</span>
+<span class="sd">        The budget limit or maximum number of alternatives to be selected.</span>
+<span class="sd">    initial_selection : Selection or None, optional</span>
+<span class="sd">        An initial selection fixing some alternatives as selected or rejected.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    pb_election.Instance</span>
+<span class="sd">        The generated PB instance containing projects.</span>
+<span class="sd">    pb_election.ApprovalMultiProfile</span>
+<span class="sd">        The PB profile created from approval ballots derived from the trichotomous profile.</span>
+<span class="sd">    dict</span>
+<span class="sd">        A mapping from PB projects back to the original alternatives.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">app_scores</span><span class="p">,</span> <span class="n">disapp_scores</span> <span class="o">=</span> <span class="n">profile</span><span class="o">.</span><span class="n">approval_disapproval_score_dict</span><span class="p">()</span>
 
@@ -327,6 +350,8 @@ document.write(`
     <span class="k">return</span> <span class="n">pb_instance</span><span class="p">,</span> <span class="n">pb_profile</span><span class="p">,</span> <span class="n">project_to_alt</span></div>
 
 
+<div class="viewcode-block" id="tax_pb_rule_scheme">
+<a class="viewcode-back" href="../../../reference/rules/index.html#trivoting.rules.tax_rules.tax_pb_rule_scheme">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">tax_pb_rule_scheme</span><span class="p">(</span>
     <span class="n">profile</span><span class="p">:</span> <span class="n">AbstractTrichotomousProfile</span><span class="p">,</span>
     <span class="n">max_size_selection</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
@@ -337,34 +362,38 @@ document.write(`
     <span class="n">pb_rule_kwargs</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Selection</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="n">Selection</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Runs the tax rule scheme. Defined the appropriate Participatory Budgeting (PB) instance and apply the required PB</span>
-<span class="sd">    rule to that instance. Makes use of the pabutools package for the PB side.</span>
+<span class="sd">    Apply a participatory budgeting rule to a trichotomous profile by translating it into a suitable PB instance with</span>
+<span class="sd">    opposition tax.</span>
+
+<span class="sd">    This function converts the given profile into a PB instance and profile,</span>
+<span class="sd">    applies the specified PB rule using pabutools, and converts the results back.</span>
+
+<span class="sd">    The taxed PB rule scheme has been defined in Section 4.2 of</span>
+<span class="sd">    ``Proportionality in Thumbs Up and Down Voting`` (Kraiczy, Papasotiropoulos, Pierczyński and Skowron, 2025).</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">        profile : AbstractTrichotomousProfile</span>
-<span class="sd">            The profile.</span>
-<span class="sd">        max_size_selection : int</span>
-<span class="sd">            The maximum number of alternatives that can be selected.</span>
-<span class="sd">        pb_rule : Callable</span>
-<span class="sd">            The PB rule to apply.</span>
-<span class="sd">        initial_selection: Selection, optional</span>
-<span class="sd">            An initial selection, fixed some alternatives has being either selected of not-selected. If the</span>
-<span class="sd">            selection has implicit_reject set to `True`, then no alternative is forced not-selected.</span>
-<span class="sd">        tie_breaking : TieBreakingRule, optional</span>
-<span class="sd">            The tie-breaking rule used.</span>
-<span class="sd">            Defaults to the lexicographic tie-breaking.</span>
-<span class="sd">        resoluteness : bool, optional</span>
-<span class="sd">            Set to `False` to obtain an irresolute outcome, where all tied budget allocations are returned.</span>
-<span class="sd">            Defaults to True.</span>
-<span class="sd">        pb_rule_kwargs: dict, optional</span>
-<span class="sd">            Additional keyword arguments to pass to the PB rule.</span>
+<span class="sd">    profile : AbstractTrichotomousProfile</span>
+<span class="sd">        The trichotomous profile.</span>
+<span class="sd">    max_size_selection : int</span>
+<span class="sd">        The maximum number of alternatives allowed in the selection.</span>
+<span class="sd">    pb_rule : callable</span>
+<span class="sd">        The participatory budgeting rule function to apply.</span>
+<span class="sd">    initial_selection : Selection or None, optional</span>
+<span class="sd">        An initial selection fixing some alternatives as selected or rejected.</span>
+<span class="sd">    tie_breaking : TieBreakingRule or None, optional</span>
+<span class="sd">        Tie-breaking rule used for resolving ties.</span>
+<span class="sd">        Defaults to lexicographic tie-breaking if None.</span>
+<span class="sd">    resoluteness : bool, optional</span>
+<span class="sd">        Whether to return a single resolute selection (True) or all tied selections (False).</span>
+<span class="sd">        Defaults to True.</span>
+<span class="sd">    pb_rule_kwargs : dict, optional</span>
+<span class="sd">        Additional keyword arguments passed to the PB rule.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">        Selection | list[Selection]</span>
-<span class="sd">            The selection if resolute (:code:`resoluteness == True`), or a list of selections</span>
-<span class="sd">            if irresolute (:code:`resoluteness == False`).</span>
+<span class="sd">    Selection or list of Selection</span>
+<span class="sd">        The resulting selection(s) after applying the PB rule.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">pb_rule_kwargs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">pb_rule_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
@@ -398,7 +427,8 @@ document.write(`
             <span class="k">if</span> <span class="ow">not</span> <span class="n">selection</span><span class="o">.</span><span class="n">implicit_reject</span><span class="p">:</span>
                 <span class="n">selection</span><span class="o">.</span><span class="n">extend_rejected</span><span class="p">(</span><span class="n">project_to_alt</span><span class="p">[</span><span class="n">p</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">pb_instance</span> <span class="k">if</span> <span class="n">p</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">alloc</span><span class="p">)</span>
             <span class="n">all_selections</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">selection</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">all_selections</span>
+        <span class="k">return</span> <span class="n">all_selections</span></div>
+
 
 <div class="viewcode-block" id="tax_method_of_equal_shares">
 <a class="viewcode-back" href="../../../reference/rules/index.html#trivoting.rules.tax_rules.tax_method_of_equal_shares">[docs]</a>
@@ -410,29 +440,29 @@ document.write(`
     <span class="n">resoluteness</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Selection</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="n">Selection</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Tax method of equal shares.</span>
+<span class="sd">    Apply the Tax method of equal shares to a trichotomous profile.</span>
+
+<span class="sd">    This method uses participatory budgeting rules to compute proportional selections</span>
+<span class="sd">    with the method of equal shares adapted for approval-disapproval profiles.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">        profile : AbstractTrichotomousProfile</span>
-<span class="sd">            The profile.</span>
-<span class="sd">        max_size_selection : int</span>
-<span class="sd">            The maximum number of alternatives that can be selected.</span>
-<span class="sd">        initial_selection: Selection, optional</span>
-<span class="sd">            An initial selection, fixed some alternatives has being either selected of not-selected. If the</span>
-<span class="sd">            selection has implicit_reject set to `True`, then no alternative is forced not-selected.</span>
-<span class="sd">        tie_breaking : TieBreakingRule, optional</span>
-<span class="sd">            The tie-breaking rule used.</span>
-<span class="sd">            Defaults to the lexicographic tie-breaking.</span>
-<span class="sd">        resoluteness : bool, optional</span>
-<span class="sd">            Set to `False` to obtain an irresolute outcome, where all tied budget allocations are returned.</span>
-<span class="sd">            Defaults to True.</span>
+<span class="sd">    profile : AbstractTrichotomousProfile</span>
+<span class="sd">        The input profile.</span>
+<span class="sd">    max_size_selection : int</span>
+<span class="sd">        The maximum number of alternatives to select.</span>
+<span class="sd">    initial_selection : Selection or None, optional</span>
+<span class="sd">        Initial fixed selection state.</span>
+<span class="sd">    tie_breaking : TieBreakingRule or None, optional</span>
+<span class="sd">        Tie-breaking rule. Defaults to lexicographic.</span>
+<span class="sd">    resoluteness : bool, optional</span>
+<span class="sd">        Whether to return a single or multiple tied selections.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">        Selection | list[Selection]</span>
-<span class="sd">            The selection if resolute (:code:`resoluteness == True`), or a list of selections</span>
-<span class="sd">            if irresolute (:code:`resoluteness == False`).</span>
+<span class="sd">    Selection | list[Selection]</span>
+<span class="sd">        The selection if resolute (:code:`resoluteness == True`), or a list of selections</span>
+<span class="sd">        if irresolute (:code:`resoluteness == False`).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">tax_pb_rule_scheme</span><span class="p">(</span>
         <span class="n">profile</span><span class="p">,</span>
@@ -455,29 +485,29 @@ document.write(`
     <span class="n">resoluteness</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Selection</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="n">Selection</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Tax sequential Phragmén.</span>
+<span class="sd">    Apply Tax sequential Phragmén method on a trichotomous profile.</span>
+
+<span class="sd">    This rule transforms the profile into a participatory budgeting instance</span>
+<span class="sd">    and applies sequential Phragmén via pabutools.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">        profile : AbstractTrichotomousProfile</span>
-<span class="sd">            The profile.</span>
-<span class="sd">        max_size_selection : int</span>
-<span class="sd">            The maximum number of alternatives that can be selected.</span>
-<span class="sd">        initial_selection: Selection, optional</span>
-<span class="sd">            An initial selection, fixed some alternatives has being either selected of not-selected. If the</span>
-<span class="sd">            selection has implicit_reject set to `True`, then no alternative is forced not-selected.</span>
-<span class="sd">        tie_breaking : TieBreakingRule, optional</span>
-<span class="sd">            The tie-breaking rule used.</span>
-<span class="sd">            Defaults to the lexicographic tie-breaking.</span>
-<span class="sd">        resoluteness : bool, optional</span>
-<span class="sd">            Set to `False` to obtain an irresolute outcome, where all tied budget allocations are returned.</span>
-<span class="sd">            Defaults to True.</span>
+<span class="sd">    profile : AbstractTrichotomousProfile</span>
+<span class="sd">        The input voting profile.</span>
+<span class="sd">    max_size_selection : int</span>
+<span class="sd">        The maximum size of the selection.</span>
+<span class="sd">    initial_selection : Selection or None, optional</span>
+<span class="sd">        Initial fixed selections.</span>
+<span class="sd">    tie_breaking : TieBreakingRule or None, optional</span>
+<span class="sd">        Tie-breaking rule, defaulting to lexicographic.</span>
+<span class="sd">    resoluteness : bool, optional</span>
+<span class="sd">        Whether to return one selection or all tied selections.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">        Selection | list[Selection]</span>
-<span class="sd">            The selection if resolute (:code:`resoluteness == True`), or a list of selections</span>
-<span class="sd">            if irresolute (:code:`resoluteness == False`).</span>
+<span class="sd">    Selection | list[Selection]</span>
+<span class="sd">        The selection if resolute (:code:`resoluteness == True`), or a list of selections</span>
+<span class="sd">        if irresolute (:code:`resoluteness == False`).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">return</span> <span class="n">tax_pb_rule_scheme</span><span class="p">(</span>

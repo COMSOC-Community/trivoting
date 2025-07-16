@@ -151,9 +151,11 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../index.html">Trivoting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Complete Guide</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../reference/index.html">Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../reference/election/index.html">Election module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../reference/rules/index.html">Rules module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../reference/axiomatic/index.html">Axiomatic module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../reference/tiebreaking.html">Tie-Breaking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../reference/fractions.html">Fractions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../reference/utils.html">Utils</a></li>
@@ -288,16 +290,43 @@ document.write(`
 <a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.generate.generate_random_ballot">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">generate_random_ballot</span><span class="p">(</span>
         <span class="n">alternatives</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Alternative</span><span class="p">],</span>
-        <span class="n">approve_disapproved_sampler</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
+        <span class="n">approved_disapproved_sampler</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
         <span class="n">approved_sampler</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
         <span class="n">disapproved_sampler</span><span class="p">:</span> <span class="n">Callable</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TrichotomousBallot</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generates a random trichotomous ballot based on the given sampling functions. Sampling functions are expected to</span>
+<span class="sd">    behave as the ones from the `prefsampling` package.</span>
+<span class="sd">    </span>
+<span class="sd">    First samples a set of potentially approved alternatives. The set of the potentially disapproved alternatives </span>
+<span class="sd">    is the complement of the former. For both of these sets, an extra sampling function is applied to determine the</span>
+<span class="sd">    definitively approved and disapproved alternatives.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    alternatives : list of Alternative</span>
+<span class="sd">        List of alternatives available in the election.</span>
+<span class="sd">    approved_disapproved_sampler : Callable</span>
+<span class="sd">        Function that samples a split between potentially approved and disapproved alternatives.</span>
+<span class="sd">        It should take `num_voters` and `num_candidates` as keyword arguments and return a list of index sets.</span>
+<span class="sd">    approved_sampler : Callable</span>
+<span class="sd">        Function that samples which of the potentially approved alternatives are definitively approved.</span>
+<span class="sd">        Same interface as `approve_disapproved_sampler`.</span>
+<span class="sd">    disapproved_sampler : Callable</span>
+<span class="sd">        Function that samples which of the potentially disapproved alternatives are definitively disapproved.</span>
+<span class="sd">        Same interface as `approve_disapproved_sampler`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    TrichotomousBallot</span>
+<span class="sd">        A randomly generated trichotomous ballot.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">ballot</span> <span class="o">=</span> <span class="n">TrichotomousBallot</span><span class="p">()</span>
-    <span class="n">approve_disapproved</span> <span class="o">=</span> <span class="n">approve_disapproved_sampler</span><span class="p">(</span><span class="n">num_voters</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_candidates</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">alternatives</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">approved_disapproved</span> <span class="o">=</span> <span class="n">approved_disapproved_sampler</span><span class="p">(</span><span class="n">num_voters</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_candidates</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">alternatives</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">potentially_approved</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">potentially_disapproved</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">alternatives</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">approve_disapproved</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">approved_disapproved</span><span class="p">:</span>
             <span class="n">potentially_approved</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">potentially_disapproved</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
@@ -320,16 +349,41 @@ document.write(`
 <span class="k">def</span><span class="w"> </span><span class="nf">generate_random_profile</span><span class="p">(</span>
         <span class="n">num_alternatives</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">num_voters</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-        <span class="n">approve_disapproved_sampler</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
+        <span class="n">approved_disapproved_sampler</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
         <span class="n">approved_sampler</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
         <span class="n">disapproved_sampler</span><span class="p">:</span> <span class="n">Callable</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TrichotomousProfile</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generates a random trichotomous profile composed of several ballots. Uses the function `generate_random_ballot`</span>
+<span class="sd">    to generate the ballots.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    num_alternatives : int</span>
+<span class="sd">        The number of alternatives in the profile.</span>
+<span class="sd">    num_voters : int</span>
+<span class="sd">        The number of voters (ballots) in the profile.</span>
+<span class="sd">    approved_disapproved_sampler : Callable</span>
+<span class="sd">        Function that samples a split between potentially approved and disapproved alternatives.</span>
+<span class="sd">        It should take `num_voters` and `num_candidates` as keyword arguments and return a list of index sets.</span>
+<span class="sd">    approved_sampler : Callable</span>
+<span class="sd">        Function that samples which of the potentially approved alternatives are definitively approved.</span>
+<span class="sd">        Same interface as `approve_disapproved_sampler`.</span>
+<span class="sd">    disapproved_sampler : Callable</span>
+<span class="sd">        Function that samples which of the potentially disapproved alternatives are definitively disapproved.</span>
+<span class="sd">        Same interface as `approve_disapproved_sampler`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    TrichotomousProfile</span>
+<span class="sd">        A profile containing randomly generated trichotomous ballots.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">alternatives</span> <span class="o">=</span> <span class="p">[</span><span class="n">Alternative</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_alternatives</span><span class="p">)]</span>
     <span class="n">profile</span> <span class="o">=</span> <span class="n">TrichotomousProfile</span><span class="p">(</span><span class="n">alternatives</span><span class="o">=</span><span class="n">alternatives</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_voters</span><span class="p">):</span>
         <span class="n">ballot</span> <span class="o">=</span> <span class="n">generate_random_ballot</span><span class="p">(</span>
             <span class="n">alternatives</span><span class="p">,</span>
-            <span class="n">approve_disapproved_sampler</span><span class="p">,</span>
+            <span class="n">approved_disapproved_sampler</span><span class="p">,</span>
             <span class="n">approved_sampler</span><span class="p">,</span>
             <span class="n">disapproved_sampler</span>
         <span class="p">)</span>

@@ -7,7 +7,7 @@ from trivoting.election.alternative import Alternative
 from trivoting.election.trichotomous_ballot import TrichotomousBallot
 from trivoting.election.trichotomous_profile import TrichotomousProfile
 from trivoting.rules.phragmen import sequential_phragmen
-from trivoting.rules.selection import Selection
+from trivoting.election.selection import Selection
 
 
 class TestPhragmen(TestCase):

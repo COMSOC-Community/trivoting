@@ -151,9 +151,11 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../index.html">Trivoting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Complete Guide</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../reference/index.html">Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../reference/election/index.html">Election module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../reference/rules/index.html">Rules module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../reference/axiomatic/index.html">Axiomatic module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../reference/tiebreaking.html">Tie-Breaking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../reference/fractions.html">Fractions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../reference/utils.html">Utils</a></li>
@@ -288,13 +290,49 @@ document.write(`
 
 <div class="viewcode-block" id="pb_approval_ballot_to_trichotomous_ballot">
 <a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.pabulib.pb_approval_ballot_to_trichotomous_ballot">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">pb_approval_ballot_to_trichotomous_ballot</span><span class="p">(</span><span class="n">app_ballot</span><span class="p">:</span> <span class="n">AbstractApprovalBallot</span><span class="p">,</span> <span class="n">alt_map</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Project</span><span class="p">,</span> <span class="n">Alternative</span><span class="p">]):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">pb_approval_ballot_to_trichotomous_ballot</span><span class="p">(</span>
+        <span class="n">app_ballot</span><span class="p">:</span> <span class="n">AbstractApprovalBallot</span><span class="p">,</span>
+        <span class="n">alt_map</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Project</span><span class="p">,</span> <span class="n">Alternative</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TrichotomousBallot</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts an approval ballot from a PaBuLib profile into a trichotomous ballot.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    app_ballot : AbstractApprovalBallot</span>
+<span class="sd">        A ballot where projects are approved in a PaBuLib approval profile.</span>
+<span class="sd">    alt_map : dict[Project, Alternative]</span>
+<span class="sd">        A mapping from PaBuLib projects to Trivoting alternatives.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    TrichotomousBallot</span>
+<span class="sd">        A trichotomous ballot with approved alternatives (no disapprovals).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">TrichotomousBallot</span><span class="p">(</span><span class="n">approved</span><span class="o">=</span><span class="p">[</span><span class="n">alt_map</span><span class="p">[</span><span class="n">p</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">app_ballot</span><span class="p">])</span></div>
 
 
 <div class="viewcode-block" id="pb_approval_profile_to_trichotomous_profile">
 <a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.pabulib.pb_approval_profile_to_trichotomous_profile">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">pb_approval_profile_to_trichotomous_profile</span><span class="p">(</span><span class="n">instance</span><span class="p">:</span> <span class="n">Instance</span><span class="p">,</span> <span class="n">app_profile</span><span class="p">:</span> <span class="n">AbstractApprovalProfile</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">pb_approval_profile_to_trichotomous_profile</span><span class="p">(</span>
+        <span class="n">instance</span><span class="p">:</span> <span class="n">Instance</span><span class="p">,</span>
+        <span class="n">app_profile</span><span class="p">:</span> <span class="n">AbstractApprovalProfile</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TrichotomousProfile</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts a PaBuLib approval profile into a trichotomous profile.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    instance : Instance</span>
+<span class="sd">        The project instance from PaBuLib.</span>
+<span class="sd">    app_profile : AbstractApprovalProfile</span>
+<span class="sd">        The approval profile from PaBuLib.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    TrichotomousProfile</span>
+<span class="sd">        A trichotomous profile with approved alternatives from the approval profile.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">alt_map</span> <span class="o">=</span> <span class="p">{</span><span class="n">p</span><span class="p">:</span> <span class="n">Alternative</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">instance</span><span class="p">}</span>
     <span class="n">profile</span> <span class="o">=</span> <span class="n">TrichotomousProfile</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">ballot</span> <span class="ow">in</span> <span class="n">app_profile</span><span class="p">:</span>
@@ -311,17 +349,19 @@ document.write(`
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">        file_path : str</span>
-<span class="sd">            Path to the PaBuLib file to be parsed.</span>
+<span class="sd">    file_path : str</span>
+<span class="sd">        Path to the PaBuLib file to be parsed.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">        TrichotomousProfile</span>
-<span class="sd">            The profile corresponding to the file.</span>
+<span class="sd">    TrichotomousProfile</span>
+<span class="sd">        The profile corresponding to the file.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">pb_instance</span><span class="p">,</span> <span class="n">pb_profile</span> <span class="o">=</span> <span class="n">pabutools_parse_pabulib</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pb_profile</span><span class="p">,</span> <span class="n">AbstractApprovalProfile</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">pb_approval_profile_to_trichotomous_profile</span><span class="p">(</span><span class="n">pb_instance</span><span class="p">,</span> <span class="n">pb_profile</span><span class="p">)</span>
+        <span class="n">profile</span> <span class="o">=</span> <span class="n">pb_approval_profile_to_trichotomous_profile</span><span class="p">(</span><span class="n">pb_instance</span><span class="p">,</span> <span class="n">pb_profile</span><span class="p">)</span>
+        <span class="n">profile</span><span class="o">.</span><span class="n">max_size_selection</span> <span class="o">=</span> <span class="n">pb_instance</span><span class="o">.</span><span class="n">budget_limit</span>
+        <span class="k">return</span> <span class="n">profile</span>
     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;PaBuLib profiles of type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">pb_instance</span><span class="p">)</span><span class="si">}</span><span class="s2"> cannot be converted as a trichotomous profile.&quot;</span><span class="p">)</span></div>
 
 </pre></div>

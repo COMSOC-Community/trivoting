@@ -152,9 +152,11 @@
 <li class="toctree-l1"><a class="reference internal" href="../index.html">Trivoting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Complete Guide</a></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="election/index.html">Election module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rules/index.html">Rules module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="axiomatic/index.html">Axiomatic module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tiebreaking.html">Tie-Breaking</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Fractions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="utils.html">Utils</a></li>
@@ -323,11 +325,12 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pabutools.fractions.frac"><code class="docutils literal notranslate"><span class="pre">frac()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pabutools.fractions.str_as_frac"><code class="docutils literal notranslate"><span class="pre">str_as_frac()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pabutools.fractions.FLOAT_FRAC"><code class="docutils literal notranslate"><span class="pre">FLOAT_FRAC</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pabutools.fractions.FRACTION"><code class="docutils literal notranslate"><span class="pre">FRACTION</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pabutools.fractions.GMPY_FRAC"><code class="docutils literal notranslate"><span class="pre">GMPY_FRAC</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.fractions.frac"><code class="docutils literal notranslate"><span class="pre">frac()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.fractions.str_as_frac"><code class="docutils literal notranslate"><span class="pre">str_as_frac()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.fractions.FLOAT_FRAC"><code class="docutils literal notranslate"><span class="pre">FLOAT_FRAC</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.fractions.FRACTION"><code class="docutils literal notranslate"><span class="pre">FRACTION</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.fractions.GMPY_FRAC"><code class="docutils literal notranslate"><span class="pre">GMPY_FRAC</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.fractions.Numeric"><code class="docutils literal notranslate"><span class="pre">Numeric</span></code></a></li>
 </ul>
             </nav>
         </div>
@@ -339,12 +342,12 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="module-pabutools.fractions">
-<span id="fractions"></span><h1>Fractions<a class="headerlink" href="#module-pabutools.fractions" title="Link to this heading">#</a></h1>
+  <section id="module-trivoting.fractions">
+<span id="fractions"></span><h1>Fractions<a class="headerlink" href="#module-trivoting.fractions" title="Link to this heading">#</a></h1>
 <p>Module introducing all the functions used to handle fractions.</p>
 <dl class="py function">
-<dt class="sig sig-object py" id="pabutools.fractions.frac">
-<span class="sig-name descname"><span class="pre">frac</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">arg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Numeric</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Numeric</span></span></span><a class="reference internal" href="../_modules/pabutools/fractions.html#frac"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pabutools.fractions.frac" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="trivoting.fractions.frac">
+<span class="sig-name descname"><span class="pre">frac</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">arg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">mpq</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">mpq</span></span></span><a class="reference internal" href="../_modules/trivoting/fractions.html#frac"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.fractions.frac" title="Link to this definition">#</a></dt>
 <dd><p>Returns a fraction instantiated from the module defined by the <cite>FRACTION</cite> constant. If more than two numbers are
 provided, an error is raised.</p>
 <dl class="field-list simple">
@@ -361,8 +364,8 @@ provided, an error is raised.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="pabutools.fractions.str_as_frac">
-<span class="sig-name descname"><span class="pre">str_as_frac</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Numeric</span></span></span><a class="reference internal" href="../_modules/pabutools/fractions.html#str_as_frac"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pabutools.fractions.str_as_frac" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="trivoting.fractions.str_as_frac">
+<span class="sig-name descname"><span class="pre">str_as_frac</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">mpq</span></span></span><a class="reference internal" href="../_modules/trivoting/fractions.html#str_as_frac"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.fractions.str_as_frac" title="Link to this definition">#</a></dt>
 <dd><p>Converts a string to a fraction instantiated from the module defined by the <cite>FRACTION</cite> constant.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -378,22 +381,29 @@ provided, an error is raised.</p>
 </dd></dl>
 
 <dl class="py data">
-<dt class="sig sig-object py" id="pabutools.fractions.FLOAT_FRAC">
-<span class="sig-name descname"><span class="pre">FLOAT_FRAC</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'float'</span></em><a class="headerlink" href="#pabutools.fractions.FLOAT_FRAC" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="trivoting.fractions.FLOAT_FRAC">
+<span class="sig-name descname"><span class="pre">FLOAT_FRAC</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'float'</span></em><a class="headerlink" href="#trivoting.fractions.FLOAT_FRAC" title="Link to this definition">#</a></dt>
 <dd><p>Value of the <cite>FRACTION</cite> constant when float fractions are to be used.</p>
 </dd></dl>
 
 <dl class="py data">
-<dt class="sig sig-object py" id="pabutools.fractions.FRACTION">
-<span class="sig-name descname"><span class="pre">FRACTION</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'gmpy2'</span></em><a class="headerlink" href="#pabutools.fractions.FRACTION" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="trivoting.fractions.FRACTION">
+<span class="sig-name descname"><span class="pre">FRACTION</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'gmpy2'</span></em><a class="headerlink" href="#trivoting.fractions.FRACTION" title="Link to this definition">#</a></dt>
 <dd><p>Constant describing which module to use for computing fractions. It can either be “gmpy2” or “float”. The default is
 “gmpy2”.</p>
 </dd></dl>
 
 <dl class="py data">
-<dt class="sig sig-object py" id="pabutools.fractions.GMPY_FRAC">
-<span class="sig-name descname"><span class="pre">GMPY_FRAC</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'gmpy2'</span></em><a class="headerlink" href="#pabutools.fractions.GMPY_FRAC" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="trivoting.fractions.GMPY_FRAC">
+<span class="sig-name descname"><span class="pre">GMPY_FRAC</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'gmpy2'</span></em><a class="headerlink" href="#trivoting.fractions.GMPY_FRAC" title="Link to this definition">#</a></dt>
 <dd><p>Value of the <cite>FRACTION</cite> constant when gumpy2 fractions are to be used.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="trivoting.fractions.Numeric">
+<span class="sig-name descname"><span class="pre">Numeric</span></span><a class="headerlink" href="#trivoting.fractions.Numeric" title="Link to this definition">#</a></dt>
+<dd><p>Type for numeric values. Is the union of int, float and mpq fractions (from the gumpy2 package).</p>
+<p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">mpq</span></code></p>
 </dd></dl>
 
 </section>
@@ -443,11 +453,12 @@ provided, an error is raised.</p>
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pabutools.fractions.frac"><code class="docutils literal notranslate"><span class="pre">frac()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pabutools.fractions.str_as_frac"><code class="docutils literal notranslate"><span class="pre">str_as_frac()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pabutools.fractions.FLOAT_FRAC"><code class="docutils literal notranslate"><span class="pre">FLOAT_FRAC</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pabutools.fractions.FRACTION"><code class="docutils literal notranslate"><span class="pre">FRACTION</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pabutools.fractions.GMPY_FRAC"><code class="docutils literal notranslate"><span class="pre">GMPY_FRAC</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.fractions.frac"><code class="docutils literal notranslate"><span class="pre">frac()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.fractions.str_as_frac"><code class="docutils literal notranslate"><span class="pre">str_as_frac()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.fractions.FLOAT_FRAC"><code class="docutils literal notranslate"><span class="pre">FLOAT_FRAC</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.fractions.FRACTION"><code class="docutils literal notranslate"><span class="pre">FRACTION</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.fractions.GMPY_FRAC"><code class="docutils literal notranslate"><span class="pre">GMPY_FRAC</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.fractions.Numeric"><code class="docutils literal notranslate"><span class="pre">Numeric</span></code></a></li>
 </ul>
   </nav></div>
 

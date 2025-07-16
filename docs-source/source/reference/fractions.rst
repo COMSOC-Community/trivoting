@@ -1,5 +1,5 @@
 Fractions
 =========
 
-.. automodule:: pabutools.fractions
+.. automodule:: trivoting.fractions
    :members:

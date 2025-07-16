@@ -70,5 +70,7 @@ def parse_pabulib(file_path: str) -> TrichotomousProfile:
     """
     pb_instance, pb_profile = pabutools_parse_pabulib(file_path)
     if isinstance(pb_profile, AbstractApprovalProfile):
-        return pb_approval_profile_to_trichotomous_profile(pb_instance, pb_profile)
+        profile = pb_approval_profile_to_trichotomous_profile(pb_instance, pb_profile)
+        profile.max_size_selection = pb_instance.budget_limit
+        return profile
     raise ValueError(f"PaBuLib profiles of type {type(pb_instance)} cannot be converted as a trichotomous profile.")

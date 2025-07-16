@@ -16,4 +16,5 @@ In this library, we provide the functionalities to:
     Trivoting <self>
     installation
     quickstart
+    usage
     reference/index

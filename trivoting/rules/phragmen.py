@@ -6,7 +6,7 @@ from trivoting.election.alternative import Alternative
 from trivoting.election.trichotomous_ballot import AbstractTrichotomousBallot
 from trivoting.election.trichotomous_profile import AbstractTrichotomousProfile
 from trivoting.fractions import Numeric, frac
-from trivoting.rules.selection import Selection
+from trivoting.election.selection import Selection
 from trivoting.tiebreaking import TieBreakingRule, lexico_tie_breaking
 
 
@@ -61,7 +61,7 @@ def sequential_phragmen(
     Parameters
     ----------
     profile : AbstractTrichotomousProfile
-        The voting profile containing trichotomous ballots.
+        The trichotomous profile.
     max_size_selection : int
         Maximum number of alternatives to select.
     initial_loads : list of Numeric, optional

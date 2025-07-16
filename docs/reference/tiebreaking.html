@@ -44,7 +44,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Fractions" href="fractions.html" />
-    <link rel="prev" title="Rules module" href="rules/index.html" />
+    <link rel="prev" title="Axiomatic module" href="axiomatic/index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -152,9 +152,11 @@
 <li class="toctree-l1"><a class="reference internal" href="../index.html">Trivoting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Complete Guide</a></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="election/index.html">Election module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rules/index.html">Rules module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="axiomatic/index.html">Axiomatic module</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Tie-Breaking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="fractions.html">Fractions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="utils.html">Utils</a></li>
@@ -330,10 +332,10 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.tiebreaking.TieBreakingRule.untie"><code class="docutils literal notranslate"><span class="pre">TieBreakingRule.untie()</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.tiebreaking.asym_app_score_tie_breaking"><code class="docutils literal notranslate"><span class="pre">asym_app_score_tie_breaking</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.tiebreaking.app_score_tie_breaking"><code class="docutils literal notranslate"><span class="pre">app_score_tie_breaking</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.tiebreaking.lexico_tie_breaking"><code class="docutils literal notranslate"><span class="pre">lexico_tie_breaking</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.tiebreaking.refuse_tie_breaking"><code class="docutils literal notranslate"><span class="pre">refuse_tie_breaking</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.tiebreaking.sym_app_score_tie_breaking"><code class="docutils literal notranslate"><span class="pre">sym_app_score_tie_breaking</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.tiebreaking.support_tie_breaking"><code class="docutils literal notranslate"><span class="pre">support_tie_breaking</span></code></a></li>
 </ul>
             </nav>
         </div>
@@ -423,10 +425,10 @@ alternatives according to the tie-breaking rule and return the first element of 
 </dd></dl>
 
 <dl class="py data">
-<dt class="sig sig-object py" id="trivoting.tiebreaking.asym_app_score_tie_breaking">
-<span class="sig-name descname"><span class="pre">asym_app_score_tie_breaking</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;trivoting.tiebreaking.TieBreakingRule</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#trivoting.tiebreaking.asym_app_score_tie_breaking" title="Link to this definition">#</a></dt>
-<dd><p>Implements tie breaking based on the asymmetric approval score where the projects with the highest support (number
-of approvers) in the profile is selected.</p>
+<dt class="sig sig-object py" id="trivoting.tiebreaking.app_score_tie_breaking">
+<span class="sig-name descname"><span class="pre">app_score_tie_breaking</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;trivoting.tiebreaking.TieBreakingRule</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#trivoting.tiebreaking.app_score_tie_breaking" title="Link to this definition">#</a></dt>
+<dd><p>Implements tie breaking based on the approval score where the projects with the highest approval score in the profile
+is selected.</p>
 </dd></dl>
 
 <dl class="py data">
@@ -442,10 +444,9 @@ of approvers) in the profile is selected.</p>
 </dd></dl>
 
 <dl class="py data">
-<dt class="sig sig-object py" id="trivoting.tiebreaking.sym_app_score_tie_breaking">
-<span class="sig-name descname"><span class="pre">sym_app_score_tie_breaking</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;trivoting.tiebreaking.TieBreakingRule</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#trivoting.tiebreaking.sym_app_score_tie_breaking" title="Link to this definition">#</a></dt>
-<dd><p>Implements tie breaking based on the symmetric approval score where the projects with the highest net support (number
-of approvers minus number of disapprovers) in the profile is selected.</p>
+<dt class="sig sig-object py" id="trivoting.tiebreaking.support_tie_breaking">
+<span class="sig-name descname"><span class="pre">support_tie_breaking</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;trivoting.tiebreaking.TieBreakingRule</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#trivoting.tiebreaking.support_tie_breaking" title="Link to this definition">#</a></dt>
+<dd><p>Implements tie breaking based on the support where the projects with the highest support in the profile is selected.</p>
 </dd></dl>
 
 </section>
@@ -462,12 +463,12 @@ of approvers minus number of disapprovers) in the profile is selected.</p>
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="rules/index.html"
+       href="axiomatic/index.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Rules module</p>
+        <p class="prev-next-title">Axiomatic module</p>
       </div>
     </a>
     <a class="right-next"
@@ -502,10 +503,10 @@ of approvers minus number of disapprovers) in the profile is selected.</p>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.tiebreaking.TieBreakingRule.untie"><code class="docutils literal notranslate"><span class="pre">TieBreakingRule.untie()</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.tiebreaking.asym_app_score_tie_breaking"><code class="docutils literal notranslate"><span class="pre">asym_app_score_tie_breaking</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.tiebreaking.app_score_tie_breaking"><code class="docutils literal notranslate"><span class="pre">app_score_tie_breaking</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.tiebreaking.lexico_tie_breaking"><code class="docutils literal notranslate"><span class="pre">lexico_tie_breaking</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.tiebreaking.refuse_tie_breaking"><code class="docutils literal notranslate"><span class="pre">refuse_tie_breaking</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.tiebreaking.sym_app_score_tie_breaking"><code class="docutils literal notranslate"><span class="pre">sym_app_score_tie_breaking</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.tiebreaking.support_tie_breaking"><code class="docutils literal notranslate"><span class="pre">support_tie_breaking</span></code></a></li>
 </ul>
   </nav></div>
 

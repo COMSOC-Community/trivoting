@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from collections.abc import Callable, Iterable
-
 from trivoting.election.trichotomous_profile import TrichotomousProfile, AbstractTrichotomousProfile
 from trivoting.election.alternative import Alternative
 from trivoting.fractions import Numeric
@@ -108,20 +107,19 @@ lexico_tie_breaking = TieBreakingRule(lambda prof, alt: alt.name)
 Implements lexicographic tie breaking, i.e., tie-breaking based on the name of the alternatives.
 """
 
-sym_app_score_tie_breaking = TieBreakingRule(
+support_tie_breaking = TieBreakingRule(
     lambda prof, alt: -prof.support(alt)
 )
 """
-Implements tie breaking based on the symmetric approval score where the projects with the highest net support (number 
-of approvers minus number of disapprovers) in the profile is selected.
+Implements tie breaking based on the support where the projects with the highest support in the profile is selected.
 """
 
-asym_app_score_tie_breaking = TieBreakingRule(
-    lambda prof, alt: -prof.support(alt, symmetric=False)
+app_score_tie_breaking = TieBreakingRule(
+    lambda prof, alt: -prof.approval_score(alt)
 )
 """
-Implements tie breaking based on the asymmetric approval score where the projects with the highest support (number 
-of approvers) in the profile is selected.
+Implements tie breaking based on the approval score where the projects with the highest approval score in the profile
+ is selected.
 """
 
 def refuse_tie_breaking(profile, alternative):

@@ -8,7 +8,7 @@ import pabutools.rules as pb_rules
 from trivoting.election.alternative import Alternative
 from trivoting.election.trichotomous_profile import AbstractTrichotomousProfile
 from trivoting.fractions import frac
-from trivoting.rules.selection import Selection
+from trivoting.election.selection import Selection
 from trivoting.tiebreaking import TieBreakingRule
 
 
@@ -26,7 +26,7 @@ def tax_pb_instance(
     Parameters
     ----------
     profile : AbstractTrichotomousProfile
-        The input trichotomous profile of voters.
+        The trichotomous profile.
     max_size_selection : int
         The budget limit or maximum number of alternatives to be selected.
     initial_selection : Selection or None, optional
@@ -88,7 +88,7 @@ def tax_pb_rule_scheme(
     Parameters
     ----------
     profile : AbstractTrichotomousProfile
-        The input trichotomous profile of voters.
+        The trichotomous profile.
     max_size_selection : int
         The maximum number of alternatives allowed in the selection.
     pb_rule : callable

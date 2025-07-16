@@ -8,6 +8,7 @@ The complete documentation is available [here](https://comsoc-community.github.i
 It includes
 * [installation instructions](https://comsoc-community.github.io/trivoting/installation.html),
 * a [short guide](https://comsoc-community.github.io/trivoting/quickstart.html) for a quick start,
+* a [complete guide](https://comsoc-community.github.io/trivoting/usage.html) to go further,
 * a [reference guide](https://comsoc-community.github.io/trivoting/reference/index.html) to get all the details.
 
 ## Development

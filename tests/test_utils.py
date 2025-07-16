@@ -1,7 +1,7 @@
 import string
 from unittest import TestCase
 
-from trivoting.utils import generate_two_list_partitions, generate_two_list_partitions_old
+from trivoting.utils import generate_two_list_partitions
 
 
 class TestUtils(TestCase):

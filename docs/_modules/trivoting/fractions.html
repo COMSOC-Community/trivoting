@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pabutools.fractions &#8212; Trivoting</title>
+    <title>trivoting.fractions &#8212; Trivoting</title>
   
   
   
@@ -39,7 +39,7 @@
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pabutools/fractions';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/trivoting/fractions';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -151,9 +151,11 @@
 <li class="toctree-l1"><a class="reference internal" href="../../index.html">Trivoting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage.html">Complete Guide</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../reference/index.html">Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../reference/election/index.html">Election module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../reference/rules/index.html">Rules module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../reference/axiomatic/index.html">Axiomatic module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../reference/tiebreaking.html">Tie-Breaking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../reference/fractions.html">Fractions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../reference/utils.html">Utils</a></li>
@@ -276,19 +278,23 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <h1>Source code for pabutools.fractions</h1><div class="highlight"><pre>
+  <h1>Source code for trivoting.fractions</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Module introducing all the functions used to handle fractions.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Union</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">gmpy2</span><span class="w"> </span><span class="kn">import</span> <span class="n">mpq</span>
 
-<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">pabutools.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">Numeric</span>
+
+<span class="n">Numeric</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="n">mpq</span><span class="p">]</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Type for numeric values. Is the union of int, float and mpq fractions (from the gumpy2 package).</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
 
 <span class="n">GMPY_FRAC</span> <span class="o">=</span> <span class="s2">&quot;gmpy2&quot;</span>
 <span class="sd">&quot;&quot;&quot;</span>
@@ -308,7 +314,7 @@ document.write(`
 
 
 <div class="viewcode-block" id="frac">
-<a class="viewcode-back" href="../../reference/fractions.html#pabutools.fractions.frac">[docs]</a>
+<a class="viewcode-back" href="../../reference/fractions.html#trivoting.fractions.frac">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">frac</span><span class="p">(</span><span class="o">*</span><span class="n">arg</span><span class="p">:</span> <span class="n">Numeric</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Numeric</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns a fraction instantiated from the module defined by the `FRACTION` constant. If more than two numbers are</span>
@@ -349,7 +355,7 @@ document.write(`
 
 
 <div class="viewcode-block" id="str_as_frac">
-<a class="viewcode-back" href="../../reference/fractions.html#pabutools.fractions.str_as_frac">[docs]</a>
+<a class="viewcode-back" href="../../reference/fractions.html#trivoting.fractions.str_as_frac">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">str_as_frac</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Numeric</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Converts a string to a fraction instantiated from the module defined by the `FRACTION` constant.</span>

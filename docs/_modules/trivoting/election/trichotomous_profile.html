@@ -151,9 +151,11 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../index.html">Trivoting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Complete Guide</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../reference/index.html">Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../reference/election/index.html">Election module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../reference/rules/index.html">Rules module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../reference/axiomatic/index.html">Axiomatic module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../reference/tiebreaking.html">Tie-Breaking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../reference/fractions.html">Fractions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../reference/utils.html">Utils</a></li>
@@ -285,10 +287,10 @@ document.write(`
 <span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">product</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.election.alternative</span><span class="w"> </span><span class="kn">import</span> <span class="n">Alternative</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.election.selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">Selection</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.election.trichotomous_ballot</span><span class="w"> </span><span class="kn">import</span> <span class="n">TrichotomousBallot</span><span class="p">,</span> <span class="n">AbstractTrichotomousBallot</span><span class="p">,</span> \
     <span class="n">FrozenTrichotomousBallot</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.fractions</span><span class="w"> </span><span class="kn">import</span> <span class="n">Numeric</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.rules.selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">Selection</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">generate_subsets</span><span class="p">,</span> <span class="n">generate_two_list_partitions</span>
 
 
@@ -296,8 +298,15 @@ document.write(`
 <a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">AbstractTrichotomousProfile</span><span class="p">(</span><span class="n">ABC</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">AbstractTrichotomousBallot</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Abstract class representing a profile, that is, a collection of ballots. This class is only meant to be inherited.</span>
+<span class="sd">    Abstract class representing a profile, i.e., a collection of ballots.</span>
+<span class="sd">    This class is only meant to be inherited and provides a common interface for trichotomous profiles.</span>
 
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    alternatives : set[Alternative]</span>
+<span class="sd">        The set of all alternatives in the profile.</span>
+<span class="sd">    max_size_selection : int or None</span>
+<span class="sd">        The maximum number of alternatives that can be selected in a feasible selection (optional).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alternatives</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Alternative</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">max_size_selection</span> <span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
@@ -307,14 +316,14 @@ document.write(`
             <span class="bp">self</span><span class="o">.</span><span class="n">alternatives</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">alternatives</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">max_size_selection</span> <span class="o">=</span> <span class="n">max_size_selection</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_alternative_by_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alt_name</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Alternative</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_alternative_by_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alt_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Alternative</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieves an alternative by its name.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">            alt_name</span>
-<span class="sd">                The name of the alternative.</span>
+<span class="sd">        alt_name : str</span>
+<span class="sd">            The name of the alternative.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -402,14 +411,14 @@ document.write(`
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">support_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">defaultdict</span><span class="p">[</span><span class="n">Alternative</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns the support of the alternatives of the instance as a dictionary. Alternatives not appearing in</span>
-<span class="sd">        any ballot will not be present in the dictionary. The method returns a defaultdict so querying it for</span>
-<span class="sd">        absent alternatives will succeed and return 0.</span>
+<span class="sd">        Returns the support of the alternatives of the instance as a dictionary.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">            collections.defaultdict[Alternative, int]</span>
 <span class="sd">                The support of each alternative appearing in at least one ballot.</span>
+<span class="sd">                Alternatives never appearing (approved or disapproved) in any ballot will be absent, but accessing them</span>
+<span class="sd">                returns 0.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         
     <span class="nd">@abstractmethod</span>
@@ -431,14 +440,13 @@ document.write(`
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">approval_score_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">defaultdict</span><span class="p">[</span><span class="n">Alternative</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns the approval scores of the alternatives of the profile as a dictionary. Never approved alternatives</span>
-<span class="sd">        will not be present in the dictionary. The method returns a defaultdict so querying it for</span>
-<span class="sd">        non-approved alternatives will succeed and return 0.</span>
+<span class="sd">        Returns the approval scores of the alternatives of the profile as a dictionary.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">            collections.defaultdict[Alternative, int]</span>
 <span class="sd">                The approval score of each alternative appearing in at least one ballot.</span>
+<span class="sd">                Alternatives never approved in any ballot will be absent, but accessing them returns 0.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         
 
@@ -462,14 +470,13 @@ document.write(`
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">disapproval_score_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">defaultdict</span><span class="p">[</span><span class="n">Alternative</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns the disapproval scores of the alternatives of the profile as a dictionary. Never disapproved alternatives</span>
-<span class="sd">        will not be present in the dictionary. The method returns a defaultdict so querying it for</span>
-<span class="sd">        non-approved alternatives will succeed and return 0.</span>
+<span class="sd">        Returns the disapproval scores of the alternatives of the profile as a dictionary.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">            collections.defaultdict[Alternative, int]</span>
 <span class="sd">                The disapproval score of each alternative appearing in at least one ballot.</span>
+<span class="sd">                Alternatives never disapproved in any ballot will be absent, but accessing them returns 0.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
     <span class="nd">@abstractmethod</span>
@@ -498,6 +505,8 @@ document.write(`
 <span class="sd">        -------</span>
 <span class="sd">            tuple[collections.defaultdict[Alternative, int], collections.defaultdict[Alternative, int]]</span>
 <span class="sd">                The approval score and the disapproval score dictionaries.</span>
+<span class="sd">                Alternatives never appearing (approved or disapproved) in any ballot will be absent, but accessing them</span>
+<span class="sd">                returns 0.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">all_feasible_selections</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_size_selection</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Selection</span><span class="p">]:</span>
@@ -521,13 +530,13 @@ document.write(`
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">all_sub_profiles</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">AbstractTrichotomousProfile</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns an iterator that yields all possible subprofiles of the profile.</span>
+<span class="sd">        Returns an iterator over all subprofiles of the profile.</span>
+<span class="sd">        A subprofile is any multiset of ballots that is a subset (in terms of multiplicity) of the original profile.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">            Iterator[AbstractTrichotomousProfile]</span>
-<span class="sd">                An iterator that yields all possible subprofiles of the profile.</span>
-
+<span class="sd">        Iterator[AbstractTrichotomousProfile]</span>
+<span class="sd">            An iterator over all subprofiles of the profile.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">commonly_approved_alternatives</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">set</span><span class="p">[</span><span class="n">Alternative</span><span class="p">]:</span>
@@ -563,22 +572,22 @@ document.write(`
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">        init: Iterable[TrichotomousBallot], Optional</span>
-<span class="sd">            An iterable of trichotomours ballots used to initialise the profile.</span>
-<span class="sd">        alternatives: Iterable[Alternative], Optional</span>
-<span class="sd">            An iterable of alternatives representing all the alternatives of the instance.</span>
-<span class="sd">        max_size_selection: int, Optional</span>
-<span class="sd">            The maximum number of alternatives to be selected when computing the outcome of a rule on the profile.</span>
-<span class="sd">            Used notably when reading files from preference libraries.</span>
+<span class="sd">    init : Iterable[TrichotomousBallot], optional</span>
+<span class="sd">        An iterable of trichotomous ballots used to initialize the profile. Defaults to empty.</span>
+<span class="sd">    alternatives : Iterable[Alternative], optional</span>
+<span class="sd">        An iterable of alternatives representing all alternatives of the instance.</span>
+<span class="sd">    max_size_selection : int, optional</span>
+<span class="sd">        The maximum number of alternatives to be selected when computing the outcome of a rule on the profile.</span>
+<span class="sd">        Used notably when reading files from preference libraries.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
-<span class="sd">        alternatives: set[Alternative]</span>
-<span class="sd">            A set of alternatives representing all the alternatives of the instance.</span>
-<span class="sd">        max_size_selection: int</span>
-<span class="sd">            The maximum number of alternatives to be selected when computing the outcome of a rule on the profile.</span>
-<span class="sd">            Used notably when reading files from preference libraries.</span>
+<span class="sd">    alternatives : set[Alternative]</span>
+<span class="sd">        A set of alternatives representing all the alternatives of the instance.</span>
+<span class="sd">    max_size_selection : int or None</span>
+<span class="sd">        The maximum number of alternatives to be selected when computing the outcome of a rule on the profile.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -612,7 +621,7 @@ document.write(`
 
 <div class="viewcode-block" id="TrichotomousProfile.support_dict">
 <a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousProfile.support_dict">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">support_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Alternative</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">support_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">defaultdict</span><span class="p">[</span><span class="n">Alternative</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
         <span class="n">res</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">ballot</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">alt</span> <span class="ow">in</span> <span class="n">ballot</span><span class="o">.</span><span class="n">approved</span><span class="p">:</span>
@@ -634,7 +643,7 @@ document.write(`
 
 <div class="viewcode-block" id="TrichotomousProfile.approval_score_dict">
 <a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousProfile.approval_score_dict">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">approval_score_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Alternative</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">approval_score_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">defaultdict</span><span class="p">[</span><span class="n">Alternative</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
         <span class="n">res</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">ballot</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">alt</span> <span class="ow">in</span> <span class="n">ballot</span><span class="o">.</span><span class="n">approved</span><span class="p">:</span>
@@ -654,7 +663,7 @@ document.write(`
 
 <div class="viewcode-block" id="TrichotomousProfile.disapproval_score_dict">
 <a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousProfile.disapproval_score_dict">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">disapproval_score_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Alternative</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">disapproval_score_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">defaultdict</span><span class="p">[</span><span class="n">Alternative</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
         <span class="n">res</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">ballot</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">alt</span> <span class="ow">in</span> <span class="n">ballot</span><span class="o">.</span><span class="n">disapproved</span><span class="p">:</span>
@@ -677,7 +686,7 @@ document.write(`
 
 <div class="viewcode-block" id="TrichotomousProfile.approval_disapproval_score_dict">
 <a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousProfile.approval_disapproval_score_dict">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">approval_disapproval_score_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="n">Alternative</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Alternative</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">approval_disapproval_score_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">defaultdict</span><span class="p">[</span><span class="n">Alternative</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">defaultdict</span><span class="p">[</span><span class="n">Alternative</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
         <span class="n">app_scores</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
         <span class="n">disapp_scores</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">ballot</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
@@ -704,17 +713,20 @@ document.write(`
 <a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousProfile.multiplicity">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">multiplicity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ballot</span><span class="p">:</span> <span class="n">TrichotomousBallot</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns 1 regardless of the input; even if the ballot does not appear in the profile (to save up computation).</span>
+<span class="sd">        Returns the multiplicity of a ballot in the profile.</span>
+
+<span class="sd">        Note: This implementation returns 1 for any ballot regardless of its presence in the profile,</span>
+<span class="sd">        to save computation time.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">            ballot : TrichotomousBallot</span>
-<span class="sd">                The ballot whose multiplicity is inquired.</span>
+<span class="sd">        ballot : TrichotomousBallot</span>
+<span class="sd">            The ballot whose multiplicity is inquired.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">            int</span>
-<span class="sd">                1</span>
+<span class="sd">        int</span>
+<span class="sd">            The multiplicity of the ballot, always 1.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="mi">1</span></div>
 
@@ -723,13 +735,14 @@ document.write(`
 <a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousProfile.as_multiprofile">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">as_multiprofile</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TrichotomousMultiProfile</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns the multiprofile corresponding to this profile. Ballots are frozen to make them unmutable.</span>
+<span class="sd">        Returns the multiprofile corresponding to this profile. Ballots are converted to immutable frozen ballots.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">            TrichotomousMultiProfile</span>
-<span class="sd">                The multiprofile.</span>
+<span class="sd">        TrichotomousMultiProfile</span>
+<span class="sd">            The multiprofile representation of this profile with frozen ballots.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">return</span> <span class="n">TrichotomousMultiProfile</span><span class="p">([</span><span class="n">ballot</span><span class="o">.</span><span class="n">freeze</span><span class="p">()</span> <span class="k">for</span> <span class="n">ballot</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">],</span> <span class="n">alternatives</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">alternatives</span><span class="p">,</span> <span class="n">max_size_selection</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_size_selection</span><span class="p">)</span></div>
 
 
@@ -737,14 +750,16 @@ document.write(`
 <a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousProfile.all_sub_profiles">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">all_sub_profiles</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">TrichotomousProfile</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns an iterator that yields all possible sub-profiles.</span>
+<span class="sd">        Returns an iterator over all possible sub-profiles of the current profile.</span>
+
+<span class="sd">        A sub-profile is any subset of the ballots from the current profile.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">            Iterator[TrichotomousProfile]</span>
-<span class="sd">                An iterator that yields all possible sub-profiles.</span>
-
+<span class="sd">        Iterator[TrichotomousProfile]</span>
+<span class="sd">            An iterator that yields all possible sub-profiles.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">for</span> <span class="n">subset</span> <span class="ow">in</span> <span class="n">generate_subsets</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ballots_list</span><span class="p">):</span>
             <span class="k">yield</span> <span class="n">TrichotomousProfile</span><span class="p">(</span><span class="n">subset</span><span class="p">,</span> <span class="n">alternatives</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">alternatives</span><span class="p">,</span> <span class="n">max_size_selection</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_size_selection</span><span class="p">)</span></div>
 
@@ -876,8 +891,35 @@ document.write(`
 <a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousMultiProfile">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">TrichotomousMultiProfile</span><span class="p">(</span><span class="n">AbstractTrichotomousProfile</span><span class="p">,</span> <span class="n">MutableMapping</span><span class="p">[</span><span class="n">FrozenTrichotomousBallot</span><span class="p">,</span> <span class="nb">int</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Represents a trichotomous multi-profile, i.e., a collection of trichotomous ballots in which identical ballots</span>
-<span class="sd">    are stored one together with their multiplicity.</span>
+<span class="sd">    Represents a trichotomous multi-profile, i.e., a collection of trichotomous ballots where identical ballots</span>
+<span class="sd">    are stored together with their multiplicities.</span>
+
+<span class="sd">    This class models a multi-set of ballots, where each unique frozen ballot is associated with an integer</span>
+<span class="sd">    count indicating how many times it appears in the profile.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    init : Iterable[FrozenTrichotomousBallot], optional</span>
+<span class="sd">        An iterable of frozen trichotomous ballots used to initialize the multi-profile.</span>
+<span class="sd">        Defaults to an empty iterable.</span>
+<span class="sd">    alternatives : Iterable[Alternative], optional</span>
+<span class="sd">        An iterable of all alternatives present in the profile. If not provided and `init` is</span>
+<span class="sd">        an `AbstractTrichotomousProfile`, its alternatives are used.</span>
+<span class="sd">    max_size_selection : int, optional</span>
+<span class="sd">        The maximum number of alternatives to be selected when computing the outcome of a rule on the profile.</span>
+<span class="sd">        Used notably when reading files from preference libraries. If not provided and `init` is an</span>
+<span class="sd">        `AbstractTrichotomousProfile`, its `max_size_selection` is used.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    _ballots_counter : collections.Counter</span>
+<span class="sd">        Internal counter mapping each frozen trichotomous ballot to its multiplicity.</span>
+
+<span class="sd">    alternatives : set[Alternative]</span>
+<span class="sd">        The set of all alternatives in the profile.</span>
+
+<span class="sd">    max_size_selection : int</span>
+<span class="sd">        Maximum number of alternatives to select in an outcome (optional).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
@@ -912,7 +954,7 @@ document.write(`
 
 <div class="viewcode-block" id="TrichotomousMultiProfile.support_dict">
 <a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.support_dict">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">support_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Alternative</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">support_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">defaultdict</span><span class="p">[</span><span class="n">Alternative</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
         <span class="n">res</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">ballot</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">for</span> <span class="n">alt</span> <span class="ow">in</span> <span class="n">ballot</span><span class="o">.</span><span class="n">approved</span><span class="p">:</span>
@@ -940,7 +982,7 @@ document.write(`
 
 <div class="viewcode-block" id="TrichotomousMultiProfile.approval_score_dict">
 <a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.approval_score_dict">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">approval_score_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Alternative</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">approval_score_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">defaultdict</span><span class="p">[</span><span class="n">Alternative</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
         <span class="n">res</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">ballot</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">for</span> <span class="n">alt</span> <span class="ow">in</span> <span class="n">ballot</span><span class="o">.</span><span class="n">approved</span><span class="p">:</span>
@@ -959,7 +1001,7 @@ document.write(`
 
 <div class="viewcode-block" id="TrichotomousMultiProfile.disapproval_score_dict">
 <a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.disapproval_score_dict">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">disapproval_score_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Alternative</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">disapproval_score_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">defaultdict</span><span class="p">[</span><span class="n">Alternative</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
         <span class="n">res</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">ballot</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">for</span> <span class="n">alt</span> <span class="ow">in</span> <span class="n">ballot</span><span class="o">.</span><span class="n">disapproved</span><span class="p">:</span>
@@ -982,7 +1024,7 @@ document.write(`
 
 <div class="viewcode-block" id="TrichotomousMultiProfile.approval_disapproval_score_dict">
 <a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.approval_disapproval_score_dict">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">approval_disapproval_score_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="n">Alternative</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Alternative</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">approval_disapproval_score_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">defaultdict</span><span class="p">[</span><span class="n">Alternative</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">defaultdict</span><span class="p">[</span><span class="n">Alternative</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
         <span class="n">app_scores</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
         <span class="n">disapp_scores</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">ballot</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -993,9 +1035,20 @@ document.write(`
         <span class="k">return</span> <span class="n">app_scores</span><span class="p">,</span> <span class="n">disapp_scores</span></div>
 
 
+<div class="viewcode-block" id="TrichotomousMultiProfile.total">
+<a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.total">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">total</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Computes the total number of ballots in the profile, counting multiplicities.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        int</span>
+<span class="sd">            Total number of ballots.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Re-implemented as it is not available in Python &lt;3.10</span>
-        <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+        <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">())</span></div>
+
 
 <div class="viewcode-block" id="TrichotomousMultiProfile.num_ballots">
 <a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.num_ballots">[docs]</a>
@@ -1007,7 +1060,12 @@ document.write(`
 <a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.add_ballot">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">add_ballot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ballot</span><span class="p">:</span> <span class="n">FrozenTrichotomousBallot</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Adds a ballot to the profile.</span>
+<span class="sd">        Adds a ballot to the multi-profile, increasing its multiplicity by one.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        ballot : FrozenTrichotomousBallot</span>
+<span class="sd">            The frozen ballot to add.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ballot</span><span class="p">,</span> <span class="n">TrichotomousBallot</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;You are trying to add a non-frozen ballot to a multiprofile. This is not possible, &quot;</span>
@@ -1019,17 +1077,17 @@ document.write(`
 <a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.multiplicity">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">multiplicity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ballot</span><span class="p">:</span> <span class="n">FrozenTrichotomousBallot</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns the multiplicity of a ballot in the profile.</span>
+<span class="sd">        Returns the multiplicity of a given ballot in the profile.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">            ballot : TrichotomousBallot</span>
-<span class="sd">                The ballot whose multiplicity is inquired.</span>
+<span class="sd">        ballot : FrozenTrichotomousBallot</span>
+<span class="sd">            The ballot whose multiplicity is requested.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">            int</span>
-<span class="sd">                The multiplicity of the ballot.</span>
+<span class="sd">        int</span>
+<span class="sd">            The number of times the ballot appears in the profile.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="p">[</span><span class="n">ballot</span><span class="p">]</span></div>
 
@@ -1038,13 +1096,15 @@ document.write(`
 <a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.all_sub_profiles">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">all_sub_profiles</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">TrichotomousMultiProfile</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns an iterator that yields all possible sub-profiles.</span>
+<span class="sd">        Generates all possible sub-profiles of the current multi-profile.</span>
 
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">            Iterator[TrichotomousMultiProfile]</span>
-<span class="sd">                An iterator that yields all possible sub-profiles.</span>
+<span class="sd">        A sub-profile is any profile obtained by choosing any number (including zero) of occurrences</span>
+<span class="sd">        of each ballot up to their multiplicity in the current profile.</span>
 
+<span class="sd">        Yields</span>
+<span class="sd">        ------</span>
+<span class="sd">        TrichotomousMultiProfile</span>
+<span class="sd">            Each possible sub-profile.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">items</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ballots_counter</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
         <span class="k">for</span> <span class="n">counts</span> <span class="ow">in</span> <span class="n">product</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">count</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">items</span><span class="p">)):</span>

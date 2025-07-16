@@ -6,10 +6,10 @@ from collections.abc import Iterable, MutableSequence, MutableMapping, Iterator,
 from itertools import product
 
 from trivoting.election.alternative import Alternative
+from trivoting.election.selection import Selection
 from trivoting.election.trichotomous_ballot import TrichotomousBallot, AbstractTrichotomousBallot, \
     FrozenTrichotomousBallot
 from trivoting.fractions import Numeric
-from trivoting.rules.selection import Selection
 from trivoting.utils import generate_subsets, generate_two_list_partitions
 
 

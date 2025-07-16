@@ -151,9 +151,11 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../index.html">Trivoting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Complete Guide</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../reference/index.html">Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../reference/election/index.html">Election module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../reference/rules/index.html">Rules module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../reference/axiomatic/index.html">Axiomatic module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../reference/tiebreaking.html">Tie-Breaking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../reference/fractions.html">Fractions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../reference/utils.html">Utils</a></li>
@@ -283,11 +285,33 @@ document.write(`
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">pulp</span><span class="w"> </span><span class="kn">import</span> <span class="n">LpProblem</span><span class="p">,</span> <span class="n">LpMaximize</span><span class="p">,</span> <span class="n">LpBinary</span><span class="p">,</span> <span class="n">LpVariable</span><span class="p">,</span> <span class="n">lpSum</span><span class="p">,</span> <span class="n">LpStatusOptimal</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">PULP_CBC_CMD</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.rules.selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">Selection</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.election.selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">Selection</span>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">PAVMipVoter</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Helper class representing a voter in the Proportional Approval Voting (PAV) ILP model.</span>
 
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ballot : FrozenTrichotomousBallot</span>
+<span class="sd">        The ballot of the voter.</span>
+<span class="sd">    multiplicity : int</span>
+<span class="sd">        The number of identical ballots represented by this voter.</span>
+<span class="sd">    x_vars : dict[int, LpVariable]</span>
+<span class="sd">        Decision variables representing the voter&#39;s contribution to the PAV score</span>
+<span class="sd">        for each possible approval count.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ballot : FrozenTrichotomousBallot</span>
+<span class="sd">        The ballot of the voter.</span>
+<span class="sd">    multiplicity : int</span>
+<span class="sd">        The number of identical ballots represented by this voter.</span>
+<span class="sd">    x_vars : dict[int, LpVariable]</span>
+<span class="sd">        Decision variables representing the voter&#39;s contribution to the PAV score</span>
+<span class="sd">        for each possible approval count.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ballot</span><span class="p">,</span> <span class="n">multiplicity</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ballot</span> <span class="o">=</span> <span class="n">ballot</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">multiplicity</span> <span class="o">=</span> <span class="n">multiplicity</span>
@@ -305,34 +329,39 @@ document.write(`
     <span class="n">max_seconds</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">600</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Selection</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="n">Selection</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Proportional Approval via ILP solver.</span>
+<span class="sd">    Compute the selections of the Proportional Approval Voting (PAV) rule via Integer Linear Programming (ILP).</span>
+<span class="sd">    The ILP is solved with the `pulp` package.</span>
+
+<span class="sd">    The definition of the PAV rule for the trichotomous context is taken from Section 3.3 of</span>
+<span class="sd">    ``Proportionality in Thumbs Up and Down Voting`` (Kraiczy, Papasotiropoulos, Pierczyński and Skowron, 2025).</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">        profile : AbstractTrichotomousProfile</span>
-<span class="sd">            The profile.</span>
-<span class="sd">        max_size_selection : int</span>
-<span class="sd">            The maximum number of alternatives that can be selected.</span>
-<span class="sd">        initial_selection: Selection, optional</span>
-<span class="sd">            An initial selection, fixed some alternatives has being either selected of not-selected. If the</span>
-<span class="sd">            selection has implicit_reject set to `True`, then no alternative is forced not-selected.</span>
-<span class="sd">        resoluteness : bool, optional</span>
-<span class="sd">            Set to `False` to obtain an irresolute outcome, where all tied budget allocations are returned.</span>
-<span class="sd">            Defaults to True.</span>
-<span class="sd">        verbose: bool, optional</span>
-<span class="sd">            Set to `True` to activate the display of the messages from the ILP solver.</span>
-<span class="sd">            Defaults to False.</span>
-<span class="sd">        max_seconds: int, optional</span>
-<span class="sd">            The maximum number of seconds allocated to the ILP solver.</span>
-<span class="sd">            Defaults to 600.</span>
+<span class="sd">    profile : AbstractTrichotomousProfile</span>
+<span class="sd">        The trichotomous profile.</span>
+<span class="sd">    max_size_selection : int</span>
+<span class="sd">        Maximum number of alternatives to select.</span>
+<span class="sd">    initial_selection : Selection, optional</span>
+<span class="sd">        An initial partial selection fixing some alternatives as selected or rejected.</span>
+<span class="sd">        If `implicit_reject` is True in the initial selection, no alternatives are fixed to be rejected.</span>
+<span class="sd">        Defaults to None.</span>
+<span class="sd">    resoluteness : bool, optional</span>
+<span class="sd">        If True, returns a single optimal selection (resolute).</span>
+<span class="sd">        If False, returns all tied optimal selections (irresolute).</span>
+<span class="sd">        Defaults to True.</span>
+<span class="sd">    verbose : bool, optional</span>
+<span class="sd">        If True, enables ILP solver output.</span>
+<span class="sd">        Defaults to False.</span>
+<span class="sd">    max_seconds : int, optional</span>
+<span class="sd">        Time limit in seconds for the ILP solver.</span>
+<span class="sd">        Defaults to 600.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">        Selection | list[Selection]</span>
-<span class="sd">            The selection if resolute (:code:`resoluteness == True`), or a list of selections</span>
-<span class="sd">            if irresolute (:code:`resoluteness == False`).</span>
+<span class="sd">    Selection | list[Selection]</span>
+<span class="sd">        The selection if resolute (:code:`resoluteness == True`), or a list of selections</span>
+<span class="sd">        if irresolute (:code:`resoluteness == False`).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
 
     <span class="n">mip_model</span> <span class="o">=</span> <span class="n">LpProblem</span><span class="p">(</span><span class="s2">&quot;pav&quot;</span><span class="p">,</span> <span class="n">LpMaximize</span><span class="p">)</span>
 

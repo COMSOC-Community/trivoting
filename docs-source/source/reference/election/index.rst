@@ -6,12 +6,16 @@ Election module
 Alternatives
 ------------
 
+.. automodule:: trivoting.election.alternative
+
 .. autoclass:: trivoting.election.alternative.Alternative
     :members:
     :show-inheritance:
 
 Trichotomous Ballots
 --------------------
+
+.. automodule:: trivoting.election.trichotomous_ballot
 
 .. autoclass:: trivoting.election.trichotomous_ballot.AbstractTrichotomousBallot
     :members:
@@ -28,6 +32,8 @@ Trichotomous Ballots
 Trichotomous Profiles
 ---------------------
 
+.. automodule:: trivoting.election.trichotomous_profile
+
 .. autoclass:: trivoting.election.trichotomous_profile.AbstractTrichotomousProfile
 
 .. autoclass:: trivoting.election.trichotomous_profile.TrichotomousProfile
@@ -41,12 +47,16 @@ Trichotomous Profiles
 Link to abcvoting
 -----------------
 
+.. automodule:: trivoting.election.abcvoting
+
 .. autofunction:: trivoting.election.abcvoting.abcvoting_to_trichotomous_profile
 
 .. autofunction:: trivoting.election.abcvoting.parse_abcvoting_yaml
 
 Link with Pabulib and pabutools
 -------------------------------
+
+.. automodule:: trivoting.election.pabulib
 
 .. autofunction:: trivoting.election.pabulib.parse_pabulib
 
@@ -57,6 +67,8 @@ Link with Pabulib and pabutools
 Link with PrefLib
 -----------------
 
+.. automodule:: trivoting.election.preflib
+
 .. autofunction:: trivoting.election.preflib.parse_preflib
 
 .. autofunction:: trivoting.election.preflib.cat_instance_to_trichotomous_profile
@@ -66,6 +78,17 @@ Link with PrefLib
 Generate Random Profile
 -----------------------
 
+.. automodule:: trivoting.election.generate
+
 .. autofunction:: trivoting.election.generate.generate_random_ballot
 
 .. autofunction:: trivoting.election.generate.generate_random_profile
+
+Selection
+---------
+
+.. automodule:: trivoting.election.selection
+
+.. autoclass:: trivoting.election.selection.Selection
+    :members:
+    :show-inheritance:

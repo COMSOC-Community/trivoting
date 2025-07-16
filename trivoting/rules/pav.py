@@ -4,7 +4,7 @@ from trivoting.election.trichotomous_profile import AbstractTrichotomousProfile
 
 from pulp import LpProblem, LpMaximize, LpBinary, LpVariable, lpSum, LpStatusOptimal, value, PULP_CBC_CMD
 
-from trivoting.rules.selection import Selection
+from trivoting.election.selection import Selection
 
 
 class PAVMipVoter:
@@ -55,7 +55,7 @@ def proportional_approval_voting(
     Parameters
     ----------
     profile : AbstractTrichotomousProfile
-        The voting profile containing trichotomous ballots.
+        The trichotomous profile.
     max_size_selection : int
         Maximum number of alternatives to select.
     initial_selection : Selection, optional

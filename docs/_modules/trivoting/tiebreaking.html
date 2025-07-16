@@ -151,9 +151,11 @@
 <li class="toctree-l1"><a class="reference internal" href="../../index.html">Trivoting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage.html">Complete Guide</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../reference/index.html">Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../reference/election/index.html">Election module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../reference/rules/index.html">Rules module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../reference/axiomatic/index.html">Axiomatic module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../reference/tiebreaking.html">Tie-Breaking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../reference/fractions.html">Fractions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../reference/utils.html">Utils</a></li>
@@ -280,7 +282,6 @@ document.write(`
 <span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Iterable</span>
-
 <span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.election.trichotomous_profile</span><span class="w"> </span><span class="kn">import</span> <span class="n">TrichotomousProfile</span><span class="p">,</span> <span class="n">AbstractTrichotomousProfile</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.election.alternative</span><span class="w"> </span><span class="kn">import</span> <span class="n">Alternative</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.fractions</span><span class="w"> </span><span class="kn">import</span> <span class="n">Numeric</span>
@@ -399,20 +400,19 @@ document.write(`
 <span class="sd">Implements lexicographic tie breaking, i.e., tie-breaking based on the name of the alternatives.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="n">sym_app_score_tie_breaking</span> <span class="o">=</span> <span class="n">TieBreakingRule</span><span class="p">(</span>
+<span class="n">support_tie_breaking</span> <span class="o">=</span> <span class="n">TieBreakingRule</span><span class="p">(</span>
     <span class="k">lambda</span> <span class="n">prof</span><span class="p">,</span> <span class="n">alt</span><span class="p">:</span> <span class="o">-</span><span class="n">prof</span><span class="o">.</span><span class="n">support</span><span class="p">(</span><span class="n">alt</span><span class="p">)</span>
 <span class="p">)</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Implements tie breaking based on the symmetric approval score where the projects with the highest net support (number </span>
-<span class="sd">of approvers minus number of disapprovers) in the profile is selected.</span>
+<span class="sd">Implements tie breaking based on the support where the projects with the highest support in the profile is selected.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="n">asym_app_score_tie_breaking</span> <span class="o">=</span> <span class="n">TieBreakingRule</span><span class="p">(</span>
-    <span class="k">lambda</span> <span class="n">prof</span><span class="p">,</span> <span class="n">alt</span><span class="p">:</span> <span class="o">-</span><span class="n">prof</span><span class="o">.</span><span class="n">support</span><span class="p">(</span><span class="n">alt</span><span class="p">,</span> <span class="n">symmetric</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">app_score_tie_breaking</span> <span class="o">=</span> <span class="n">TieBreakingRule</span><span class="p">(</span>
+    <span class="k">lambda</span> <span class="n">prof</span><span class="p">,</span> <span class="n">alt</span><span class="p">:</span> <span class="o">-</span><span class="n">prof</span><span class="o">.</span><span class="n">approval_score</span><span class="p">(</span><span class="n">alt</span><span class="p">)</span>
 <span class="p">)</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Implements tie breaking based on the asymmetric approval score where the projects with the highest support (number </span>
-<span class="sd">of approvers) in the profile is selected.</span>
+<span class="sd">Implements tie breaking based on the approval score where the projects with the highest approval score in the profile</span>
+<span class="sd"> is selected.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="refuse_tie_breaking">

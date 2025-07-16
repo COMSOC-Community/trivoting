@@ -9,7 +9,7 @@ class Selection:
     A selection is the outcome of a rule. It contains both the alternatives that have been selected and the ones that
     have been rejected.
 
-     Parameters
+    Parameters
     ----------
         selected : Iterable[Alternative], optional
             A collection of alternatives that are selected. Defaults to an empty list.

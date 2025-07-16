@@ -151,9 +151,11 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../index.html">Trivoting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Complete Guide</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../reference/index.html">Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../reference/election/index.html">Election module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../reference/rules/index.html">Rules module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../reference/axiomatic/index.html">Axiomatic module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../reference/tiebreaking.html">Tie-Breaking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../reference/fractions.html">Fractions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../reference/utils.html">Utils</a></li>
@@ -288,22 +290,33 @@ document.write(`
 
 <div class="viewcode-block" id="cat_preferences_to_trichotomous_ballot">
 <a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.preflib.cat_preferences_to_trichotomous_ballot">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">cat_preferences_to_trichotomous_ballot</span><span class="p">(</span><span class="n">pref</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">]],</span> <span class="n">alt_map</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Alternative</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">TrichotomousBallot</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Converts a categorical preference as defined in the PrefLib standard into a trichotomous ballot.</span>
-<span class="sd">    The first category is mapped to the &quot;approved alternatives&quot;. The second category is mapped to the &quot;neutral</span>
-<span class="sd">    alternatives&quot;. The last category is mapped to the &quot;disapproved alternatives&quot;.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">cat_preferences_to_trichotomous_ballot</span><span class="p">(</span>
+    <span class="n">pref</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">]],</span>
+    <span class="n">alt_map</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Alternative</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TrichotomousBallot</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts a categorical preference from PrefLib into a trichotomous ballot.</span>
+
+<span class="sd">    The first category in the preference is treated as the set of approved alternatives.</span>
+<span class="sd">    If a second category is present, it is treated as neutral and ignored in the ballot.</span>
+<span class="sd">    If a third category is present, it is treated as the set of disapproved alternatives.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">        pref: tuple[tuple[int]]</span>
-<span class="sd">            The preferences as represented in the preflibtools&#39; CategoricalInstance.</span>
-<span class="sd">        alt_map: dict[int, Alternative]</span>
-<span class="sd">            A dictionary mapping alternative names in PrefLib (int) to Alternative objects.</span>
+<span class="sd">    pref : tuple[tuple[int]]</span>
+<span class="sd">        The categorical preferences, typically a tuple of up to 3 ranked groups of alternative IDs.</span>
+<span class="sd">    alt_map : dict[int, Alternative]</span>
+<span class="sd">        A mapping from PrefLib integer IDs to Alternative objects.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">        TrichotomousBallot</span>
-<span class="sd">            The trichotomous ballot.</span>
+<span class="sd">    TrichotomousBallot</span>
+<span class="sd">        The corresponding trichotomous ballot.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If the number of categories is not between 1 and 3.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">pref</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">pref</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Only categorical preferences between 1 and 3 categories can be converted to&quot;</span>
@@ -318,8 +331,28 @@ document.write(`
 
 <div class="viewcode-block" id="cat_instance_to_trichotomous_profile">
 <a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.preflib.cat_instance_to_trichotomous_profile">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">cat_instance_to_trichotomous_profile</span><span class="p">(</span><span class="n">cat_instance</span><span class="p">:</span> <span class="n">CategoricalInstance</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TrichotomousProfile</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Converts a PrefLib Categorical instance into a Trichotomous Profile.&quot;&quot;&quot;</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">cat_instance_to_trichotomous_profile</span><span class="p">(</span>
+    <span class="n">cat_instance</span><span class="p">:</span> <span class="n">CategoricalInstance</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TrichotomousProfile</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts a PrefLib CategoricalInstance into a trichotomous profile. The PrefLib instance should have 1, 2 or 3</span>
+<span class="sd">    categories. If there is a single categories, it is assumed to represent the approved alternatives. If there are</span>
+<span class="sd">    2 categories, it is assumed that they represent the approved and neutral alternatives. In case of 3 categories,</span>
+<span class="sd">    the categories are assumed to represent approved, neutral and disapproved alternatives, in that order.</span>
+
+<span class="sd">    Each ballot in the categorical instance is converted using</span>
+<span class="sd">    `cat_preferences_to_trichotomous_ballot`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cat_instance : CategoricalInstance</span>
+<span class="sd">        A parsed categorical instance from PrefLib.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    TrichotomousProfile</span>
+<span class="sd">        A profile composed of trichotomous ballots.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">cat_instance</span><span class="o">.</span><span class="n">num_categories</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">cat_instance</span><span class="o">.</span><span class="n">num_categories</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Only categorical preferences between 1 and 3 categories can be converted to&quot;</span>
                          <span class="sa">f</span><span class="s2">&quot;a trichotomous profile. Categorical instance </span><span class="si">{</span><span class="n">cat_instance</span><span class="si">}</span><span class="s2"> has &quot;</span>
@@ -340,15 +373,18 @@ document.write(`
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Parses a PrefLib file and returns the corresponding trichotomous profile.</span>
 
+<span class="sd">    The file is parsed using `preflibtools.get_parsed_instance`, and only</span>
+<span class="sd">    categorical instances with 1–3 categories are supported.</span>
+
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">        file_path : str</span>
-<span class="sd">            Path to the PrefLib file to be parsed.</span>
+<span class="sd">    file_path : str</span>
+<span class="sd">        The file path to a PrefLib categorical instance.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">        TrichotomousProfile</span>
-<span class="sd">            The profile corresponding to the file.</span>
+<span class="sd">    TrichotomousProfile</span>
+<span class="sd">        A trichotomous profile built from the given file.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">instance</span> <span class="o">=</span> <span class="n">get_parsed_instance</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">autocorrect</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>

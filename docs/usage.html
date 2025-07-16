@@ -1,0 +1,1055 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" data-theme="light">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Complete Guide &#8212; Trivoting</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "light";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=f131489c"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'usage';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Reference" href="reference/index.html" />
+    <link rel="prev" title="Quick Start" href="quickstart.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="light">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Trivoting</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="index.html">Trivoting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Complete Guide</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="reference/index.html">Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="reference/election/index.html">Election module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/rules/index.html">Rules module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/axiomatic/index.html">Axiomatic module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/tiebreaking.html">Tie-Breaking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/fractions.html">Fractions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/utils.html">Utils</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/Simon-Rey/trivoting" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/usage.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Complete Guide</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#alternatives">Alternatives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#trichotomous-ballots">Trichotomous Ballots</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#profiles">Profiles</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trichotomousprofile">TrichotomousProfile</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trichotomousmultiprofile">TrichotomousMultiProfile</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#details-of-a-profile">Details of a Profile</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interoperability-with-other-libraries">Interoperability with Other Libraries</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#preflib-integration">PrefLib Integration</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pabulib-integration">PaBuLib Integration</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#abcvoting-integration">AbcVoting Integration</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#random-generation-of-profiles">Random Generation of Profiles</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#selection">Selection</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rules">Rules</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#proportional-approval-voting-pav">Proportional Approval Voting (PAV)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sequential-phragmen">Sequential Phragmén</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tax-pb-rule-scheme">Tax PB Rule Scheme</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tie-breaking">Tie-Breaking</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#axiomatic">Axiomatic</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#justified-representation">Justified Representation</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fractions">Fractions</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="complete-guide">
+<span id="usage"></span><h1>Complete Guide<a class="headerlink" href="#complete-guide" title="Link to this heading">#</a></h1>
+<section id="alternatives">
+<h2>Alternatives<a class="headerlink" href="#alternatives" title="Link to this heading">#</a></h2>
+<p>Please refer to the module <a class="reference internal" href="reference/election/index.html#module-trivoting.election.alternative" title="trivoting.election.alternative"><code class="xref py py-mod docutils literal notranslate"><span class="pre">alternative</span></code></a> for more information.</p>
+<p>An alternative represents a possible outcome of the election. It is defined by a single attribute: its name.
+Equality, comparison, and hashing are all based on this name.</p>
+<p>The central class is <a class="reference internal" href="reference/election/index.html#trivoting.election.alternative.Alternative" title="trivoting.election.alternative.Alternative"><code class="xref py py-class docutils literal notranslate"><span class="pre">Alternative</span></code></a>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.election</span><span class="w"> </span><span class="kn">import</span> <span class="n">Alternative</span>
+
+<span class="c1"># Creating alternatives</span>
+<span class="n">a1</span> <span class="o">=</span> <span class="n">Alternative</span><span class="p">(</span><span class="s2">&quot;Option A&quot;</span><span class="p">)</span>
+<span class="n">a2</span> <span class="o">=</span> <span class="n">Alternative</span><span class="p">(</span><span class="s2">&quot;Option B&quot;</span><span class="p">)</span>
+<span class="n">a3</span> <span class="o">=</span> <span class="n">Alternative</span><span class="p">(</span><span class="s2">&quot;Option C&quot;</span><span class="p">)</span>
+
+<span class="c1"># Alternatives are compared based on their names</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">a1</span> <span class="o">==</span> <span class="s2">&quot;Option A&quot;</span><span class="p">)</span>  <span class="c1"># True</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">a1</span> <span class="o">==</span> <span class="n">a2</span><span class="p">)</span>          <span class="c1"># False</span>
+
+<span class="c1"># They can be used in sets and as dictionary keys</span>
+<span class="n">alternatives_set</span> <span class="o">=</span> <span class="p">{</span><span class="n">a1</span><span class="p">,</span> <span class="n">a2</span><span class="p">}</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">a3</span> <span class="ow">in</span> <span class="n">alternatives_set</span><span class="p">)</span>  <span class="c1"># False</span>
+
+<span class="c1"># Sorting alternatives is based on name</span>
+<span class="n">sorted_alts</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([</span><span class="n">a2</span><span class="p">,</span> <span class="n">a1</span><span class="p">,</span> <span class="n">a3</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">sorted_alts</span><span class="p">)</span>  <span class="c1"># [&#39;Option A&#39;, &#39;Option B&#39;, &#39;Option C&#39;]</span>
+</pre></div>
+</div>
+</section>
+<section id="trichotomous-ballots">
+<h2>Trichotomous Ballots<a class="headerlink" href="#trichotomous-ballots" title="Link to this heading">#</a></h2>
+<p>Please refer to the module <a class="reference internal" href="reference/election/index.html#module-trivoting.election.trichotomous_ballot" title="trivoting.election.trichotomous_ballot"><code class="xref py py-mod docutils literal notranslate"><span class="pre">trichotomous_ballot</span></code></a> for more information.</p>
+<p>Ballots contain the opinions of voters over a set of alternatives. In the trichotomous model,
+each voter categorizes alternatives into three categories:</p>
+<ul class="simple">
+<li><p><strong>Approved</strong></p></li>
+<li><p><strong>Disapproved</strong></p></li>
+<li><p><strong>Neutral</strong> (implicitly defined as those that are neither approved nor disapproved)</p></li>
+</ul>
+<p>The base interface is <a class="reference internal" href="reference/election/index.html#trivoting.election.trichotomous_ballot.AbstractTrichotomousBallot" title="trivoting.election.trichotomous_ballot.AbstractTrichotomousBallot"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractTrichotomousBallot</span></code></a>, which is subclassed by
+two concrete classes:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="reference/election/index.html#trivoting.election.trichotomous_ballot.TrichotomousBallot" title="trivoting.election.trichotomous_ballot.TrichotomousBallot"><code class="xref py py-class docutils literal notranslate"><span class="pre">TrichotomousBallot</span></code></a>: a mutable version.</p></li>
+<li><p><a class="reference internal" href="reference/election/index.html#trivoting.election.trichotomous_ballot.FrozenTrichotomousBallot" title="trivoting.election.trichotomous_ballot.FrozenTrichotomousBallot"><code class="xref py py-class docutils literal notranslate"><span class="pre">FrozenTrichotomousBallot</span></code></a>: an immutable, hashable version suitable for use in sets or as dictionary keys.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.election</span><span class="w"> </span><span class="kn">import</span> <span class="n">Alternative</span><span class="p">,</span> <span class="n">TrichotomousBallot</span>
+
+<span class="c1"># Create some alternatives</span>
+<span class="n">a1</span> <span class="o">=</span> <span class="n">Alternative</span><span class="p">(</span><span class="s2">&quot;Option A&quot;</span><span class="p">)</span>
+<span class="n">a2</span> <span class="o">=</span> <span class="n">Alternative</span><span class="p">(</span><span class="s2">&quot;Option B&quot;</span><span class="p">)</span>
+<span class="n">a3</span> <span class="o">=</span> <span class="n">Alternative</span><span class="p">(</span><span class="s2">&quot;Option C&quot;</span><span class="p">)</span>
+
+<span class="c1"># Create a trichotomous ballot</span>
+<span class="n">ballot</span> <span class="o">=</span> <span class="n">TrichotomousBallot</span><span class="p">(</span>
+    <span class="n">approved</span><span class="o">=</span><span class="p">[</span><span class="n">a1</span><span class="p">],</span>
+    <span class="n">disapproved</span><span class="o">=</span><span class="p">[</span><span class="n">a2</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">ballot</span><span class="p">)</span>  <span class="c1"># {Option A} // {Option B}</span>
+
+<span class="c1"># Add more opinions</span>
+<span class="n">ballot</span><span class="o">.</span><span class="n">add_approved</span><span class="p">(</span><span class="n">a3</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">ballot</span><span class="o">.</span><span class="n">approved</span><span class="p">)</span>     <span class="c1"># {Option A, Option C}</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">ballot</span><span class="o">.</span><span class="n">disapproved</span><span class="p">)</span>  <span class="c1"># {Option B}</span>
+
+<span class="c1"># Check membership</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">a1</span> <span class="ow">in</span> <span class="n">ballot</span><span class="p">)</span>  <span class="c1"># True as a1 is approved</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">a2</span> <span class="ow">in</span> <span class="n">ballot</span><span class="p">)</span>  <span class="c1"># True as s2 is disapproved</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">Alternative</span><span class="p">(</span><span class="s2">&quot;Option D&quot;</span><span class="p">)</span> <span class="ow">in</span> <span class="n">ballot</span><span class="p">)</span>  <span class="c1"># False</span>
+
+<span class="c1"># Freeze the ballot to make it immuable</span>
+<span class="n">frozen</span> <span class="o">=</span> <span class="n">ballot</span><span class="o">.</span><span class="n">freeze</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">frozen</span><span class="p">)</span>  <span class="c1"># (Option A, Option C) // (Option B)</span>
+
+<span class="c1"># Frozen ballots are immutable and hashable</span>
+<span class="n">ballot_set</span> <span class="o">=</span> <span class="p">{</span><span class="n">frozen</span><span class="p">}</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">frozen</span> <span class="ow">in</span> <span class="n">ballot_set</span><span class="p">)</span>  <span class="c1"># True</span>
+</pre></div>
+</div>
+</section>
+<section id="profiles">
+<h2>Profiles<a class="headerlink" href="#profiles" title="Link to this heading">#</a></h2>
+<p>Please refer to the module <a class="reference internal" href="reference/election/index.html#module-trivoting.election.trichotomous_profile" title="trivoting.election.trichotomous_profile"><code class="xref py py-mod docutils literal notranslate"><span class="pre">trichotomous_profile</span></code></a> for more information.</p>
+<p>The <cite>trivoting</cite> package provides classes to represent collections of trichotomous ballots, called profiles.
+A profile models a group of voters’ preferences classified into three categories: approved, disapproved, and not classified alternatives.</p>
+<p>Two main profile classes are available:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousProfile" title="trivoting.election.trichotomous_profile.TrichotomousProfile"><code class="xref py py-class docutils literal notranslate"><span class="pre">TrichotomousProfile</span></code></a>: stores ballots individually, one per voter.</p></li>
+<li><p><a class="reference internal" href="reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousMultiProfile" title="trivoting.election.trichotomous_profile.TrichotomousMultiProfile"><code class="xref py py-class docutils literal notranslate"><span class="pre">TrichotomousMultiProfile</span></code></a>: stores ballots with multiplicities, grouping identical ballots together.</p></li>
+</ul>
+<section id="trichotomousprofile">
+<h3>TrichotomousProfile<a class="headerlink" href="#trichotomousprofile" title="Link to this heading">#</a></h3>
+<p>The <a class="reference internal" href="reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousProfile" title="trivoting.election.trichotomous_profile.TrichotomousProfile"><code class="xref py py-class docutils literal notranslate"><span class="pre">TrichotomousProfile</span></code></a> class represents a list of ballots, where
+each ballot is an instance of <a class="reference internal" href="reference/election/index.html#trivoting.election.trichotomous_ballot.TrichotomousBallot" title="trivoting.election.trichotomous_ballot.TrichotomousBallot"><code class="xref py py-class docutils literal notranslate"><span class="pre">TrichotomousBallot</span></code></a>.
+You can initialize a profile with an iterable of ballots, and optionally provide a set of alternatives and a maximum size for selections.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.election.alternative</span><span class="w"> </span><span class="kn">import</span> <span class="n">Alternative</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.election.trichotomous_ballot</span><span class="w"> </span><span class="kn">import</span> <span class="n">TrichotomousBallot</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.election.trichotomous_profile</span><span class="w"> </span><span class="kn">import</span> <span class="n">TrichotomousProfile</span>
+
+<span class="c1"># Define alternatives</span>
+<span class="n">a</span> <span class="o">=</span> <span class="n">Alternative</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">Alternative</span><span class="p">(</span><span class="s2">&quot;b&quot;</span><span class="p">)</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">Alternative</span><span class="p">(</span><span class="s2">&quot;c&quot;</span><span class="p">)</span>
+
+<span class="c1"># Create ballots</span>
+<span class="n">ballot1</span> <span class="o">=</span> <span class="n">TrichotomousBallot</span><span class="p">(</span><span class="n">approved</span><span class="o">=</span><span class="p">[</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">],</span> <span class="n">disapproved</span><span class="o">=</span><span class="p">[</span><span class="n">c</span><span class="p">])</span>
+<span class="n">ballot2</span> <span class="o">=</span> <span class="n">TrichotomousBallot</span><span class="p">(</span><span class="n">approved</span><span class="o">=</span><span class="p">[</span><span class="n">b</span><span class="p">],</span> <span class="n">disapproved</span><span class="o">=</span><span class="p">[</span><span class="n">a</span><span class="p">])</span>
+
+<span class="c1"># Initialize profile</span>
+<span class="n">profile</span> <span class="o">=</span> <span class="n">TrichotomousProfile</span><span class="p">([</span><span class="n">ballot1</span><span class="p">,</span> <span class="n">ballot2</span><span class="p">,</span> <span class="n">ballot1</span><span class="p">,</span> <span class="n">ballot2</span><span class="p">],</span> <span class="n">alternatives</span><span class="o">=</span><span class="p">[</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">])</span>
+
+<span class="c1"># Access ballots (behaves like a list)</span>
+<span class="n">b_at_pos_1</span> <span class="o">=</span> <span class="n">profile</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">b_at_pos_1_to_3</span> <span class="o">=</span> <span class="n">profile</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+<span class="n">profile</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ballot1</span><span class="p">)</span>
+<span class="n">profile</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">ballot1</span><span class="p">,</span> <span class="n">ballot2</span><span class="p">])</span>
+
+<span class="c1"># Iterate over ballots</span>
+<span class="k">for</span> <span class="n">ballot</span> <span class="ow">in</span> <span class="n">profile</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">ballot</span><span class="p">)</span>
+
+<span class="c1"># Convert to a multiprofile (groups ballots by multiplicity)</span>
+<span class="n">multiprofile</span> <span class="o">=</span> <span class="n">profile</span><span class="o">.</span><span class="n">as_multiprofile</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Profile also have a <cite>max_size_selection</cite> attribute that indicates the maximum number of alternatives that can be selected
+in a feasible outcome. The usage is reserved for parsing files. Users should not expect this attribute to be considerd
+in most functions. Most functions needing this information require the value to be explicitly passed as an argument.</p>
+</section>
+<section id="trichotomousmultiprofile">
+<h3>TrichotomousMultiProfile<a class="headerlink" href="#trichotomousmultiprofile" title="Link to this heading">#</a></h3>
+<p>The <a class="reference internal" href="reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousMultiProfile" title="trivoting.election.trichotomous_profile.TrichotomousMultiProfile"><code class="xref py py-class docutils literal notranslate"><span class="pre">TrichotomousMultiProfile</span></code></a> class represents profiles where
+ballots are stored with their multiplicities. It makes use of the <a class="reference internal" href="reference/election/index.html#trivoting.election.trichotomous_ballot.FrozenTrichotomousBallot" title="trivoting.election.trichotomous_ballot.FrozenTrichotomousBallot"><code class="xref py py-class docutils literal notranslate"><span class="pre">FrozenTrichotomousBallot</span></code></a>
+for the ballots.
+This is more efficient when many voters have identical ballots.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.election.trichotomous_ballot</span><span class="w"> </span><span class="kn">import</span> <span class="n">FrozenTrichotomousBallot</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.election.trichotomous_profile</span><span class="w"> </span><span class="kn">import</span> <span class="n">TrichotomousMultiProfile</span>
+
+<span class="c1"># Freeze ballots to make them hashable and usable in multiprofiles</span>
+<span class="n">frozen_ballot1</span> <span class="o">=</span> <span class="n">ballot1</span><span class="o">.</span><span class="n">freeze</span><span class="p">()</span>
+<span class="n">frozen_ballot2</span> <span class="o">=</span> <span class="n">ballot2</span><span class="o">.</span><span class="n">freeze</span><span class="p">()</span>
+
+<span class="c1"># Initialize multiprofile with multiple copies of ballots</span>
+<span class="n">multi_profile</span> <span class="o">=</span> <span class="n">TrichotomousMultiProfile</span><span class="p">([</span><span class="n">frozen_ballot1</span><span class="p">,</span> <span class="n">frozen_ballot1</span><span class="p">,</span> <span class="n">frozen_ballot2</span><span class="p">],</span> <span class="n">alternatives</span><span class="o">=</span><span class="p">[</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">])</span>
+
+<span class="c1"># Multiplicity of a specific ballot</span>
+<span class="n">multiplicity</span> <span class="o">=</span> <span class="n">multi_profile</span><span class="o">.</span><span class="n">multiplicity</span><span class="p">(</span><span class="n">frozen_ballot1</span><span class="p">)</span>
+
+<span class="c1"># Acces the ballots (behaves like a dict)</span>
+<span class="n">profile</span><span class="p">[</span><span class="n">ballot1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">profile</span><span class="p">[</span><span class="n">ballot2</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+
+<span class="c1"># Iterate over ballots</span>
+<span class="k">for</span> <span class="n">ballot</span> <span class="ow">in</span> <span class="n">multi_profile</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">ballot</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="details-of-a-profile">
+<h3>Details of a Profile<a class="headerlink" href="#details-of-a-profile" title="Link to this heading">#</a></h3>
+<p>Both classes provide the same methods to extract information about the profile.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">profile</span> <span class="ow">in</span> <span class="p">[</span><span class="n">multi_profile</span><span class="p">,</span> <span class="n">profile</span><span class="p">]:</span>
+    <span class="c1"># Number of ballots</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">profile</span><span class="o">.</span><span class="n">num_ballots</span><span class="p">()</span>
+
+    <span class="c1"># Support score of alternative a (approvals minus disapprovals)</span>
+    <span class="n">support_a</span> <span class="o">=</span> <span class="n">profile</span><span class="o">.</span><span class="n">support</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+    <span class="n">support_dict</span> <span class="o">=</span> <span class="n">profile</span><span class="o">.</span><span class="n">support_dict</span>
+
+    <span class="c1"># Approval score (number of voters approving a)</span>
+    <span class="n">approval_a</span> <span class="o">=</span> <span class="n">profile</span><span class="o">.</span><span class="n">approval_score</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+
+    <span class="c1"># Disapproval score (number of voters disapproving a)</span>
+    <span class="n">disapproval_a</span> <span class="o">=</span> <span class="n">profile</span><span class="o">.</span><span class="n">disapproval_score</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+
+    <span class="c1"># All approval scores as a dictionary</span>
+    <span class="n">approval_dict</span> <span class="o">=</span> <span class="n">profile</span><span class="o">.</span><span class="n">approval_score_dict</span><span class="p">()</span>
+
+    <span class="c1"># Iterate over all feasible selections (partial outcomes)</span>
+    <span class="k">for</span> <span class="n">selection</span> <span class="ow">in</span> <span class="n">profile</span><span class="o">.</span><span class="n">all_feasible_selections</span><span class="p">(</span><span class="n">max_size_selection</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">selection</span><span class="p">)</span>
+    <span class="n">common_approved</span> <span class="o">=</span> <span class="n">profile</span><span class="o">.</span><span class="n">commonly_approved_alternatives</span><span class="p">()</span>
+    <span class="n">common_disapproved</span> <span class="o">=</span> <span class="n">profile</span><span class="o">.</span><span class="n">commonly_disapproved_alternatives</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>You can generate all subprofiles (all subsets of ballots), for both normal profiles and multiprofiles:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">subprofile</span> <span class="ow">in</span> <span class="n">profile</span><span class="o">.</span><span class="n">all_sub_profiles</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">subprofile</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">sub_multi_profile</span> <span class="ow">in</span> <span class="n">multi_profile</span><span class="o">.</span><span class="n">all_sub_profiles</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">sub_multi_profile</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You can also generate all the feasible selections of the profile:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">selection</span> <span class="ow">in</span> <span class="n">profile</span><span class="o">.</span><span class="n">all_feasible_selections</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">selection</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="interoperability-with-other-libraries">
+<h2>Interoperability with Other Libraries<a class="headerlink" href="#interoperability-with-other-libraries" title="Link to this heading">#</a></h2>
+<p>This package provides functions to convert and parse election data from several popular external libraries/formats into
+<a class="reference internal" href="reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousProfile" title="trivoting.election.trichotomous_profile.TrichotomousProfile"><code class="xref py py-class docutils literal notranslate"><span class="pre">TrichotomousProfile</span></code></a> objects used internally.</p>
+<section id="preflib-integration">
+<h3>PrefLib Integration<a class="headerlink" href="#preflib-integration" title="Link to this heading">#</a></h3>
+<p>Please refer to the module <a class="reference internal" href="reference/election/index.html#module-trivoting.election.preflib" title="trivoting.election.preflib"><code class="xref py py-mod docutils literal notranslate"><span class="pre">preflib</span></code></a> for more information.</p>
+<p>PrefLib is a popular dataset repository and parsing toolkit for voting preferences.
+The module supports conversion of PrefLib categorical preferences (with up to 3 categories) into trichotomous ballots.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.election</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_preflib</span>
+
+<span class="n">profile</span> <span class="o">=</span> <span class="n">parse_preflib</span><span class="p">(</span><span class="s2">&quot;path/to/preflib_file.cat&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="pabulib-integration">
+<h3>PaBuLib Integration<a class="headerlink" href="#pabulib-integration" title="Link to this heading">#</a></h3>
+<p>Please refer to the module <a class="reference internal" href="reference/election/index.html#module-trivoting.election.pabulib" title="trivoting.election.pabulib"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pabulib</span></code></a> for more information.</p>
+<p>PaBuLib is a library for participatory budgeting profiles. Approval-based PaBuLib elections can be converted to our
+format.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.election</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_pabulib</span>
+
+<span class="n">profile</span> <span class="o">=</span> <span class="n">parse_pabulib</span><span class="p">(</span><span class="s2">&quot;path/to/preflib_file.pb&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">profile</span><span class="o">.</span><span class="n">max_size_selection</span><span class="p">)</span>  <span class="c1"># The budget limit is saved as &#39;max_size_selection&#39;</span>
+</pre></div>
+</div>
+</section>
+<section id="abcvoting-integration">
+<h3>AbcVoting Integration<a class="headerlink" href="#abcvoting-integration" title="Link to this heading">#</a></h3>
+<p>Please refer to the module <a class="reference internal" href="reference/election/index.html#module-trivoting.election.abcvoting" title="trivoting.election.abcvoting"><code class="xref py py-mod docutils literal notranslate"><span class="pre">abcvoting</span></code></a> for more information.</p>
+<p>The abcvoting library focuses on approval-based multiwinner elections. It can outputs preference files in the form
+of a YAML file. These files can be parsed into the trivoting package.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.election</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_abcvoting_yaml</span>
+
+<span class="n">profile</span> <span class="o">=</span> <span class="n">parse_abcvoting_yaml</span><span class="p">(</span><span class="s2">&quot;path/to/abcvoting_profile.yaml&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">profile</span><span class="o">.</span><span class="n">max_size_selection</span><span class="p">)</span>  <span class="c1"># Parameter &#39;k&#39; is saved in &#39;max_size_selection&#39;</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="random-generation-of-profiles">
+<h2>Random Generation of Profiles<a class="headerlink" href="#random-generation-of-profiles" title="Link to this heading">#</a></h2>
+<p>Please refer to the module <a class="reference internal" href="reference/election/index.html#module-trivoting.election.generate" title="trivoting.election.generate"><code class="xref py py-mod docutils literal notranslate"><span class="pre">generate</span></code></a> for more information.</p>
+<p>We provide convenient functions to generate random trichotomous ballots and profiles. You can control how alternatives
+are assigned to approved, neutral, and disapproved categories by supplying your own sampling functions.
+The sampling functions can typically be taken from the <cite>prefsampling</cite> package.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.election.generate</span><span class="w"> </span><span class="kn">import</span> <span class="n">generate_random_profile</span>
+<span class="c1"># Use the set samplers from prefsampling</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">prefsampling.approval</span><span class="w"> </span><span class="kn">import</span> <span class="n">urn</span><span class="p">,</span> <span class="n">resampling</span><span class="p">,</span> <span class="n">noise</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">my_urn_sampler</span><span class="p">(</span><span class="n">num_voters</span><span class="p">,</span> <span class="n">num_candidates</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">urn</span><span class="p">(</span><span class="n">num_voters</span><span class="p">,</span> <span class="n">num_candidates</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mf">0.33</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">my_resampling_sampler</span><span class="p">(</span><span class="n">num_voters</span><span class="p">,</span> <span class="n">num_candidates</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">resampling</span><span class="p">(</span><span class="n">num_voters</span><span class="p">,</span> <span class="n">num_candidates</span><span class="p">,</span> <span class="n">phi</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">rel_size_central_vote</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">my_noise_sampler</span><span class="p">(</span><span class="n">num_voters</span><span class="p">,</span> <span class="n">num_candidates</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">noise</span><span class="p">(</span><span class="n">num_voters</span><span class="p">,</span> <span class="n">num_candidates</span><span class="p">,</span> <span class="n">phi</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">rel_size_central_vote</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+
+<span class="n">generate_random_profile</span><span class="p">(</span>
+    <span class="mi">100</span><span class="p">,</span> <span class="c1"># num_alternatives</span>
+    <span class="mi">100</span><span class="p">,</span> <span class="c1"># num_voters</span>
+    <span class="n">my_urn_sampler</span><span class="p">,</span>  <span class="c1"># First sampler to divide between divides between potentially approved and potentially disapproved</span>
+    <span class="n">my_resampling_sampler</span><span class="p">,</span>  <span class="c1"># Second sampler selects the definitively approved from the set of potentially approved</span>
+    <span class="n">my_noise_sampler</span><span class="p">,</span>  <span class="c1"># Third sampler selects the definitively disapproved from the set of potentially disapproved</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="selection">
+<h2>Selection<a class="headerlink" href="#selection" title="Link to this heading">#</a></h2>
+<p>Please refer to the module <a class="reference internal" href="reference/election/index.html#module-trivoting.election.selection" title="trivoting.election.selection"><code class="xref py py-mod docutils literal notranslate"><span class="pre">selection</span></code></a> for more information.</p>
+<p>Selections are used to represent the outcome of a rule: which alternatives are selected and which are rejected.
+The central class is <a class="reference internal" href="reference/election/index.html#trivoting.election.selection.Selection" title="trivoting.election.selection.Selection"><code class="xref py py-class docutils literal notranslate"><span class="pre">Selection</span></code></a>.</p>
+<p>A selection always includes the selected alternatives. Rejected alternatives can either be explicitly provided or be
+implicitly inferred (i.e., anything not selected is considered rejected). This behavior is controlled by the <code class="docutils literal notranslate"><span class="pre">implicit_reject</span></code> flag.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.election</span><span class="w"> </span><span class="kn">import</span> <span class="n">Alternative</span><span class="p">,</span> <span class="n">Selection</span>
+
+<span class="n">a1</span> <span class="o">=</span> <span class="n">Alternative</span><span class="p">(</span><span class="s2">&quot;a1&quot;</span><span class="p">)</span>
+<span class="n">a2</span> <span class="o">=</span> <span class="n">Alternative</span><span class="p">(</span><span class="s2">&quot;a2&quot;</span><span class="p">)</span>
+<span class="n">a3</span> <span class="o">=</span> <span class="n">Alternative</span><span class="p">(</span><span class="s2">&quot;a3&quot;</span><span class="p">)</span>
+
+<span class="c1"># Implicit rejection (default): everything not selected is rejected</span>
+<span class="n">selection</span> <span class="o">=</span> <span class="n">Selection</span><span class="p">(</span><span class="n">selected</span><span class="o">=</span><span class="p">[</span><span class="n">a1</span><span class="p">])</span>
+
+<span class="c1"># Count how many alternatives are selected</span>
+<span class="nb">len</span><span class="p">(</span><span class="n">selection</span><span class="p">)</span>
+
+<span class="c1"># Count total number of selected + rejected alternatives</span>
+<span class="n">selection</span><span class="o">.</span><span class="n">total_len</span><span class="p">()</span>
+
+<span class="c1"># Explicit rejection</span>
+<span class="n">selection_explicit</span> <span class="o">=</span> <span class="n">Selection</span><span class="p">(</span><span class="n">selected</span><span class="o">=</span><span class="p">[</span><span class="n">a1</span><span class="p">],</span> <span class="n">rejected</span><span class="o">=</span><span class="p">[</span><span class="n">a2</span><span class="p">,</span> <span class="n">a3</span><span class="p">],</span> <span class="n">implicit_reject</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You can check whether an alternative is selected or rejected using the corresponding methods:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">selection</span><span class="o">.</span><span class="n">is_selected</span><span class="p">(</span><span class="n">a1</span><span class="p">)</span>      <span class="c1"># True</span>
+<span class="n">selection</span><span class="o">.</span><span class="n">is_rejected</span><span class="p">(</span><span class="n">a2</span><span class="p">)</span>      <span class="c1"># True, because a2 is not selected</span>
+
+<span class="n">selection_explicit</span><span class="o">.</span><span class="n">is_selected</span><span class="p">(</span><span class="n">a1</span><span class="p">)</span>   <span class="c1"># True</span>
+<span class="n">selection_explicit</span><span class="o">.</span><span class="n">is_rejected</span><span class="p">(</span><span class="n">a2</span><span class="p">)</span>   <span class="c1"># True</span>
+<span class="n">selection_explicit</span><span class="o">.</span><span class="n">is_rejected</span><span class="p">(</span><span class="n">a3</span><span class="p">)</span>   <span class="c1"># True</span>
+</pre></div>
+</div>
+<p>You can add or extend the selected and rejected sets dynamically:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">a4</span> <span class="o">=</span> <span class="n">Alternative</span><span class="p">(</span><span class="s2">&quot;a4&quot;</span><span class="p">)</span>
+
+<span class="n">selection</span><span class="o">.</span><span class="n">add_selected</span><span class="p">(</span><span class="n">a4</span><span class="p">)</span>
+<span class="n">selection</span><span class="o">.</span><span class="n">extend_selected</span><span class="p">([</span><span class="n">Alternative</span><span class="p">(</span><span class="s2">&quot;a5&quot;</span><span class="p">)])</span>
+
+<span class="n">selection_explicit</span><span class="o">.</span><span class="n">add_rejected</span><span class="p">(</span><span class="n">Alternative</span><span class="p">(</span><span class="s2">&quot;a6&quot;</span><span class="p">))</span>
+<span class="n">selection_explicit</span><span class="o">.</span><span class="n">extend_rejected</span><span class="p">([</span><span class="n">Alternative</span><span class="p">(</span><span class="s2">&quot;a7&quot;</span><span class="p">),</span> <span class="n">Alternative</span><span class="p">(</span><span class="s2">&quot;a8&quot;</span><span class="p">)])</span>
+</pre></div>
+</div>
+</section>
+<section id="rules">
+<h2>Rules<a class="headerlink" href="#rules" title="Link to this heading">#</a></h2>
+<p>Rules are used to determine selections based on a profile. They all take a <cite>max_size_selection</cite> argument that indicates
+the maximum number of alternatives that can be selected. Since ballots can indicate disapproval, rules need not select
+exactly the desired number of alternatives.</p>
+<p>We try to always offer the possibility to ask for resolute or irresolute outcomes, via the <cite>resoluteness</cite> argument.
+The tie breaking rule to use can typically be specified via the <cite>tie_breaking</cite>
+argument (not all the rules support that). See the <a class="reference internal" href="reference/tiebreaking.html#module-trivoting.tiebreaking" title="trivoting.tiebreaking"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tiebreaking</span></code></a> module for more information.
+Initial selection can usually be passed to the rules via the <cite>initial</cite> argument. The rule then completes the initial
+selection.</p>
+<section id="proportional-approval-voting-pav">
+<h3>Proportional Approval Voting (PAV)<a class="headerlink" href="#proportional-approval-voting-pav" title="Link to this heading">#</a></h3>
+<p>The <a class="reference internal" href="reference/rules/index.html#trivoting.rules.pav.proportional_approval_voting" title="trivoting.rules.pav.proportional_approval_voting"><code class="xref py py-func docutils literal notranslate"><span class="pre">proportional_approval_voting()</span></code></a> function implements the Proportional Approval Voting (PAV)
+rule using Integer Linear Programming (ILP).</p>
+<p>You need to pass a trichotomous profile (implementing the <a class="reference internal" href="reference/election/index.html#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile" title="trivoting.election.trichotomous_profile.AbstractTrichotomousProfile"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractTrichotomousProfile</span></code></a> interface)
+and specify the maximum number of alternatives to select.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.rules</span><span class="w"> </span><span class="kn">import</span> <span class="n">proportional_approval_voting</span>
+
+<span class="n">selection</span> <span class="o">=</span> <span class="n">proportional_approval_voting</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">max_size_selection</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>By default, the function returns a single optimal selection (resolute). To retrieve all optimal selections (if multiple exist), set <cite>resoluteness=False</cite>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">results</span> <span class="o">=</span> <span class="n">proportional_approval_voting</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">max_size_selection</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">resoluteness</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">selection</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">selection</span><span class="p">)</span>
+<span class="c1"># Example output:</span>
+</pre></div>
+</div>
+<p>You can fix certain alternatives to be selected or rejected by providing an initial <a class="reference internal" href="reference/election/index.html#trivoting.election.selection.Selection" title="trivoting.election.selection.Selection"><code class="xref py py-class docutils literal notranslate"><span class="pre">Selection</span></code></a> object.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.election</span><span class="w"> </span><span class="kn">import</span> <span class="n">Selection</span>
+
+<span class="n">initial</span> <span class="o">=</span> <span class="n">Selection</span><span class="p">(</span><span class="n">selected</span><span class="o">=</span><span class="p">[</span><span class="n">a1</span><span class="p">],</span> <span class="n">implicit_reject</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">proportional_approval_voting</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">max_size_selection</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">initial_selection</span><span class="o">=</span><span class="n">initial</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Additional options for the ILP solver can be passed:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">verbose=True</span></code> enables output from the ILP solver.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">max_seconds</span></code> can be used to limit the computation time (default: 600 seconds).</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">proportional_approval_voting</span><span class="p">(</span>
+    <span class="n">profile</span><span class="p">,</span>
+    <span class="n">max_size_selection</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+    <span class="n">resoluteness</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">max_seconds</span><span class="o">=</span><span class="mi">300</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="sequential-phragmen">
+<h3>Sequential Phragmén<a class="headerlink" href="#sequential-phragmen" title="Link to this heading">#</a></h3>
+<p>The <a class="reference internal" href="reference/rules/index.html#trivoting.rules.phragmen.sequential_phragmen" title="trivoting.rules.phragmen.sequential_phragmen"><code class="xref py py-func docutils literal notranslate"><span class="pre">sequential_phragmen()</span></code></a> function implements the sequential Phragmén rule
+adapted to trichotomous preferences. This method distributes load among voters to achieve proportional representation.</p>
+<p>You need to pass a trichotomous profile (implementing the <a class="reference internal" href="reference/election/index.html#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile" title="trivoting.election.trichotomous_profile.AbstractTrichotomousProfile"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractTrichotomousProfile</span></code></a> interface)
+and specify the maximum number of alternatives to select.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.rules</span><span class="w"> </span><span class="kn">import</span> <span class="n">sequential_phragmen</span>
+
+<span class="n">selection</span> <span class="o">=</span> <span class="n">sequential_phragmen</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">max_size_selection</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>By default, the function returns a single optimal selection (resolute). To retrieve all optimal selections (if multiple exist), set <cite>resoluteness=False</cite>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">results</span> <span class="o">=</span> <span class="n">sequential_phragmen</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">max_size_selection</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">resoluteness</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">selection</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">selection</span><span class="p">)</span>
+<span class="c1"># Example output:</span>
+<span class="c1"># {[a1, a2, a5]} // {implicit}</span>
+<span class="c1"># {[a1, a3, a5]} // {implicit}</span>
+</pre></div>
+</div>
+<p>You can fix certain alternatives to be selected or rejected by providing an initial <a class="reference internal" href="reference/election/index.html#trivoting.election.selection.Selection" title="trivoting.election.selection.Selection"><code class="xref py py-class docutils literal notranslate"><span class="pre">Selection</span></code></a> object.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.election</span><span class="w"> </span><span class="kn">import</span> <span class="n">Selection</span>
+
+<span class="n">initial</span> <span class="o">=</span> <span class="n">Selection</span><span class="p">(</span><span class="n">selected</span><span class="o">=</span><span class="p">[</span><span class="n">a1</span><span class="p">],</span> <span class="n">implicit_reject</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">sequential_phragmen</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">max_size_selection</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">initial_selection</span><span class="o">=</span><span class="n">initial</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Additional options include:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">initial_loads</span></code>: a list of numeric values to set initial loads for the voters (default is 0 for all).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tie_breaking</span></code>: a custom tie-breaking rule. Defaults to lexicographic tie-breaking.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.tiebreaking</span><span class="w"> </span><span class="kn">import</span> <span class="n">lexico_tie_breaking</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">sequential_phragmen</span><span class="p">(</span>
+    <span class="n">profile</span><span class="p">,</span>
+    <span class="n">max_size_selection</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+    <span class="n">initial_loads</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+    <span class="n">initial_selection</span><span class="o">=</span><span class="n">initial</span><span class="p">,</span>
+    <span class="n">tie_breaking</span><span class="o">=</span><span class="n">lexico_tie_breaking</span><span class="p">,</span>
+    <span class="n">resoluteness</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="tax-pb-rule-scheme">
+<h3>Tax PB Rule Scheme<a class="headerlink" href="#tax-pb-rule-scheme" title="Link to this heading">#</a></h3>
+<p>The <a class="reference internal" href="reference/rules/index.html#trivoting.rules.tax_rules.tax_pb_rule_scheme" title="trivoting.rules.tax_rules.tax_pb_rule_scheme"><code class="xref py py-func docutils literal notranslate"><span class="pre">tax_pb_rule_scheme()</span></code></a> function implements a generic scheme for applying
+participatory budgeting (PB) rules to trichotomous profiles converted into PB instance via an opposition tax.</p>
+<p>This method first translates the trichotomous profile into a PB instance by assigning higher costs to alternatives with
+lower net support (approvals minus disapprovals). It then applies a PB rule from the <cite>pabutools</cite> package and converts
+the resulting budget allocations back into selections of alternatives.</p>
+<p>You need to pass a trichotomous profile (implementing the <a class="reference internal" href="reference/election/index.html#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile" title="trivoting.election.trichotomous_profile.AbstractTrichotomousProfile"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractTrichotomousProfile</span></code></a> interface),
+specify the maximum number of alternatives to select and the PB rule to use (that may require kwargs).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.rules</span><span class="w"> </span><span class="kn">import</span> <span class="n">tax_pb_rule_scheme</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pabutools.rules</span><span class="w"> </span><span class="kn">import</span> <span class="n">method_of_equal_shares</span>
+
+<span class="n">selection</span> <span class="o">=</span> <span class="n">tax_pb_rule_scheme</span><span class="p">(</span>
+    <span class="n">profile</span><span class="p">,</span>
+    <span class="n">max_size_selection</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+    <span class="n">pb_rule</span><span class="o">=</span><span class="n">method_of_equal_shares</span><span class="p">,</span>
+    <span class="n">pb_rule_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;sat_class&quot;</span><span class="p">:</span> <span class="n">pb_election</span><span class="o">.</span><span class="n">Cardinality_Sat</span><span class="p">}</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Additionally, resoluteness, initial selection and tie-breaking can be specified:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.tiebreaking</span><span class="w"> </span><span class="kn">import</span> <span class="n">lexico_tie_breaking</span>
+
+<span class="n">selection</span> <span class="o">=</span> <span class="n">tax_pb_rule_scheme</span><span class="p">(</span>
+    <span class="n">profile</span><span class="p">,</span>
+    <span class="n">max_size_selection</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+    <span class="n">pb_rule</span><span class="o">=</span><span class="n">method_of_equal_shares</span><span class="p">,</span>
+    <span class="n">pb_rule_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;sat_class&quot;</span><span class="p">:</span> <span class="n">pb_election</span><span class="o">.</span><span class="n">Cardinality_Sat</span><span class="p">},</span>
+    <span class="n">resoluteness</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">tie_breaking</span><span class="o">=</span><span class="n">lexico_tie_breaking</span><span class="p">,</span>
+    <span class="n">initial_selection</span><span class="o">=</span><span class="n">selection</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Two tax-based rules are defined by default: <a class="reference internal" href="reference/rules/index.html#trivoting.rules.tax_rules.tax_method_of_equal_shares" title="trivoting.rules.tax_rules.tax_method_of_equal_shares"><code class="xref py py-func docutils literal notranslate"><span class="pre">tax_method_of_equal_shares()</span></code></a> and
+<a class="reference internal" href="reference/rules/index.html#trivoting.rules.tax_rules.tax_sequential_phragmen" title="trivoting.rules.tax_rules.tax_sequential_phragmen"><code class="xref py py-func docutils literal notranslate"><span class="pre">tax_sequential_phragmen()</span></code></a>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.rules</span><span class="w"> </span><span class="kn">import</span> <span class="n">tax_pb_rule_scheme</span>
+
+<span class="n">selection_mes</span> <span class="o">=</span> <span class="n">tax_method_of_equal_shares</span><span class="p">(</span>
+    <span class="n">profile</span><span class="p">,</span>
+    <span class="n">max_size_selection</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+    <span class="n">resoluteness</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">tie_breaking</span><span class="o">=</span><span class="n">lexico_tie_breaking</span><span class="p">,</span>
+    <span class="n">initial_selection</span><span class="o">=</span><span class="n">selection</span>
+<span class="p">)</span>
+
+<span class="n">selection_phrag</span> <span class="o">=</span> <span class="n">tax_sequential_phragmen</span><span class="p">(</span>
+    <span class="n">profile</span><span class="p">,</span>
+    <span class="n">max_size_selection</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+    <span class="n">resoluteness</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">tie_breaking</span><span class="o">=</span><span class="n">lexico_tie_breaking</span><span class="p">,</span>
+    <span class="n">initial_selection</span><span class="o">=</span><span class="n">selection</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="tie-breaking">
+<h2>Tie-Breaking<a class="headerlink" href="#tie-breaking" title="Link to this heading">#</a></h2>
+<p>Please refer to the module <a class="reference internal" href="reference/tiebreaking.html#module-trivoting.tiebreaking" title="trivoting.tiebreaking"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tiebreaking</span></code></a> for more information.</p>
+<p>We provide several ways to break ties between several projects. All tie-breaking rules are
+instantiations of the <a class="reference internal" href="reference/tiebreaking.html#trivoting.tiebreaking.TieBreakingRule" title="trivoting.tiebreaking.TieBreakingRule"><code class="xref py py-class docutils literal notranslate"><span class="pre">TieBreakingRule</span></code></a> class.
+This class defines two functions <cite>untie</cite> and <cite>order</cite> that respectively return a single project
+from a set of several or order a list of projects.</p>
+<p>We profile several tie-breaking rules:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="reference/tiebreaking.html#trivoting.tiebreaking.lexico_tie_breaking" title="trivoting.tiebreaking.lexico_tie_breaking"><code class="xref py py-func docutils literal notranslate"><span class="pre">lexico_tie_breaking()</span></code></a></p></li>
+<li><p><a class="reference internal" href="reference/tiebreaking.html#trivoting.tiebreaking.support_tie_breaking" title="trivoting.tiebreaking.support_tie_breaking"><code class="xref py py-func docutils literal notranslate"><span class="pre">support_tie_breaking()</span></code></a></p></li>
+<li><p><a class="reference internal" href="reference/tiebreaking.html#trivoting.tiebreaking.refuse_tie_breaking" title="trivoting.tiebreaking.refuse_tie_breaking"><code class="xref py py-func docutils literal notranslate"><span class="pre">refuse_tie_breaking()</span></code></a></p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.tiebreaking</span><span class="w"> </span><span class="kn">import</span> <span class="n">lexico_tie_breaking</span><span class="p">,</span> <span class="n">support_tie_breaking</span><span class="p">,</span> <span class="n">app_score_tie_breaking</span>
+
+    <span class="c1"># Offers order() or untie() to either order alternatives</span>
+    <span class="c1"># or single out an alternative</span>
+
+    <span class="c1"># Lexicographic tie-breaking based on name</span>
+    <span class="n">order_alts</span> <span class="o">=</span> <span class="n">lexico_tie_breaking</span><span class="o">.</span><span class="n">order</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">alt_set</span><span class="p">)</span>
+    <span class="n">alt</span> <span class="o">=</span> <span class="n">lexico_tie_breaking</span><span class="o">.</span><span class="n">untie</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">alt_set</span><span class="p">)</span>
+
+    <span class="c1"># Tie-breaking based on support of an alternative</span>
+    <span class="n">order_alts</span> <span class="o">=</span> <span class="n">support_tie_breaking</span><span class="o">.</span><span class="n">order</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">alt_set</span><span class="p">)</span>
+
+    <span class="c1"># Tie-breaking based on the approval score of an alternative</span>
+    <span class="n">alt</span> <span class="o">=</span> <span class="n">app_score_tie_breaking</span><span class="o">.</span><span class="n">untie</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">alt_set</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Other tie-breaking rules can be implemented by instantiating the <a class="reference internal" href="reference/tiebreaking.html#trivoting.tiebreaking.TieBreakingRule" title="trivoting.tiebreaking.TieBreakingRule"><code class="xref py py-class docutils literal notranslate"><span class="pre">TieBreakingRule</span></code></a> class.</p>
+</section>
+<section id="axiomatic">
+<h2>Axiomatic<a class="headerlink" href="#axiomatic" title="Link to this heading">#</a></h2>
+<section id="justified-representation">
+<h3>Justified Representation<a class="headerlink" href="#justified-representation" title="Link to this heading">#</a></h3>
+<p>Please refer to the module <a class="reference internal" href="reference/axiomatic/index.html#module-trivoting.axiomatic.justified_representation" title="trivoting.axiomatic.justified_representation"><code class="xref py py-mod docutils literal notranslate"><span class="pre">justified_representation</span></code></a> for more information.</p>
+<p>We provide utilities for verifying various justified representation (JR) axioms
+in trichotomous voting settings: base EJR, base PJR, positive EJR and group veto.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.axiomatic</span><span class="w"> </span><span class="kn">import</span> <span class="n">is_base_ejr</span><span class="p">,</span> <span class="n">is_base_pjr</span>
+
+<span class="n">is_base_ejr</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">selection</span><span class="p">)</span>  <span class="c1"># Uses closed-form characterization (efficient)</span>
+<span class="n">is_base_pjr</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">selection</span><span class="p">)</span>  <span class="c1"># Checks PJR using all cohesive groups</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.axiomatic</span><span class="w"> </span><span class="kn">import</span> <span class="n">is_positive_ejr</span><span class="p">,</span> <span class="n">is_group_veto</span>
+
+<span class="n">is_positive_ejr</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">selection</span><span class="p">)</span>  <span class="c1"># Checks if all positively cohesive groups are satisfied</span>
+<span class="n">is_group_veto</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">selection</span><span class="p">)</span>  <span class="c1"># Ensures no sufficiently strong group is overruled</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="fractions">
+<h2>Fractions<a class="headerlink" href="#fractions" title="Link to this heading">#</a></h2>
+<p>Please refer to the module <a class="reference internal" href="reference/fractions.html#module-trivoting.fractions" title="trivoting.fractions"><code class="xref py py-mod docutils literal notranslate"><span class="pre">fractions</span></code></a> for more information.</p>
+<p>We provide a customizable way to handle fractions. In general, all fractions should be defined
+using the <a class="reference internal" href="reference/fractions.html#trivoting.fractions.frac" title="trivoting.fractions.frac"><code class="xref py py-func docutils literal notranslate"><span class="pre">frac()</span></code></a> function provided in the <a class="reference internal" href="reference/fractions.html#module-trivoting.fractions" title="trivoting.fractions"><code class="xref py py-mod docutils literal notranslate"><span class="pre">fractions</span></code></a>
+module. Not doing so may lead to undesirable behaviors (i.e., errors).</p>
+<p>To make a fraction, simply follow this guide:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.fractions</span><span class="w"> </span><span class="kn">import</span> <span class="n">frac</span><span class="p">,</span> <span class="n">str_as_frac</span>
+
+<span class="c1"># Define a fraction</span>
+<span class="n">fraction</span> <span class="o">=</span> <span class="n">frac</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+
+<span class="c1"># Define a fraction from an integer</span>
+<span class="n">fraction_from_int</span> <span class="o">=</span> <span class="n">frac</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="c1"># Define a fraction from a float</span>
+<span class="n">fraction_from_int</span> <span class="o">=</span> <span class="n">frac</span><span class="p">(</span><span class="mf">2.6</span><span class="p">)</span>
+
+<span class="c1"># Define a fraction from a string</span>
+<span class="n">fraction_from_str</span> <span class="o">=</span> <span class="n">str_as_frac</span><span class="p">(</span><span class="s2">&quot;2.3&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>By default, the <a class="reference external" href="https://gmpy2.readthedocs.io/en/latest/mpq.html">gmpy2</a> module is used to
+handle fractions. To change this, simply change the value of the <cite>FRACTION</cite> constant.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">trivoting.fractions</span>
+
+<span class="c1"># The default value</span>
+<span class="n">pabutools</span><span class="o">.</span><span class="n">fractions</span><span class="o">.</span><span class="n">FRACTION</span> <span class="o">=</span> <span class="s2">&quot;gmpy2&quot;</span>
+
+<span class="c1"># Change to Python float</span>
+<span class="n">pabutools</span><span class="o">.</span><span class="n">fractions</span><span class="o">.</span><span class="n">FRACTION</span> <span class="o">=</span> <span class="s2">&quot;float&quot;</span>
+</pre></div>
+</div>
+<p>Changing the <cite>FRACTION</cite> constant changes the algorithm used to handle fractions.</p>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="quickstart.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Quick Start</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="reference/index.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Reference</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#alternatives">Alternatives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#trichotomous-ballots">Trichotomous Ballots</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#profiles">Profiles</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trichotomousprofile">TrichotomousProfile</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trichotomousmultiprofile">TrichotomousMultiProfile</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#details-of-a-profile">Details of a Profile</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interoperability-with-other-libraries">Interoperability with Other Libraries</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#preflib-integration">PrefLib Integration</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pabulib-integration">PaBuLib Integration</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#abcvoting-integration">AbcVoting Integration</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#random-generation-of-profiles">Random Generation of Profiles</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#selection">Selection</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rules">Rules</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#proportional-approval-voting-pav">Proportional Approval Voting (PAV)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sequential-phragmen">Sequential Phragmén</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tax-pb-rule-scheme">Tax PB Rule Scheme</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tie-breaking">Tie-Breaking</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#axiomatic">Axiomatic</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#justified-representation">Justified Representation</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fractions">Fractions</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Simon Rey
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025, Simon Rey.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

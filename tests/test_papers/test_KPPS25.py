@@ -5,7 +5,7 @@ from trivoting.axiomatic.justified_representation import is_positive_ejr, is_gro
 from trivoting.election.alternative import Alternative
 from trivoting.election.trichotomous_ballot import TrichotomousBallot
 from trivoting.election.trichotomous_profile import TrichotomousProfile
-from trivoting.rules.selection import Selection
+from trivoting.election.selection import Selection
 from trivoting.rules.tax_rules import tax_method_of_equal_shares, tax_sequential_phragmen
 
 

@@ -7,7 +7,7 @@ from trivoting.election.alternative import Alternative
 from trivoting.election.trichotomous_ballot import TrichotomousBallot
 from trivoting.election.trichotomous_profile import TrichotomousProfile
 from trivoting.rules.pav import proportional_approval_voting
-from trivoting.rules.selection import Selection
+from trivoting.election.selection import Selection
 
 
 class TestPAV(TestCase):

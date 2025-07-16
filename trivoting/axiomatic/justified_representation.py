@@ -1,17 +1,9 @@
-"""
-Module for evaluating justified-representation axioms in trichotomous preference profiles.
-
-This module defines functions to test whether a given selection of alternatives satisfies various representation
-properties, such as Base EJR, Base PJR, EJPR, and Group Veto, in the context of trichotomous preference profiles.
-It also provides utilities to identify cohesive and positively/negatively cohesive voter groups.
-"""
-
 from collections.abc import Iterable, Iterator, Callable
 
 from trivoting.election.alternative import Alternative
 from trivoting.election.trichotomous_profile import AbstractTrichotomousProfile
 from trivoting.fractions import frac
-from trivoting.rules.selection import Selection
+from trivoting.election.selection import Selection
 from trivoting.utils import generate_subsets
 
 
@@ -28,7 +20,7 @@ def is_cohesive_for_l(
     Parameters
     ----------
     profile : AbstractTrichotomousProfile
-        The full electorate's profile.
+        The trichotomous profile.
     max_size_selection : int
         The maximum number of alternatives that can be selected.
     l : int
@@ -76,7 +68,7 @@ def all_cohesive_groups(
         max_size_selection: int,
         min_l: int = 1,
         max_l: int = None,
-        test_cohesive_func: Callable = is_cohesive_for_l
+        test_cohesive_func: Callable = None
 ) -> Iterator[tuple[AbstractTrichotomousProfile, int]]:
     """
     Yields all voter groups that are cohesive for some level `l`. Yields both the group and the level `l`.
@@ -84,7 +76,7 @@ def all_cohesive_groups(
     Parameters
     ----------
     profile : AbstractTrichotomousProfile
-        The full electorate's profile.
+        The trichotomous profile.
     max_size_selection : int
         The maximum number of alternatives that can be selected.
     min_l : int, optional
@@ -99,6 +91,8 @@ def all_cohesive_groups(
     tuple of (AbstractTrichotomousProfile, int)
         A cohesive group and the smallest level l for which it is cohesive.
     """
+    if test_cohesive_func is None:
+        test_cohesive_func = is_cohesive_for_l
     if max_l is None:
         max_l = len(profile.alternatives)
     for group in profile.all_sub_profiles():
@@ -121,7 +115,7 @@ def is_base_ejr_brute_force(
     Parameters
     ----------
     profile : AbstractTrichotomousProfile
-        The full electorate's profile.
+        The trichotomous profile.
     max_size_selection : int
         The maximum number of alternatives that can be selected.
     selection : Selection
@@ -132,7 +126,6 @@ def is_base_ejr_brute_force(
     bool
         True if Base EJR is satisfied, False otherwise.
     """
-
     for group, l in all_cohesive_groups(profile, max_size_selection):
         group_satisfied = False
         for ballot in group:
@@ -158,7 +151,7 @@ def is_base_ejr(
     Parameters
     ----------
     profile : AbstractTrichotomousProfile
-        The full electorate's profile.
+        The trichotomous profile.
     max_size_selection : int
         The maximum number of alternatives that can be selected.
     selection : Selection
@@ -219,7 +212,7 @@ def is_base_pjr(
     Parameters
     ----------
     profile : AbstractTrichotomousProfile
-        The full electorate's profile.
+        The trichotomous profile.
     max_size_selection : int
         The maximum number of alternatives that can be selected.
     selection : Selection
@@ -252,7 +245,7 @@ def is_positively_cohesive_for_l(
     Parameters
     ----------
     profile : AbstractTrichotomousProfile
-        The full electorate's profile.
+        The trichotomous profile.
     max_size_selection : int
         The maximum number of alternatives that can be selected.
     l : int
@@ -265,7 +258,6 @@ def is_positively_cohesive_for_l(
     bool
         True if the group is positively cohesive, False otherwise.
     """
-
     if l > max_size_selection:
         return False
     if l == 0:
@@ -303,7 +295,7 @@ def is_positive_ejr(
     Parameters
     ----------
     profile : AbstractTrichotomousProfile
-        The full electorate's profile.
+        The trichotomous profile.
     max_size_selection : int
         The maximum number of alternatives that can be selected.
     selection : Selection
@@ -314,7 +306,6 @@ def is_positive_ejr(
     bool
         True if EJPR is satisfied, False otherwise.
     """
-
     for group, l in all_cohesive_groups(profile, max_size_selection, test_cohesive_func=is_positively_cohesive_for_l):
         group_satisfied = False
         for ballot in group:
@@ -338,7 +329,7 @@ def is_negatively_cohesive_for_l_t(
     Parameters
     ----------
     profile : AbstractTrichotomousProfile
-        The full electorate's profile.
+        The trichotomous profile.
     max_size_selection : int
         The maximum number of alternatives that can be selected.
     l : int
@@ -353,7 +344,6 @@ def is_negatively_cohesive_for_l_t(
     bool
         True if the group is l-T negatively cohesive, False otherwise.
     """
-
     if not group.commonly_disapproved_alternatives().issubset(alt_set):
         return False
 
@@ -375,7 +365,7 @@ def is_group_veto(
     Parameters
     ----------
     profile : AbstractTrichotomousProfile
-        The full electorate's profile.
+        The trichotomous profile.
     max_size_selection : int
         The maximum number of alternatives that can be selected.
     selection : Selection

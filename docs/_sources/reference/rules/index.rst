@@ -3,20 +3,17 @@ Rules module
 
 .. automodule:: trivoting.rules
 
-Selection
----------
-
-.. autoclass:: trivoting.rules.selection.Selection
-    :members:
-    :show-inheritance:
-
 Proportional Approval Voting
 ----------------------------
+
+.. automodule:: trivoting.rules.proportional_approval_voting
 
 .. autofunction:: trivoting.rules.pav.proportional_approval_voting
 
 Sequential Phragmén's Rule
 --------------------------
+
+.. automodule:: trivoting.rules.phragmen
 
 .. autofunction:: trivoting.rules.phragmen.sequential_phragmen
 
@@ -24,7 +21,11 @@ Sequential Phragmén's Rule
 Tax-Based Rules
 ---------------
 
+.. automodule:: trivoting.rules.tax_rules
+
 .. autofunction:: trivoting.rules.tax_rules.tax_pb_instance
+
+.. autofunction:: trivoting.rules.tax_rules.tax_pb_rule_scheme
 
 .. autofunction:: trivoting.rules.tax_rules.tax_method_of_equal_shares
 

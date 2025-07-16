@@ -151,9 +151,11 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../index.html">Trivoting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Complete Guide</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../reference/index.html">Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../reference/election/index.html">Election module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../reference/rules/index.html">Rules module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../reference/axiomatic/index.html">Axiomatic module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../reference/tiebreaking.html">Tie-Breaking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../reference/fractions.html">Fractions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../reference/utils.html">Utils</a></li>
@@ -288,7 +290,12 @@ document.write(`
 <a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_ballot.AbstractTrichotomousBallot">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">AbstractTrichotomousBallot</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Abstract class used for typing.</span>
+<span class="sd">    Abstract base class for a trichotomous ballot.</span>
+
+<span class="sd">    A trichotomous ballot partitions alternatives into approved and disapproved sets,</span>
+<span class="sd">    with the implicit third category being neutral or unknown.</span>
+
+<span class="sd">    Subclasses must implement the `approved` and `disapproved` properties.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="nd">@property</span>
@@ -306,8 +313,22 @@ document.write(`
 <a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_ballot.TrichotomousBallot">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">TrichotomousBallot</span><span class="p">(</span><span class="n">AbstractTrichotomousBallot</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Represents a trichotomous ballot, i.e., a ballot in which the voter classifies the alternatives between approved,</span>
-<span class="sd">    disapproved and not seen/no opinion.</span>
+<span class="sd">    Represents a mutable trichotomous ballot, where alternatives are categorized into approved, disapproved, or</span>
+<span class="sd">    implicitly neutral.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    approved : Iterable[Alternative], optional</span>
+<span class="sd">        Approved alternatives.</span>
+<span class="sd">    disapproved : Iterable[Alternative], optional</span>
+<span class="sd">        Disapproved alternatives.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    approved : set[Alternative]</span>
+<span class="sd">        The alternatives the voter approves of.</span>
+<span class="sd">    disapproved : set[Alternative]</span>
+<span class="sd">        The alternatives the voter disapproves of.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">approved</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Alternative</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">disapproved</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Alternative</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
@@ -325,6 +346,7 @@ document.write(`
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">approved</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">set</span><span class="p">[</span><span class="n">Alternative</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set of approved alternatives.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_approved</span>
 
     <span class="nd">@approved</span><span class="o">.</span><span class="n">setter</span>
@@ -333,28 +355,80 @@ document.write(`
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">disapproved</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">set</span><span class="p">[</span><span class="n">Alternative</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set of disapproved alternatives.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_disapproved</span>
 
     <span class="nd">@disapproved</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">disapproved</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Alternative</span><span class="p">]):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_disapproved</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">add_approved</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alt</span><span class="p">:</span> <span class="n">Alternative</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">approved</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">alt</span><span class="p">)</span>
+<div class="viewcode-block" id="TrichotomousBallot.add_approved">
+<a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_ballot.TrichotomousBallot.add_approved">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_approved</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alt</span><span class="p">:</span> <span class="n">Alternative</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add an alternative to the approved set.</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">add_disapproved</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alt</span><span class="p">:</span> <span class="n">Alternative</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">disapproved</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">alt</span><span class="p">)</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        alt : Alternative</span>
+<span class="sd">            The alternative to approve.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">approved</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">alt</span><span class="p">)</span></div>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">freeze</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="TrichotomousBallot.add_disapproved">
+<a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_ballot.TrichotomousBallot.add_disapproved">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_disapproved</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alt</span><span class="p">:</span> <span class="n">Alternative</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add an alternative to the disapproved set.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        alt : Alternative</span>
+<span class="sd">            The alternative to disapprove.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">disapproved</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">alt</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TrichotomousBallot.freeze">
+<a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_ballot.TrichotomousBallot.freeze">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">freeze</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FrozenTrichotomousBallot</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return an immutable version of this ballot.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        FrozenTrichotomousBallot</span>
+<span class="sd">            A frozen (immutable) copy of this ballot.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">FrozenTrichotomousBallot</span><span class="p">(</span>
             <span class="n">approved</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">approved</span><span class="p">,</span>
             <span class="n">disapproved</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">disapproved</span><span class="p">,</span>
-        <span class="p">)</span>
+        <span class="p">)</span></div>
+
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check if an alternative is in either the approved or disapproved sets.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        item : Alternative</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">approved</span> <span class="ow">or</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">disapproved</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the total number of alternatives in the ballot (both approved and disapproved).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        int</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">approved</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">disapproved</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -378,6 +452,25 @@ document.write(`
 <div class="viewcode-block" id="FrozenTrichotomousBallot">
 <a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_ballot.FrozenTrichotomousBallot">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">FrozenTrichotomousBallot</span><span class="p">(</span><span class="n">AbstractTrichotomousBallot</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represents an immutable trichotomous ballot using tuples for storage.</span>
+
+<span class="sd">    This version is suitable for hashing and storing in sets or as keys in dictionaries.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    approved : Iterable[Alternative], optional</span>
+<span class="sd">        Approved alternatives.</span>
+<span class="sd">    disapproved : Iterable[Alternative], optional</span>
+<span class="sd">        Disapproved alternatives.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    approved : tuple[Alternative, ...]</span>
+<span class="sd">        The alternatives the voter approves of.</span>
+<span class="sd">    disapproved : tuple[Alternative, ...]</span>
+<span class="sd">        The alternatives the voter disapproves of.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>  <span class="o">*</span><span class="p">,</span> <span class="n">approved</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Alternative</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">disapproved</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Alternative</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">approved</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -394,11 +487,56 @@ document.write(`
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">approved</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Alternative</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Tuple of approved alternatives.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_approved</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">disapproved</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Alternative</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_disapproved</span></div>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Tuple of disapproved alternatives.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_disapproved</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check if an alternative is in either the approved or disapproved sets.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        item : Alternative</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">approved</span> <span class="ow">or</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">disapproved</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the total number of alternatives in the ballot (both approved and disapproved).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        int</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">approved</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">disapproved</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">{{</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">approved</span><span class="si">}</span><span class="se">}}</span><span class="s2"> // </span><span class="se">{{</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">disapproved</span><span class="si">}</span><span class="se">}}</span><span class="s2">&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">FrozenTrichotomousBallot</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">approved</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">approved</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">disapproved</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">disapproved</span>
+        <span class="k">return</span> <span class="bp">NotImplemented</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">FrozenTrichotomousBallot</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">approved</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">disapproved</span><span class="p">)</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">approved</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">disapproved</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">NotImplemented</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">hash</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">approved</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">disapproved</span><span class="p">))</span></div>
 
 </pre></div>
 
