@@ -15,8 +15,15 @@ from trivoting.utils import generate_subsets, generate_two_list_partitions
 
 class AbstractTrichotomousProfile(ABC, Iterable[AbstractTrichotomousBallot]):
     """
-    Abstract class representing a profile, that is, a collection of ballots. This class is only meant to be inherited.
+    Abstract class representing a profile, i.e., a collection of ballots.
+    This class is only meant to be inherited and provides a common interface for trichotomous profiles.
 
+    Attributes
+    ----------
+    alternatives : set[Alternative]
+        The set of all alternatives in the profile.
+    max_size_selection : int or None
+        The maximum number of alternatives that can be selected in a feasible selection (optional).
     """
 
     def __init__(self, alternatives: Iterable[Alternative] = None, max_size_selection : int = None):
@@ -26,14 +33,14 @@ class AbstractTrichotomousProfile(ABC, Iterable[AbstractTrichotomousBallot]):
             self.alternatives = set(alternatives)
         self.max_size_selection = max_size_selection
 
-    def get_alternative_by_name(self, alt_name) -> Alternative | None:
+    def get_alternative_by_name(self, alt_name: str) -> Alternative | None:
         """
         Retrieves an alternative by its name.
 
         Parameters
         ----------
-            alt_name
-                The name of the alternative.
+        alt_name : str
+            The name of the alternative.
 
         Returns
         -------
@@ -121,14 +128,14 @@ class AbstractTrichotomousProfile(ABC, Iterable[AbstractTrichotomousBallot]):
     @abstractmethod
     def support_dict(self) -> defaultdict[Alternative, int]:
         """
-        Returns the support of the alternatives of the instance as a dictionary. Alternatives not appearing in
-        any ballot will not be present in the dictionary. The method returns a defaultdict so querying it for
-        absent alternatives will succeed and return 0.
+        Returns the support of the alternatives of the instance as a dictionary.
 
         Returns
         -------
             collections.defaultdict[Alternative, int]
                 The support of each alternative appearing in at least one ballot.
+                Alternatives never appearing (approved or disapproved) in any ballot will be absent, but accessing them
+                returns 0.
         """
         
     @abstractmethod
@@ -150,14 +157,13 @@ class AbstractTrichotomousProfile(ABC, Iterable[AbstractTrichotomousBallot]):
     @abstractmethod
     def approval_score_dict(self) -> defaultdict[Alternative, int]:
         """
-        Returns the approval scores of the alternatives of the profile as a dictionary. Never approved alternatives
-        will not be present in the dictionary. The method returns a defaultdict so querying it for
-        non-approved alternatives will succeed and return 0.
+        Returns the approval scores of the alternatives of the profile as a dictionary.
 
         Returns
         -------
             collections.defaultdict[Alternative, int]
                 The approval score of each alternative appearing in at least one ballot.
+                Alternatives never approved in any ballot will be absent, but accessing them returns 0.
         """
         
 
@@ -181,14 +187,13 @@ class AbstractTrichotomousProfile(ABC, Iterable[AbstractTrichotomousBallot]):
     @abstractmethod
     def disapproval_score_dict(self) -> defaultdict[Alternative, int]:
         """
-        Returns the disapproval scores of the alternatives of the profile as a dictionary. Never disapproved alternatives
-        will not be present in the dictionary. The method returns a defaultdict so querying it for
-        non-approved alternatives will succeed and return 0.
+        Returns the disapproval scores of the alternatives of the profile as a dictionary.
 
         Returns
         -------
             collections.defaultdict[Alternative, int]
                 The disapproval score of each alternative appearing in at least one ballot.
+                Alternatives never disapproved in any ballot will be absent, but accessing them returns 0.
         """
 
     @abstractmethod
@@ -217,6 +222,8 @@ class AbstractTrichotomousProfile(ABC, Iterable[AbstractTrichotomousBallot]):
         -------
             tuple[collections.defaultdict[Alternative, int], collections.defaultdict[Alternative, int]]
                 The approval score and the disapproval score dictionaries.
+                Alternatives never appearing (approved or disapproved) in any ballot will be absent, but accessing them
+                returns 0.
         """
 
     def all_feasible_selections(self, max_size_selection: int) -> Iterator[Selection]:
@@ -240,13 +247,13 @@ class AbstractTrichotomousProfile(ABC, Iterable[AbstractTrichotomousBallot]):
     @abstractmethod
     def all_sub_profiles(self) -> Iterator[AbstractTrichotomousProfile]:
         """
-        Returns an iterator that yields all possible subprofiles of the profile.
+        Returns an iterator over all subprofiles of the profile.
+        A subprofile is any multiset of ballots that is a subset (in terms of multiplicity) of the original profile.
 
         Returns
         -------
-            Iterator[AbstractTrichotomousProfile]
-                An iterator that yields all possible subprofiles of the profile.
-
+        Iterator[AbstractTrichotomousProfile]
+            An iterator over all subprofiles of the profile.
         """
 
     def commonly_approved_alternatives(self) -> set[Alternative]:
@@ -279,22 +286,22 @@ class TrichotomousProfile(AbstractTrichotomousProfile, MutableSequence[Trichotom
 
     Parameters
     ----------
-        init: Iterable[TrichotomousBallot], Optional
-            An iterable of trichotomours ballots used to initialise the profile.
-        alternatives: Iterable[Alternative], Optional
-            An iterable of alternatives representing all the alternatives of the instance.
-        max_size_selection: int, Optional
-            The maximum number of alternatives to be selected when computing the outcome of a rule on the profile.
-            Used notably when reading files from preference libraries.
+    init : Iterable[TrichotomousBallot], optional
+        An iterable of trichotomous ballots used to initialize the profile. Defaults to empty.
+    alternatives : Iterable[Alternative], optional
+        An iterable of alternatives representing all alternatives of the instance.
+    max_size_selection : int, optional
+        The maximum number of alternatives to be selected when computing the outcome of a rule on the profile.
+        Used notably when reading files from preference libraries.
 
     Attributes
     ----------
-        alternatives: set[Alternative]
-            A set of alternatives representing all the alternatives of the instance.
-        max_size_selection: int
-            The maximum number of alternatives to be selected when computing the outcome of a rule on the profile.
-            Used notably when reading files from preference libraries.
+    alternatives : set[Alternative]
+        A set of alternatives representing all the alternatives of the instance.
+    max_size_selection : int or None
+        The maximum number of alternatives to be selected when computing the outcome of a rule on the profile.
     """
+
 
     def __init__(
         self,
@@ -323,7 +330,7 @@ class TrichotomousProfile(AbstractTrichotomousProfile, MutableSequence[Trichotom
                 score -= 1
         return score
 
-    def support_dict(self) -> dict[Alternative, int]:
+    def support_dict(self) -> defaultdict[Alternative, int]:
         res = defaultdict(int)
         for ballot in self:
             for alt in ballot.approved:
@@ -339,7 +346,7 @@ class TrichotomousProfile(AbstractTrichotomousProfile, MutableSequence[Trichotom
                 score += 1
         return score
 
-    def approval_score_dict(self) -> dict[Alternative, int]:
+    def approval_score_dict(self) -> defaultdict[Alternative, int]:
         res = defaultdict(int)
         for ballot in self:
             for alt in ballot.approved:
@@ -353,7 +360,7 @@ class TrichotomousProfile(AbstractTrichotomousProfile, MutableSequence[Trichotom
                 score += 1
         return score
 
-    def disapproval_score_dict(self) -> dict[Alternative, int]:
+    def disapproval_score_dict(self) -> defaultdict[Alternative, int]:
         res = defaultdict(int)
         for ballot in self:
             for alt in ballot.disapproved:
@@ -370,7 +377,7 @@ class TrichotomousProfile(AbstractTrichotomousProfile, MutableSequence[Trichotom
                 disapp_score += 1
         return app_score, disapp_score
 
-    def approval_disapproval_score_dict(self) -> tuple[dict[Alternative, int], dict[Alternative, int]]:
+    def approval_disapproval_score_dict(self) -> tuple[defaultdict[Alternative, int], defaultdict[Alternative, int]]:
         app_scores = defaultdict(int)
         disapp_scores = defaultdict(int)
         for ballot in self:
@@ -388,41 +395,47 @@ class TrichotomousProfile(AbstractTrichotomousProfile, MutableSequence[Trichotom
 
     def multiplicity(self, ballot: TrichotomousBallot) -> int:
         """
-        Returns 1 regardless of the input; even if the ballot does not appear in the profile (to save up computation).
+        Returns the multiplicity of a ballot in the profile.
+
+        Note: This implementation returns 1 for any ballot regardless of its presence in the profile,
+        to save computation time.
 
         Parameters
         ----------
-            ballot : TrichotomousBallot
-                The ballot whose multiplicity is inquired.
+        ballot : TrichotomousBallot
+            The ballot whose multiplicity is inquired.
 
         Returns
         -------
-            int
-                1
+        int
+            The multiplicity of the ballot, always 1.
         """
         return 1
 
     def as_multiprofile(self) -> TrichotomousMultiProfile:
         """
-        Returns the multiprofile corresponding to this profile. Ballots are frozen to make them unmutable.
+        Returns the multiprofile corresponding to this profile. Ballots are converted to immutable frozen ballots.
 
         Returns
         -------
-            TrichotomousMultiProfile
-                The multiprofile.
+        TrichotomousMultiProfile
+            The multiprofile representation of this profile with frozen ballots.
         """
+
         return TrichotomousMultiProfile([ballot.freeze() for ballot in self], alternatives=self.alternatives, max_size_selection=self.max_size_selection)
 
     def all_sub_profiles(self) -> Iterator[TrichotomousProfile]:
         """
-        Returns an iterator that yields all possible sub-profiles.
+        Returns an iterator over all possible sub-profiles of the current profile.
+
+        A sub-profile is any subset of the ballots from the current profile.
 
         Returns
         -------
-            Iterator[TrichotomousProfile]
-                An iterator that yields all possible sub-profiles.
-
+        Iterator[TrichotomousProfile]
+            An iterator that yields all possible sub-profiles.
         """
+
         for subset in generate_subsets(self._ballots_list):
             yield TrichotomousProfile(subset, alternatives=self.alternatives, max_size_selection=self.max_size_selection)
 
@@ -523,8 +536,35 @@ class TrichotomousProfile(AbstractTrichotomousProfile, MutableSequence[Trichotom
 
 class TrichotomousMultiProfile(AbstractTrichotomousProfile, MutableMapping[FrozenTrichotomousBallot, int]):
     """
-    Represents a trichotomous multi-profile, i.e., a collection of trichotomous ballots in which identical ballots
-    are stored one together with their multiplicity.
+    Represents a trichotomous multi-profile, i.e., a collection of trichotomous ballots where identical ballots
+    are stored together with their multiplicities.
+
+    This class models a multi-set of ballots, where each unique frozen ballot is associated with an integer
+    count indicating how many times it appears in the profile.
+
+    Parameters
+    ----------
+    init : Iterable[FrozenTrichotomousBallot], optional
+        An iterable of frozen trichotomous ballots used to initialize the multi-profile.
+        Defaults to an empty iterable.
+    alternatives : Iterable[Alternative], optional
+        An iterable of all alternatives present in the profile. If not provided and `init` is
+        an `AbstractTrichotomousProfile`, its alternatives are used.
+    max_size_selection : int, optional
+        The maximum number of alternatives to be selected when computing the outcome of a rule on the profile.
+        Used notably when reading files from preference libraries. If not provided and `init` is an
+        `AbstractTrichotomousProfile`, its `max_size_selection` is used.
+
+    Attributes
+    ----------
+    _ballots_counter : collections.Counter
+        Internal counter mapping each frozen trichotomous ballot to its multiplicity.
+
+    alternatives : set[Alternative]
+        The set of all alternatives in the profile.
+
+    max_size_selection : int
+        Maximum number of alternatives to select in an outcome (optional).
     """
 
     def __init__(
@@ -554,7 +594,7 @@ class TrichotomousMultiProfile(AbstractTrichotomousProfile, MutableMapping[Froze
                 score -= count
         return score
 
-    def support_dict(self) -> dict[Alternative, int]:
+    def support_dict(self) -> defaultdict[Alternative, int]:
         res = dict()
         for ballot, count in self.items():
             for alt in ballot.approved:
@@ -576,7 +616,7 @@ class TrichotomousMultiProfile(AbstractTrichotomousProfile, MutableMapping[Froze
                 score += count
         return score
 
-    def approval_score_dict(self) -> dict[Alternative, int]:
+    def approval_score_dict(self) -> defaultdict[Alternative, int]:
         res = defaultdict(int)
         for ballot, count in self.items():
             for alt in ballot.approved:
@@ -589,7 +629,7 @@ class TrichotomousMultiProfile(AbstractTrichotomousProfile, MutableMapping[Froze
                 score += count
         return score
 
-    def disapproval_score_dict(self) -> dict[Alternative, int]:
+    def disapproval_score_dict(self) -> defaultdict[Alternative, int]:
         res = defaultdict(int)
         for ballot, count in self.items():
             for alt in ballot.disapproved:
@@ -606,7 +646,7 @@ class TrichotomousMultiProfile(AbstractTrichotomousProfile, MutableMapping[Froze
                 disapp_score += count
         return app_score, disapp_score
 
-    def approval_disapproval_score_dict(self) -> tuple[dict[Alternative, int], dict[Alternative, int]]:
+    def approval_disapproval_score_dict(self) -> tuple[defaultdict[Alternative, int], defaultdict[Alternative, int]]:
         app_scores = defaultdict(int)
         disapp_scores = defaultdict(int)
         for ballot, count in self.items():
@@ -617,6 +657,14 @@ class TrichotomousMultiProfile(AbstractTrichotomousProfile, MutableMapping[Froze
         return app_scores, disapp_scores
 
     def total(self):
+        """
+        Computes the total number of ballots in the profile, counting multiplicities.
+
+        Returns
+        -------
+        int
+            Total number of ballots.
+        """
         # Re-implemented as it is not available in Python <3.10
         return sum(self.values())
 
@@ -625,7 +673,12 @@ class TrichotomousMultiProfile(AbstractTrichotomousProfile, MutableMapping[Froze
 
     def add_ballot(self, ballot: FrozenTrichotomousBallot):
         """
-        Adds a ballot to the profile.
+        Adds a ballot to the multi-profile, increasing its multiplicity by one.
+
+        Parameters
+        ----------
+        ballot : FrozenTrichotomousBallot
+            The frozen ballot to add.
         """
         if isinstance(ballot, TrichotomousBallot):
             raise ValueError("You are trying to add a non-frozen ballot to a multiprofile. This is not possible, "
@@ -634,29 +687,31 @@ class TrichotomousMultiProfile(AbstractTrichotomousProfile, MutableMapping[Froze
 
     def multiplicity(self, ballot: FrozenTrichotomousBallot) -> int:
         """
-        Returns the multiplicity of a ballot in the profile.
+        Returns the multiplicity of a given ballot in the profile.
 
         Parameters
         ----------
-            ballot : TrichotomousBallot
-                The ballot whose multiplicity is inquired.
+        ballot : FrozenTrichotomousBallot
+            The ballot whose multiplicity is requested.
 
         Returns
         -------
-            int
-                The multiplicity of the ballot.
+        int
+            The number of times the ballot appears in the profile.
         """
         return self[ballot]
 
     def all_sub_profiles(self) -> Iterator[TrichotomousMultiProfile]:
         """
-        Returns an iterator that yields all possible sub-profiles.
+        Generates all possible sub-profiles of the current multi-profile.
 
-        Returns
-        -------
-            Iterator[TrichotomousMultiProfile]
-                An iterator that yields all possible sub-profiles.
+        A sub-profile is any profile obtained by choosing any number (including zero) of occurrences
+        of each ballot up to their multiplicity in the current profile.
 
+        Yields
+        ------
+        TrichotomousMultiProfile
+            Each possible sub-profile.
         """
         items = list(self._ballots_counter.items())
         for counts in product(*(range(count + 1) for _, count in items)):

@@ -33,7 +33,6 @@ Trichotomous Profiles
 .. autoclass:: trivoting.election.trichotomous_profile.TrichotomousProfile
     :members:
     :show-inheritance:
-    :exclude-members:
 
 .. autoclass:: trivoting.election.trichotomous_profile.TrichotomousMultiProfile
     :members:

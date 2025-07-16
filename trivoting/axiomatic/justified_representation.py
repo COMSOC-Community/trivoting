@@ -1,3 +1,11 @@
+"""
+Module for evaluating justified-representation axioms in trichotomous preference profiles.
+
+This module defines functions to test whether a given selection of alternatives satisfies various representation
+properties, such as Base EJR, Base PJR, EJPR, and Group Veto, in the context of trichotomous preference profiles.
+It also provides utilities to identify cohesive and positively/negatively cohesive voter groups.
+"""
+
 from collections.abc import Iterable, Iterator, Callable
 
 from trivoting.election.alternative import Alternative
@@ -14,7 +22,24 @@ def is_cohesive_for_l(
     group: AbstractTrichotomousProfile
 ) -> bool:
     """
-    Tests whether the given set of voters is cohesive.
+    Tests whether the given set of voters is cohesive for level `l` as defined in Definition 1 of
+    ``Proportionality in Thumbs Up and Down Voting`` (Kraiczy, Papasotiropoulos, Pierczyński and Skowron, 2025).
+
+    Parameters
+    ----------
+    profile : AbstractTrichotomousProfile
+        The full electorate's profile.
+    max_size_selection : int
+        The maximum number of alternatives that can be selected.
+    l : int
+        The required representation level.
+    group : AbstractTrichotomousProfile
+        The subset of voters being tested for cohesion.
+
+    Returns
+    -------
+    bool
+        True if the group is l-cohesive, False otherwise.
     """
     if l > max_size_selection:
         return False
@@ -53,6 +78,27 @@ def all_cohesive_groups(
         max_l: int = None,
         test_cohesive_func: Callable = is_cohesive_for_l
 ) -> Iterator[tuple[AbstractTrichotomousProfile, int]]:
+    """
+    Yields all voter groups that are cohesive for some level `l`. Yields both the group and the level `l`.
+
+    Parameters
+    ----------
+    profile : AbstractTrichotomousProfile
+        The full electorate's profile.
+    max_size_selection : int
+        The maximum number of alternatives that can be selected.
+    min_l : int, optional
+        The minimum level of cohesion to test for. Defaults to 1.
+    max_l : int, optional
+        The maximum level of cohesion to test for. Defaults to the number of alternatives.
+    test_cohesive_func : Callable, optional
+        The function used to test cohesion. Defaults to `is_cohesive_for_l`.
+
+    Yields
+    ------
+    tuple of (AbstractTrichotomousProfile, int)
+        A cohesive group and the smallest level l for which it is cohesive.
+    """
     if max_l is None:
         max_l = len(profile.alternatives)
     for group in profile.all_sub_profiles():
@@ -68,8 +114,23 @@ def is_base_ejr_brute_force(
     selection: Selection
 ) -> bool:
     """
-    Tests whether the given selection satisfies Base Extended Justified Representation (Base EJR) for the given
-    profile.
+    Determines whether a selection satisfies Base Extended Justified Representation (Base EJR) as defined in Definition 1 of
+    ``Proportionality in Thumbs Up and Down Voting`` (Kraiczy, Papasotiropoulos, Pierczyński and Skowron, 2025). Looks
+    for every cohesive group and verifies that they are all satisfied.
+
+    Parameters
+    ----------
+    profile : AbstractTrichotomousProfile
+        The full electorate's profile.
+    max_size_selection : int
+        The maximum number of alternatives that can be selected.
+    selection : Selection
+        The selection of alternatives to test.
+
+    Returns
+    -------
+    bool
+        True if Base EJR is satisfied, False otherwise.
     """
 
     for group, l in all_cohesive_groups(profile, max_size_selection):
@@ -90,8 +151,23 @@ def is_base_ejr(
     selection: Selection
 ) -> bool:
     """
-    Tests whether the given selection satisfies Base Extended Justified Representation (Base EJR) for the given
-    profile. This function makes use of the closed formula proposed in Lemma 1.
+    Determines whether a selection satisfies Base Extended Justified Representation (Base EJR) as defined in Definition 1 of
+    ``Proportionality in Thumbs Up and Down Voting`` (Kraiczy, Papasotiropoulos, Pierczyński and Skowron, 2025).
+    Makes used of the close formula provided in Lemma 1 of the same paper.
+
+    Parameters
+    ----------
+    profile : AbstractTrichotomousProfile
+        The full electorate's profile.
+    max_size_selection : int
+        The maximum number of alternatives that can be selected.
+    selection : Selection
+        The selection of alternatives to test.
+
+    Returns
+    -------
+    bool
+        True if Base EJR is satisfied, False otherwise.
     """
     n = profile.num_ballots()
     m = len(profile.alternatives)
@@ -136,8 +212,23 @@ def is_base_pjr(
     selection: Selection
 ) -> bool:
     """
-    Tests whether the given selection satisfies Base Proportional Justified Representation (Base PJR) for the given
-    profile.
+    Determines whether a selection satisfies Base Proportional Justified Representation (Base PJR) as defined in
+    Definition 2 of ``Proportionality in Thumbs Up and Down Voting`` (Kraiczy, Papasotiropoulos, Pierczyński and
+    Skowron, 2025).
+
+    Parameters
+    ----------
+    profile : AbstractTrichotomousProfile
+        The full electorate's profile.
+    max_size_selection : int
+        The maximum number of alternatives that can be selected.
+    selection : Selection
+        The selection of alternatives to test.
+
+    Returns
+    -------
+    bool
+        True if Base PJR is satisfied, False otherwise.
     """
 
     for group, l in all_cohesive_groups(profile, max_size_selection):
@@ -156,8 +247,25 @@ def is_positively_cohesive_for_l(
     group: AbstractTrichotomousProfile
 ) -> bool:
     """
-    Tests whether the given set of voters is positively cohesive.
+    Tests whether a group of voters is positively cohesive for level `l`.
+
+    Parameters
+    ----------
+    profile : AbstractTrichotomousProfile
+        The full electorate's profile.
+    max_size_selection : int
+        The maximum number of alternatives that can be selected.
+    l : int
+        The required representation level.
+    group : AbstractTrichotomousProfile
+        The subset of voters being tested.
+
+    Returns
+    -------
+    bool
+        True if the group is positively cohesive, False otherwise.
     """
+
     if l > max_size_selection:
         return False
     if l == 0:
@@ -190,8 +298,21 @@ def is_positive_ejr(
     selection: Selection
 ) -> bool:
     """
-    Tests whether the given selection satisfies Extended Justified Positive Representation (EJPR) for the given
-    profile.
+    Determines whether a selection satisfies Extended Justified Positive Representation (EJPR).
+
+    Parameters
+    ----------
+    profile : AbstractTrichotomousProfile
+        The full electorate's profile.
+    max_size_selection : int
+        The maximum number of alternatives that can be selected.
+    selection : Selection
+        The selection of alternatives to test.
+
+    Returns
+    -------
+    bool
+        True if EJPR is satisfied, False otherwise.
     """
 
     for group, l in all_cohesive_groups(profile, max_size_selection, test_cohesive_func=is_positively_cohesive_for_l):
@@ -212,7 +333,25 @@ def is_negatively_cohesive_for_l_t(
     group: AbstractTrichotomousProfile
 ) -> bool:
     """
-    Tests whether the given set of voters is l-T negatively cohesive.
+    Tests whether a group of voters is l-T negatively cohesive for a given set of alternatives.
+
+    Parameters
+    ----------
+    profile : AbstractTrichotomousProfile
+        The full electorate's profile.
+    max_size_selection : int
+        The maximum number of alternatives that can be selected.
+    l : int
+        The level of allowed violation.
+    alt_set : Iterable[Alternative]
+        The set of alternatives in question.
+    group : AbstractTrichotomousProfile
+        The subset of voters being tested.
+
+    Returns
+    -------
+    bool
+        True if the group is l-T negatively cohesive, False otherwise.
     """
 
     if not group.commonly_disapproved_alternatives().issubset(alt_set):
@@ -231,7 +370,21 @@ def is_group_veto(
     selection: Selection
 ) -> bool:
     """
-    Tests whether the given selection satisfies group veto for the given profile.
+    Determines whether a selection satisfies the group veto property.
+
+    Parameters
+    ----------
+    profile : AbstractTrichotomousProfile
+        The full electorate's profile.
+    max_size_selection : int
+        The maximum number of alternatives that can be selected.
+    selection : Selection
+        The selection of alternatives to test.
+
+    Returns
+    -------
+    bool
+        True if the group veto condition is satisfied, False otherwise.
     """
     for group in profile.all_sub_profiles():
         commonly_disapproved_alts = group.commonly_disapproved_alternatives()

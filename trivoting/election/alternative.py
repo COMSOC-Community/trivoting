@@ -2,7 +2,19 @@ from __future__ import annotations
 
 class Alternative:
     """
-    Class representing an alternative, i.e., one of the potential outcome of the election.
+    Represents an alternative, i.e., one of the potential outcomes of the election.
+
+    An alternative is represented by its name. Equality, hash, and other tests are based on the name.
+
+    Parameters
+    ----------
+    name : str
+        The identifier or label for the alternative.
+
+    Attributes
+    ----------
+    name : str
+        The identifier or label for the alternative.
     """
 
     def __init__(self, name):

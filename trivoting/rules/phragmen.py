@@ -12,25 +12,25 @@ from trivoting.tiebreaking import TieBreakingRule, lexico_tie_breaking
 
 class PhragmenVoter:
     """
-    Class used to summarise a voter during a run of the Phragmén's sequential rule.
+    Represents a voter during a run of the sequential Phragmén rule.
 
     Parameters
     ----------
-        ballot: AbstractTrichotomousBallot
-            The ballot of the voter.
-        load: Numeric
-            The initial load of the voter.
-        multiplicity: int
-            The multiplicity of the ballot.
+    ballot : AbstractTrichotomousBallot
+        The ballot of the voter.
+    load : Numeric
+        The initial load assigned to the voter.
+    multiplicity : int
+        The number of identical ballots represented by this voter.
 
     Attributes
     ----------
-        ballot: AbstractTrichotomousBallot
-            The ballot of the voter.
-        load: Numeric
-            The initial load of the voter.
-        multiplicity: int
-            The multiplicity of the ballot.
+    ballot : AbstractTrichotomousBallot
+        The ballot of the voter.
+    load : Numeric
+        The current load of the voter.
+    multiplicity : int
+        The multiplicity of the ballot.
     """
 
     def __init__(
@@ -53,31 +53,35 @@ def sequential_phragmen(
     resoluteness: bool = True,
 ) -> Selection | list[Selection]:
     """
-    Sequential Phragmén.
+    Compute the selections of the sequential Phragmén's rule.
+
+    The definition of the sequential Phragmén's rule for the trichotomous context is taken from Section 3.2 of
+    ``Proportionality in Thumbs Up and Down Voting`` (Kraiczy, Papasotiropoulos, Pierczyński and Skowron, 2025).
 
     Parameters
     ----------
-        profile : AbstractTrichotomousProfile
-            The profile.
-        max_size_selection : int
-            The maximum number of alternatives that can be selected.
-        initial_loads: list[Numeric], optional
-            A list of initial load, one per ballot in `profile`. By defaults, the initial load is `0`.
-        initial_selection: Selection, optional
-            An initial selection, fixed some alternatives has being either selected of not-selected. If the
-            selection has implicit_reject set to `True`, then no alternative is forced not-selected.
-        tie_breaking : TieBreakingRule, optional
-            The tie-breaking rule used.
-            Defaults to the lexicographic tie-breaking.
-        resoluteness : bool, optional
-            Set to `False` to obtain an irresolute outcome, where all tied budget allocations are returned.
-            Defaults to True.
+    profile : AbstractTrichotomousProfile
+        The voting profile containing trichotomous ballots.
+    max_size_selection : int
+        Maximum number of alternatives to select.
+    initial_loads : list of Numeric, optional
+        Initial loads for each ballot in the profile. Defaults to zero for all ballots.
+    initial_selection : Selection, optional
+        An initial selection that fixes some alternatives as selected or rejected.
+        If `implicit_reject` is True, no alternatives are fixed to be rejected.
+    tie_breaking : TieBreakingRule, optional
+        Tie-breaking rule used when multiple alternatives tie.
+        Defaults to lexicographic tie-breaking.
+    resoluteness : bool, optional
+        If True, returns a single selection (resolute).
+        If False, returns all tied optimal selections (irresolute).
+        Defaults to True.
 
     Returns
     -------
-        Selection | list[Selection]
-            The selection if resolute (:code:`resoluteness == True`), or a list of selections
-            if irresolute (:code:`resoluteness == False`).
+    Selection | list[Selection]
+        The selection if resolute (:code:`resoluteness == True`), or a list of selections
+        if irresolute (:code:`resoluteness == False`).
     """
 
     def _sequential_phragmen_rec(alternatives: set[Alternative], voters: list[PhragmenVoter], selection: Selection):

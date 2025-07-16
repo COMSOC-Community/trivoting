@@ -7,6 +7,7 @@ Reference
 
     election/index
     rules/index
+    axiomatic/index
     tiebreaking
     fractions
     utils

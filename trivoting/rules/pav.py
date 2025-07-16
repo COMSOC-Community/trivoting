@@ -8,7 +8,29 @@ from trivoting.rules.selection import Selection
 
 
 class PAVMipVoter:
+    """
+    Helper class representing a voter in the Proportional Approval Voting (PAV) ILP model.
 
+    Parameters
+    ----------
+    ballot : FrozenTrichotomousBallot
+        The ballot of the voter.
+    multiplicity : int
+        The number of identical ballots represented by this voter.
+    x_vars : dict[int, LpVariable]
+        Decision variables representing the voter's contribution to the PAV score
+        for each possible approval count.
+
+    Attributes
+    ----------
+    ballot : FrozenTrichotomousBallot
+        The ballot of the voter.
+    multiplicity : int
+        The number of identical ballots represented by this voter.
+    x_vars : dict[int, LpVariable]
+        Decision variables representing the voter's contribution to the PAV score
+        for each possible approval count.
+    """
     def __init__(self, ballot, multiplicity):
         self.ballot = ballot
         self.multiplicity = multiplicity
@@ -24,34 +46,39 @@ def proportional_approval_voting(
     max_seconds: int = 600
 ) -> Selection | list[Selection]:
     """
-    Proportional Approval via ILP solver.
+    Compute the selections of the Proportional Approval Voting (PAV) rule via Integer Linear Programming (ILP).
+    The ILP is solved with the `pulp` package.
+
+    The definition of the PAV rule for the trichotomous context is taken from Section 3.3 of
+    ``Proportionality in Thumbs Up and Down Voting`` (Kraiczy, Papasotiropoulos, Pierczyński and Skowron, 2025).
 
     Parameters
     ----------
-        profile : AbstractTrichotomousProfile
-            The profile.
-        max_size_selection : int
-            The maximum number of alternatives that can be selected.
-        initial_selection: Selection, optional
-            An initial selection, fixed some alternatives has being either selected of not-selected. If the
-            selection has implicit_reject set to `True`, then no alternative is forced not-selected.
-        resoluteness : bool, optional
-            Set to `False` to obtain an irresolute outcome, where all tied budget allocations are returned.
-            Defaults to True.
-        verbose: bool, optional
-            Set to `True` to activate the display of the messages from the ILP solver.
-            Defaults to False.
-        max_seconds: int, optional
-            The maximum number of seconds allocated to the ILP solver.
-            Defaults to 600.
+    profile : AbstractTrichotomousProfile
+        The voting profile containing trichotomous ballots.
+    max_size_selection : int
+        Maximum number of alternatives to select.
+    initial_selection : Selection, optional
+        An initial partial selection fixing some alternatives as selected or rejected.
+        If `implicit_reject` is True in the initial selection, no alternatives are fixed to be rejected.
+        Defaults to None.
+    resoluteness : bool, optional
+        If True, returns a single optimal selection (resolute).
+        If False, returns all tied optimal selections (irresolute).
+        Defaults to True.
+    verbose : bool, optional
+        If True, enables ILP solver output.
+        Defaults to False.
+    max_seconds : int, optional
+        Time limit in seconds for the ILP solver.
+        Defaults to 600.
 
     Returns
     -------
-        Selection | list[Selection]
-            The selection if resolute (:code:`resoluteness == True`), or a list of selections
-            if irresolute (:code:`resoluteness == False`).
+    Selection | list[Selection]
+        The selection if resolute (:code:`resoluteness == True`), or a list of selections
+        if irresolute (:code:`resoluteness == False`).
     """
-
 
     mip_model = LpProblem("pav", LpMaximize)
 

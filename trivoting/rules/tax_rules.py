@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from collections.abc import Collection, Callable
+from collections.abc import Callable
 
 import pabutools.election as pb_election
 import pabutools.rules as pb_rules
@@ -16,9 +16,30 @@ def tax_pb_instance(
         profile: AbstractTrichotomousProfile,
         max_size_selection: int,
         initial_selection: Selection | None = None,
-):
+) -> tuple[pb_election.Instance, pb_election.ApprovalMultiProfile, dict[pb_election.Project, Alternative]]:
     """
-    Returns a Participatory Budgeting instance and profile based on the given trichotomous profile.
+    Construct a Participatory Budgeting (PB) instance and PB profile from a trichotomous profile.
+
+    This function translates the trichotomous voting profile into a PB instance,
+    setting project costs inversely proportional to net support.
+
+    Parameters
+    ----------
+    profile : AbstractTrichotomousProfile
+        The input trichotomous profile of voters.
+    max_size_selection : int
+        The budget limit or maximum number of alternatives to be selected.
+    initial_selection : Selection or None, optional
+        An initial selection fixing some alternatives as selected or rejected.
+
+    Returns
+    -------
+    pb_election.Instance
+        The generated PB instance containing projects.
+    pb_election.ApprovalMultiProfile
+        The PB profile created from approval ballots derived from the trichotomous profile.
+    dict
+        A mapping from PB projects back to the original alternatives.
     """
     app_scores, disapp_scores = profile.approval_disapproval_score_dict()
 
@@ -55,34 +76,38 @@ def tax_pb_rule_scheme(
     pb_rule_kwargs: dict = None,
 ) -> Selection | list[Selection]:
     """
-    Runs the tax rule scheme. Defined the appropriate Participatory Budgeting (PB) instance and apply the required PB
-    rule to that instance. Makes use of the pabutools package for the PB side.
+    Apply a participatory budgeting rule to a trichotomous profile by translating it into a suitable PB instance with
+    opposition tax.
+
+    This function converts the given profile into a PB instance and profile,
+    applies the specified PB rule using pabutools, and converts the results back.
+
+    The taxed PB rule scheme has been defined in Section 4.2 of
+    ``Proportionality in Thumbs Up and Down Voting`` (Kraiczy, Papasotiropoulos, Pierczyński and Skowron, 2025).
 
     Parameters
     ----------
-        profile : AbstractTrichotomousProfile
-            The profile.
-        max_size_selection : int
-            The maximum number of alternatives that can be selected.
-        pb_rule : Callable
-            The PB rule to apply.
-        initial_selection: Selection, optional
-            An initial selection, fixed some alternatives has being either selected of not-selected. If the
-            selection has implicit_reject set to `True`, then no alternative is forced not-selected.
-        tie_breaking : TieBreakingRule, optional
-            The tie-breaking rule used.
-            Defaults to the lexicographic tie-breaking.
-        resoluteness : bool, optional
-            Set to `False` to obtain an irresolute outcome, where all tied budget allocations are returned.
-            Defaults to True.
-        pb_rule_kwargs: dict, optional
-            Additional keyword arguments to pass to the PB rule.
+    profile : AbstractTrichotomousProfile
+        The input trichotomous profile of voters.
+    max_size_selection : int
+        The maximum number of alternatives allowed in the selection.
+    pb_rule : callable
+        The participatory budgeting rule function to apply.
+    initial_selection : Selection or None, optional
+        An initial selection fixing some alternatives as selected or rejected.
+    tie_breaking : TieBreakingRule or None, optional
+        Tie-breaking rule used for resolving ties.
+        Defaults to lexicographic tie-breaking if None.
+    resoluteness : bool, optional
+        Whether to return a single resolute selection (True) or all tied selections (False).
+        Defaults to True.
+    pb_rule_kwargs : dict, optional
+        Additional keyword arguments passed to the PB rule.
 
     Returns
     -------
-        Selection | list[Selection]
-            The selection if resolute (:code:`resoluteness == True`), or a list of selections
-            if irresolute (:code:`resoluteness == False`).
+    Selection or list of Selection
+        The resulting selection(s) after applying the PB rule.
     """
     if pb_rule_kwargs is None:
         pb_rule_kwargs = dict()
@@ -126,29 +151,29 @@ def tax_method_of_equal_shares(
     resoluteness: bool = True,
 ) -> Selection | list[Selection]:
     """
-    Tax method of equal shares.
+    Apply the Tax method of equal shares to a trichotomous profile.
+
+    This method uses participatory budgeting rules to compute proportional selections
+    with the method of equal shares adapted for approval-disapproval profiles.
 
     Parameters
     ----------
-        profile : AbstractTrichotomousProfile
-            The profile.
-        max_size_selection : int
-            The maximum number of alternatives that can be selected.
-        initial_selection: Selection, optional
-            An initial selection, fixed some alternatives has being either selected of not-selected. If the
-            selection has implicit_reject set to `True`, then no alternative is forced not-selected.
-        tie_breaking : TieBreakingRule, optional
-            The tie-breaking rule used.
-            Defaults to the lexicographic tie-breaking.
-        resoluteness : bool, optional
-            Set to `False` to obtain an irresolute outcome, where all tied budget allocations are returned.
-            Defaults to True.
+    profile : AbstractTrichotomousProfile
+        The input profile.
+    max_size_selection : int
+        The maximum number of alternatives to select.
+    initial_selection : Selection or None, optional
+        Initial fixed selection state.
+    tie_breaking : TieBreakingRule or None, optional
+        Tie-breaking rule. Defaults to lexicographic.
+    resoluteness : bool, optional
+        Whether to return a single or multiple tied selections.
 
     Returns
     -------
-        Selection | list[Selection]
-            The selection if resolute (:code:`resoluteness == True`), or a list of selections
-            if irresolute (:code:`resoluteness == False`).
+    Selection | list[Selection]
+        The selection if resolute (:code:`resoluteness == True`), or a list of selections
+        if irresolute (:code:`resoluteness == False`).
     """
     return tax_pb_rule_scheme(
         profile,
@@ -168,29 +193,29 @@ def tax_sequential_phragmen(
     resoluteness: bool = True,
 ) -> Selection | list[Selection]:
     """
-    Tax sequential Phragmén.
+    Apply Tax sequential Phragmén method on a trichotomous profile.
+
+    This rule transforms the profile into a participatory budgeting instance
+    and applies sequential Phragmén via pabutools.
 
     Parameters
     ----------
-        profile : AbstractTrichotomousProfile
-            The profile.
-        max_size_selection : int
-            The maximum number of alternatives that can be selected.
-        initial_selection: Selection, optional
-            An initial selection, fixed some alternatives has being either selected of not-selected. If the
-            selection has implicit_reject set to `True`, then no alternative is forced not-selected.
-        tie_breaking : TieBreakingRule, optional
-            The tie-breaking rule used.
-            Defaults to the lexicographic tie-breaking.
-        resoluteness : bool, optional
-            Set to `False` to obtain an irresolute outcome, where all tied budget allocations are returned.
-            Defaults to True.
+    profile : AbstractTrichotomousProfile
+        The input voting profile.
+    max_size_selection : int
+        The maximum size of the selection.
+    initial_selection : Selection or None, optional
+        Initial fixed selections.
+    tie_breaking : TieBreakingRule or None, optional
+        Tie-breaking rule, defaulting to lexicographic.
+    resoluteness : bool, optional
+        Whether to return one selection or all tied selections.
 
     Returns
     -------
-        Selection | list[Selection]
-            The selection if resolute (:code:`resoluteness == True`), or a list of selections
-            if irresolute (:code:`resoluteness == False`).
+    Selection | list[Selection]
+        The selection if resolute (:code:`resoluteness == True`), or a list of selections
+        if irresolute (:code:`resoluteness == False`).
     """
 
     return tax_pb_rule_scheme(
