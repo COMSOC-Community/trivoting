@@ -60,7 +60,6 @@ class TieBreakingRule:
 
         if not alternatives:
             return []
-
         if key is None:
             key = default_key
         return sorted(

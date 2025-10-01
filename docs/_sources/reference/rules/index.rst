@@ -23,6 +23,12 @@ Tax-Based Rules
 
 .. automodule:: trivoting.rules.tax_rules
 
+.. autoclass:: trivoting.rules.tax_rules.TaxFunction
+
+.. autoclass:: trivoting.rules.tax_rules.TaxKraiczy2025
+
+.. autoclass:: trivoting.rules.tax_rules.DisapprovalLinearTax
+
 .. autofunction:: trivoting.rules.tax_rules.tax_pb_instance
 
 .. autofunction:: trivoting.rules.tax_rules.tax_pb_rule_scheme

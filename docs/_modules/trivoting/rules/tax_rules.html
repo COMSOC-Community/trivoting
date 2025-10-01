@@ -35,7 +35,7 @@
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="../../../_static/documentation_options.js?v=f131489c"></script>
+    <script src="../../../_static/documentation_options.js?v=4acdca81"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
@@ -281,6 +281,7 @@ document.write(`
   <h1>Source code for trivoting.rules.tax_rules</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
+<span class="kn">import</span><span class="w"> </span><span class="nn">abc</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">pabutools.election</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pb_election</span>
@@ -288,9 +289,84 @@ document.write(`
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.election.alternative</span><span class="w"> </span><span class="kn">import</span> <span class="n">Alternative</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.election.trichotomous_profile</span><span class="w"> </span><span class="kn">import</span> <span class="n">AbstractTrichotomousProfile</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.fractions</span><span class="w"> </span><span class="kn">import</span> <span class="n">frac</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.fractions</span><span class="w"> </span><span class="kn">import</span> <span class="n">frac</span><span class="p">,</span> <span class="n">Numeric</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.election.selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">Selection</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.tiebreaking</span><span class="w"> </span><span class="kn">import</span> <span class="n">TieBreakingRule</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.tiebreaking</span><span class="w"> </span><span class="kn">import</span> <span class="n">TieBreakingRule</span><span class="p">,</span> <span class="n">lexico_tie_breaking</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">generate_subsets</span>
+
+
+<div class="viewcode-block" id="TaxFunction">
+<a class="viewcode-back" href="../../../reference/rules/index.html#trivoting.rules.tax_rules.TaxFunction">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TaxFunction</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Abstract class representing tax functions. A tax function associates a tax (i.e., the cost of a project on the PB side)</span>
+<span class="sd">    to alternatives.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">profile</span><span class="p">:</span> <span class="n">AbstractTrichotomousProfile</span><span class="p">,</span> <span class="n">max_size_selection</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">profile</span> <span class="o">=</span> <span class="n">profile</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_size_selection</span> <span class="o">=</span> <span class="n">max_size_selection</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">preprocessed_data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">preprocess</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">preprocess</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Preprocessing of the profile used to save up time on expensive computations that would be otherwise repeated.&quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">tax_alternative</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alternative</span><span class="p">:</span> <span class="n">Alternative</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Numeric</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the tax corresponding to the alternative. If `None` is returned, no project corresponding to the</span>
+<span class="sd">        alternative is added to the PB instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="TaxKraiczy2025">
+<a class="viewcode-back" href="../../../reference/rules/index.html#trivoting.rules.tax_rules.TaxKraiczy2025">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TaxKraiczy2025</span><span class="p">(</span><span class="n">TaxFunction</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Tax function proposed in ``Proportionality in Thumbs Up and Down Voting`` (Kraiczy, Papasotiropoulos, Pierczyński</span>
+<span class="sd">    and Skowron, 2025). The cost of a project is equal to its approval score divided by its support (approval minus disapproval score).</span>
+<span class="sd">    If the support is negative, then the project is skipped.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">preprocess</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">app_scores</span><span class="p">,</span> <span class="n">disapp_scores</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">approval_disapproval_score_dict</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">preprocessed_data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;app_scores&quot;</span><span class="p">:</span> <span class="n">app_scores</span><span class="p">,</span> <span class="s2">&quot;disapp_scores&quot;</span><span class="p">:</span> <span class="n">disapp_scores</span><span class="p">}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">tax_alternative</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alternative</span><span class="p">:</span> <span class="n">Alternative</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Numeric</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">app_score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">preprocessed_data</span><span class="p">[</span><span class="s2">&quot;app_scores&quot;</span><span class="p">][</span><span class="n">alternative</span><span class="p">]</span>
+        <span class="n">disapp_score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">preprocessed_data</span><span class="p">[</span><span class="s2">&quot;disapp_scores&quot;</span><span class="p">][</span><span class="n">alternative</span><span class="p">]</span>
+        <span class="n">support</span> <span class="o">=</span> <span class="n">app_score</span> <span class="o">-</span> <span class="n">disapp_score</span>
+        <span class="k">if</span> <span class="n">support</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">frac</span><span class="p">(</span><span class="n">app_score</span><span class="p">,</span> <span class="n">support</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="DisapprovalLinearTax">
+<a class="viewcode-back" href="../../../reference/rules/index.html#trivoting.rules.tax_rules.DisapprovalLinearTax">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">DisapprovalLinearTax</span><span class="p">(</span><span class="n">TaxFunction</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Disapproval linear tax function for which the cost of a project is equal to its disapproval multiplied by a fixed</span>
+<span class="sd">    factor.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">profile</span><span class="p">:</span> <span class="n">AbstractTrichotomousProfile</span><span class="p">,</span> <span class="n">max_size_selection</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">class_method_call</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">class_method_call</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;To create a disapproval linear tax, use the initialize() class method instead of using the class itself.&quot;</span><span class="p">)</span>
+        <span class="n">TaxFunction</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">profile</span><span class="p">,</span> <span class="n">max_size_selection</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="n">weight</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">weight</span><span class="p">:</span> <span class="n">Numeric</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[</span><span class="n">AbstractTrichotomousProfile</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">DisapprovalLinearTax</span><span class="p">]:</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">constructor</span><span class="p">(</span><span class="n">profile</span><span class="p">:</span> <span class="n">AbstractTrichotomousProfile</span><span class="p">,</span> <span class="n">max_size_selection</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DisapprovalLinearTax</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">max_size_selection</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="n">weight</span><span class="p">,</span> <span class="n">class_method_call</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">constructor</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">preprocess</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">preprocessed_data</span><span class="p">[</span><span class="s2">&quot;disapp_scores&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">disapproval_score_dict</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">tax_alternative</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alternative</span><span class="p">:</span> <span class="n">Alternative</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Numeric</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">preprocessed_data</span><span class="p">[</span><span class="s2">&quot;disapp_scores&quot;</span><span class="p">][</span><span class="n">alternative</span><span class="p">]</span></div>
+
 
 
 <div class="viewcode-block" id="tax_pb_instance">
@@ -299,6 +375,7 @@ document.write(`
         <span class="n">profile</span><span class="p">:</span> <span class="n">AbstractTrichotomousProfile</span><span class="p">,</span>
         <span class="n">max_size_selection</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">initial_selection</span><span class="p">:</span> <span class="n">Selection</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">tax_function</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">TaxFunction</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">pb_election</span><span class="o">.</span><span class="n">Instance</span><span class="p">,</span> <span class="n">pb_election</span><span class="o">.</span><span class="n">ApprovalMultiProfile</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="n">pb_election</span><span class="o">.</span><span class="n">Project</span><span class="p">,</span> <span class="n">Alternative</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Construct a Participatory Budgeting (PB) instance and PB profile from a trichotomous profile.</span>
@@ -314,6 +391,9 @@ document.write(`
 <span class="sd">        The budget limit or maximum number of alternatives to be selected.</span>
 <span class="sd">    initial_selection : Selection or None, optional</span>
 <span class="sd">        An initial selection fixing some alternatives as selected or rejected.</span>
+<span class="sd">    tax_function: type[TaxFunction], optional</span>
+<span class="sd">        A tax function defined as a subclass of the :py:class:`TaxFunction` class. Defaults to</span>
+<span class="sd">        :py:class:`TaxKraiczy2025`.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -324,24 +404,26 @@ document.write(`
 <span class="sd">    dict</span>
 <span class="sd">        A mapping from PB projects back to the original alternatives.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">app_scores</span><span class="p">,</span> <span class="n">disapp_scores</span> <span class="o">=</span> <span class="n">profile</span><span class="o">.</span><span class="n">approval_disapproval_score_dict</span><span class="p">()</span>
 
     <span class="k">if</span> <span class="n">initial_selection</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">initial_selection</span> <span class="o">=</span> <span class="n">Selection</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">tax_function</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">tax_function</span> <span class="o">=</span> <span class="n">TaxKraiczy2025</span>
 
+    <span class="n">tax_function</span> <span class="o">=</span> <span class="n">tax_function</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">max_size_selection</span><span class="p">)</span>
     <span class="n">alt_to_project</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
     <span class="n">project_to_alt</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
     <span class="n">running_alternatives</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-    <span class="n">pb_instance</span> <span class="o">=</span> <span class="n">pb_election</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="n">budget_limit</span><span class="o">=</span><span class="n">max_size_selection</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">alt</span><span class="p">,</span> <span class="n">app_score</span> <span class="ow">in</span> <span class="n">app_scores</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="n">support</span> <span class="o">=</span> <span class="n">app_score</span> <span class="o">-</span> <span class="n">disapp_scores</span><span class="p">[</span><span class="n">alt</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">support</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">alt</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">initial_selection</span><span class="p">:</span>
-            <span class="n">project</span> <span class="o">=</span> <span class="n">pb_election</span><span class="o">.</span><span class="n">Project</span><span class="p">(</span><span class="n">alt</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">cost</span><span class="o">=</span><span class="n">frac</span><span class="p">(</span><span class="n">app_score</span><span class="p">,</span> <span class="n">support</span><span class="p">))</span>
-            <span class="n">pb_instance</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">project</span><span class="p">)</span>
-            <span class="n">running_alternatives</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">alt</span><span class="p">)</span>
-            <span class="n">alt_to_project</span><span class="p">[</span><span class="n">alt</span><span class="p">]</span> <span class="o">=</span> <span class="n">project</span>
-            <span class="n">project_to_alt</span><span class="p">[</span><span class="n">project</span><span class="p">]</span> <span class="o">=</span> <span class="n">alt</span>
-
+    <span class="n">pb_instance</span> <span class="o">=</span> <span class="n">pb_election</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="n">budget_limit</span><span class="o">=</span><span class="n">max_size_selection</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">initial_selection</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">alt</span> <span class="ow">in</span> <span class="n">profile</span><span class="o">.</span><span class="n">alternatives</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">alt</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">initial_selection</span><span class="p">:</span>
+            <span class="n">cost</span> <span class="o">=</span> <span class="n">tax_function</span><span class="o">.</span><span class="n">tax_alternative</span><span class="p">(</span><span class="n">alt</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">cost</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">project</span> <span class="o">=</span> <span class="n">pb_election</span><span class="o">.</span><span class="n">Project</span><span class="p">(</span><span class="n">alt</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">cost</span><span class="o">=</span><span class="n">tax_function</span><span class="o">.</span><span class="n">tax_alternative</span><span class="p">(</span><span class="n">alt</span><span class="p">))</span>
+                <span class="n">pb_instance</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">project</span><span class="p">)</span>
+                <span class="n">running_alternatives</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">alt</span><span class="p">)</span>
+                <span class="n">alt_to_project</span><span class="p">[</span><span class="n">alt</span><span class="p">]</span> <span class="o">=</span> <span class="n">project</span>
+                <span class="n">project_to_alt</span><span class="p">[</span><span class="n">project</span><span class="p">]</span> <span class="o">=</span> <span class="n">alt</span>
     <span class="n">pb_profile</span> <span class="o">=</span> <span class="n">pb_election</span><span class="o">.</span><span class="n">ApprovalMultiProfile</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="n">pb_instance</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">ballot</span> <span class="ow">in</span> <span class="n">profile</span><span class="p">:</span>
         <span class="n">pb_profile</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
@@ -356,6 +438,7 @@ document.write(`
     <span class="n">profile</span><span class="p">:</span> <span class="n">AbstractTrichotomousProfile</span><span class="p">,</span>
     <span class="n">max_size_selection</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">pb_rule</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
+    <span class="n">tax_function</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">TaxFunction</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">initial_selection</span><span class="p">:</span> <span class="n">Selection</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">tie_breaking</span><span class="p">:</span> <span class="n">TieBreakingRule</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">resoluteness</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
@@ -371,6 +454,9 @@ document.write(`
 <span class="sd">    The taxed PB rule scheme has been defined in Section 4.2 of</span>
 <span class="sd">    ``Proportionality in Thumbs Up and Down Voting`` (Kraiczy, Papasotiropoulos, Pierczyński and Skowron, 2025).</span>
 
+<span class="sd">    In case there are alternatives whose corresponding projects have cost 0, it can happen that too many projects are</span>
+<span class="sd">    selected on the PB side. In this case, the tie breaking function is used to select the right number of alternatives.</span>
+
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    profile : AbstractTrichotomousProfile</span>
@@ -379,6 +465,9 @@ document.write(`
 <span class="sd">        The maximum number of alternatives allowed in the selection.</span>
 <span class="sd">    pb_rule : callable</span>
 <span class="sd">        The participatory budgeting rule function to apply.</span>
+<span class="sd">    tax_function: type[TaxFunction], optional</span>
+<span class="sd">        A tax function defined as a subclass of the :py:class:`TaxFunction` class. Defaults to</span>
+<span class="sd">        :py:class:`TaxKraiczy2025`.</span>
 <span class="sd">    initial_selection : Selection or None, optional</span>
 <span class="sd">        An initial selection fixing some alternatives as selected or rejected.</span>
 <span class="sd">    tie_breaking : TieBreakingRule or None, optional</span>
@@ -397,36 +486,52 @@ document.write(`
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">pb_rule_kwargs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">pb_rule_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">tie_breaking</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">tie_breaking</span> <span class="o">=</span> <span class="n">lexico_tie_breaking</span>
+    <span class="k">if</span> <span class="n">tax_function</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">tax_function</span> <span class="o">=</span> <span class="n">TaxKraiczy2025</span>
 
     <span class="k">if</span> <span class="n">initial_selection</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">initial_selection</span> <span class="o">=</span> <span class="n">Selection</span><span class="p">(</span><span class="n">implicit_reject</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">remaining_max_size</span> <span class="o">=</span> <span class="n">max_size_selection</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">initial_selection</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">profile</span><span class="o">.</span><span class="n">num_ballots</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">initial_selection</span> <span class="k">if</span> <span class="n">resoluteness</span> <span class="k">else</span> <span class="p">[</span><span class="n">initial_selection</span><span class="p">]</span>
 
-    <span class="n">pb_instance</span><span class="p">,</span> <span class="n">pb_profile</span><span class="p">,</span> <span class="n">project_to_alt</span> <span class="o">=</span> <span class="n">tax_pb_instance</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">max_size_selection</span><span class="p">,</span> <span class="n">initial_selection</span><span class="p">)</span>
+    <span class="n">pb_instance</span><span class="p">,</span> <span class="n">pb_profile</span><span class="p">,</span> <span class="n">project_to_alt</span> <span class="o">=</span> <span class="n">tax_pb_instance</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">max_size_selection</span><span class="p">,</span> <span class="n">initial_selection</span><span class="p">,</span> <span class="n">tax_function</span><span class="o">=</span><span class="n">tax_function</span><span class="p">)</span>
 
     <span class="n">budget_allocation</span> <span class="o">=</span> <span class="n">pb_rule</span><span class="p">(</span>
         <span class="n">pb_instance</span><span class="p">,</span>
         <span class="n">pb_profile</span><span class="p">,</span>
-        <span class="n">tie_breaking</span><span class="o">=</span><span class="n">tie_breaking</span><span class="p">,</span>
         <span class="n">resoluteness</span><span class="o">=</span><span class="n">resoluteness</span><span class="p">,</span>
         <span class="o">**</span><span class="n">pb_rule_kwargs</span>
     <span class="p">)</span>
 
     <span class="k">if</span> <span class="n">resoluteness</span><span class="p">:</span>
-        <span class="n">initial_selection</span><span class="o">.</span><span class="n">extend_selected</span><span class="p">(</span><span class="n">project_to_alt</span><span class="p">[</span><span class="n">p</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">budget_allocation</span><span class="p">)</span>
+        <span class="n">selected_alts</span> <span class="o">=</span> <span class="p">[</span><span class="n">project_to_alt</span><span class="p">[</span><span class="n">p</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">budget_allocation</span><span class="p">]</span>
+        <span class="c1"># We need to deal with the case when too many projects are selected on the PB side.</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">budget_allocation</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">remaining_max_size</span><span class="p">:</span>
+            <span class="n">initial_selection</span><span class="o">.</span><span class="n">extend_selected</span><span class="p">(</span><span class="n">tie_breaking</span><span class="o">.</span><span class="n">order</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">selected_alts</span><span class="p">)[:</span><span class="n">remaining_max_size</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">initial_selection</span><span class="o">.</span><span class="n">extend_selected</span><span class="p">(</span><span class="n">selected_alts</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">initial_selection</span><span class="o">.</span><span class="n">implicit_reject</span><span class="p">:</span>
             <span class="n">initial_selection</span><span class="o">.</span><span class="n">extend_rejected</span><span class="p">(</span><span class="n">project_to_alt</span><span class="p">[</span><span class="n">p</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">pb_instance</span> <span class="k">if</span> <span class="n">p</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">budget_allocation</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">initial_selection</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">all_selections</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">alloc</span> <span class="ow">in</span> <span class="n">budget_allocation</span><span class="p">:</span>
-            <span class="n">selection</span> <span class="o">=</span> <span class="n">initial_selection</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-            <span class="n">selection</span><span class="o">.</span><span class="n">extend_selected</span><span class="p">(</span><span class="n">project_to_alt</span><span class="p">[</span><span class="n">p</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">alloc</span><span class="p">)</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">selection</span><span class="o">.</span><span class="n">implicit_reject</span><span class="p">:</span>
-                <span class="n">selection</span><span class="o">.</span><span class="n">extend_rejected</span><span class="p">(</span><span class="n">project_to_alt</span><span class="p">[</span><span class="n">p</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">pb_instance</span> <span class="k">if</span> <span class="n">p</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">alloc</span><span class="p">)</span>
-            <span class="n">all_selections</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">selection</span><span class="p">)</span>
+            <span class="n">selected_alts</span> <span class="o">=</span> <span class="p">[</span><span class="n">project_to_alt</span><span class="p">[</span><span class="n">p</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">alloc</span><span class="p">]</span>
+            <span class="c1"># We need to deal with the case when too many projects are selected on the PB side.</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">alloc</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">remaining_max_size</span><span class="p">:</span>
+                <span class="n">subselections</span> <span class="o">=</span> <span class="n">generate_subsets</span><span class="p">(</span><span class="n">selected_alts</span><span class="p">,</span> <span class="n">min_size</span><span class="o">=</span><span class="n">remaining_max_size</span><span class="p">,</span> <span class="n">max_size</span><span class="o">=</span><span class="n">remaining_max_size</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">subselections</span> <span class="o">=</span> <span class="p">[</span><span class="n">selected_alts</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">subselection</span> <span class="ow">in</span> <span class="n">subselections</span><span class="p">:</span>
+                <span class="n">selection</span> <span class="o">=</span> <span class="n">initial_selection</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                <span class="n">selection</span><span class="o">.</span><span class="n">extend_selected</span><span class="p">(</span><span class="n">subselection</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">selection</span><span class="o">.</span><span class="n">implicit_reject</span><span class="p">:</span>
+                    <span class="n">selection</span><span class="o">.</span><span class="n">extend_rejected</span><span class="p">(</span><span class="n">project_to_alt</span><span class="p">[</span><span class="n">p</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">pb_instance</span> <span class="k">if</span> <span class="n">p</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">alloc</span><span class="p">)</span>
+                <span class="n">all_selections</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">selection</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">all_selections</span></div>
 
 
@@ -435,6 +540,7 @@ document.write(`
 <span class="k">def</span><span class="w"> </span><span class="nf">tax_method_of_equal_shares</span><span class="p">(</span>
     <span class="n">profile</span><span class="p">:</span> <span class="n">AbstractTrichotomousProfile</span><span class="p">,</span>
     <span class="n">max_size_selection</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">tax_function</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">TaxFunction</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">initial_selection</span><span class="p">:</span> <span class="n">Selection</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">tie_breaking</span><span class="p">:</span> <span class="n">TieBreakingRule</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">resoluteness</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
@@ -451,6 +557,9 @@ document.write(`
 <span class="sd">        The input profile.</span>
 <span class="sd">    max_size_selection : int</span>
 <span class="sd">        The maximum number of alternatives to select.</span>
+<span class="sd">    tax_function: type[TaxFunction], optional</span>
+<span class="sd">        A tax function defined as a subclass of the :py:class:`TaxFunction` class. Defaults to</span>
+<span class="sd">        :py:class:`TaxKraiczy2025`.</span>
 <span class="sd">    initial_selection : Selection or None, optional</span>
 <span class="sd">        Initial fixed selection state.</span>
 <span class="sd">    tie_breaking : TieBreakingRule or None, optional</span>
@@ -468,6 +577,7 @@ document.write(`
         <span class="n">profile</span><span class="p">,</span>
         <span class="n">max_size_selection</span><span class="p">,</span>
         <span class="n">pb_rules</span><span class="o">.</span><span class="n">method_of_equal_shares</span><span class="p">,</span>
+        <span class="n">tax_function</span><span class="o">=</span><span class="n">tax_function</span><span class="p">,</span>
         <span class="n">initial_selection</span><span class="o">=</span><span class="n">initial_selection</span><span class="p">,</span>
         <span class="n">tie_breaking</span><span class="o">=</span><span class="n">tie_breaking</span><span class="p">,</span>
         <span class="n">resoluteness</span><span class="o">=</span><span class="n">resoluteness</span><span class="p">,</span>
@@ -480,6 +590,7 @@ document.write(`
 <span class="k">def</span><span class="w"> </span><span class="nf">tax_sequential_phragmen</span><span class="p">(</span>
     <span class="n">profile</span><span class="p">:</span> <span class="n">AbstractTrichotomousProfile</span><span class="p">,</span>
     <span class="n">max_size_selection</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">tax_function</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">TaxFunction</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">initial_selection</span><span class="p">:</span> <span class="n">Selection</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">tie_breaking</span><span class="p">:</span> <span class="n">TieBreakingRule</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">resoluteness</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
@@ -496,6 +607,9 @@ document.write(`
 <span class="sd">        The input voting profile.</span>
 <span class="sd">    max_size_selection : int</span>
 <span class="sd">        The maximum size of the selection.</span>
+<span class="sd">    tax_function: type[TaxFunction], optional</span>
+<span class="sd">        A tax function defined as a subclass of the :py:class:`TaxFunction` class. Defaults to</span>
+<span class="sd">        :py:class:`TaxKraiczy2025`.</span>
 <span class="sd">    initial_selection : Selection or None, optional</span>
 <span class="sd">        Initial fixed selections.</span>
 <span class="sd">    tie_breaking : TieBreakingRule or None, optional</span>
@@ -514,6 +628,7 @@ document.write(`
         <span class="n">profile</span><span class="p">,</span>
         <span class="n">max_size_selection</span><span class="p">,</span>
         <span class="n">pb_rules</span><span class="o">.</span><span class="n">sequential_phragmen</span><span class="p">,</span>
+        <span class="n">tax_function</span><span class="o">=</span><span class="n">tax_function</span><span class="p">,</span>
         <span class="n">initial_selection</span><span class="o">=</span><span class="n">initial_selection</span><span class="p">,</span>
         <span class="n">tie_breaking</span><span class="o">=</span><span class="n">tie_breaking</span><span class="p">,</span>
         <span class="n">resoluteness</span><span class="o">=</span><span class="n">resoluteness</span><span class="p">,</span>
