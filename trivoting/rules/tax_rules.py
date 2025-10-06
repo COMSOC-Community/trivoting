@@ -76,7 +76,7 @@ class DisapprovalLinearTax(TaxFunction):
         self.preprocessed_data["disapp_scores"] = self.profile.disapproval_score_dict()
 
     def tax_alternative(self, alternative: Alternative) -> Numeric | None:
-        return self.weight * self.preprocessed_data["disapp_scores"][alternative]
+        return 1 + self.weight * self.preprocessed_data["disapp_scores"][alternative]
 
 
 def tax_pb_instance(
