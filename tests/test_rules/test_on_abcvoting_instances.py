@@ -6,7 +6,7 @@ import yaml
 from unittest import TestCase
 
 from trivoting.election.abcvoting import parse_abcvoting_yaml
-from trivoting.rules.pav import proportional_approval_voting
+from trivoting.rules.thiele import thiele_method
 from trivoting.rules.phragmen import sequential_phragmen
 
 
@@ -55,7 +55,7 @@ def irresolute_res_representation(budget_allocations, profile):
 
 RULE_MAPPING = {
     "seqphragmen": sequential_phragmen,
-    "pav": proportional_approval_voting,
+    "pav": thiele_method,
 }
 
 def process_yaml_file(yaml_file_path: str):

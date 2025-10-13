@@ -1,33 +1,83 @@
 from __future__ import annotations
 
 import abc
-from collections.abc import Iterable, Callable
+from abc import abstractmethod
+from collections.abc import Iterable
+from copy import deepcopy
 
+from trivoting.election import AbstractTrichotomousBallot, Alternative
 from trivoting.election.trichotomous_profile import AbstractTrichotomousProfile
 
 from pulp import LpProblem, LpMaximize, LpBinary, LpVariable, lpSum, LpStatusOptimal, value, PULP_CBC_CMD, \
     LpAffineExpression
 
 from trivoting.election.selection import Selection
+from trivoting.fractions import Numeric
+from trivoting.tiebreaking import TieBreakingRule, lexico_tie_breaking
+from trivoting.utils import harmonic_sum
 
 
-class PAVMipVoter:
+class ThieleScore(abc.ABC):
+    def __init__(self, max_size_selection):
+        self.max_size_selection = max_size_selection
+
+    @abstractmethod
+    def score_function(self, num_app_sel=0, num_disapp_sel=0, num_app_rej=0, num_disapp_rej=0):
+        pass
+
+    def score_selection(self, profile: AbstractTrichotomousProfile, selection: Selection, extra_reject: Iterable[Alternative] = None, extra_accept: Iterable[Alternative] = None
+                        ) -> Numeric:
+        if extra_reject is None:
+            extra_reject = []
+        if extra_accept is None:
+            extra_accept = []
+        score = 0
+        for ballot in profile:
+            num_app_sel = 0
+            num_app_rej = 0
+            num_disapp_sel = 0
+            num_disapp_rej = 0
+            for a in ballot.approved:
+                if selection.is_selected(a) or a in extra_accept:
+                    num_app_sel += 1
+                elif selection.is_rejected(a) or a in extra_reject:
+                    num_app_rej += 1
+            for a in ballot.disapproved:
+                if selection.is_rejected(a) or a in extra_reject:
+                    num_disapp_rej += 1
+                elif selection.is_selected(a) or a in extra_accept:
+                    num_disapp_sel += 1
+            ballot_score = self.score_function(num_app_sel, num_disapp_sel, num_app_rej, num_disapp_rej)
+            score += ballot_score * profile.multiplicity(ballot)
+        return score
+
+class PAVScoreKraiczy2025(ThieleScore):
+    def score_function(self, num_app_sel=0, num_disapp_sel=0, num_app_rej=0, num_disapp_rej=0):
+        return harmonic_sum(num_app_sel + num_disapp_rej)
+
+class PAVScoreTalmonPaige2021(ThieleScore):
+    def score_function(self, num_app_sel=0, num_disapp_sel=0, num_app_rej=0, num_disapp_rej=0):
+        return harmonic_sum(num_app_sel) - harmonic_sum(num_disapp_sel)
+
+class PAVScoreHervouin2025(ThieleScore):
+    def score_function(self, num_app_sel=0, num_disapp_sel=0, num_app_rej=0, num_disapp_rej=0):
+        return harmonic_sum(num_app_sel) + harmonic_sum(self.max_size_selection - num_disapp_rej)
+
+
+class ThieleILPVoter:
     """
-    Helper class representing a voter in the Proportional Approval Voting (PAV) ILP model.
+    Helper class holding the necessary information to build the ILP to compute the winner of Thiele a rule.
 
     Parameters
     ----------
-    ballot : FrozenTrichotomousBallot
+    ballot : AbstractTrichotomousBallot
         The ballot of the voter.
     multiplicity : int
         The number of identical ballots represented by this voter.
-    x_vars : dict[int, LpVariable]
-        Decision variables representing the voter's contribution to the PAV score
-        for each possible approval count.
 
     Attributes
     ----------
-    ballot : FrozenTrichotomousBallot
+    ballot : AbstractTrichotomousBallot
         The ballot of the voter.
     multiplicity : int
         The number of identical ballots represented by this voter.
@@ -50,11 +100,35 @@ class PAVMipVoter:
         self.sat_vars = None
         self.dissat_vars = None
 
-class PAVILPBuilder(abc.ABC):
+class ThieleILPBuilder(abc.ABC):
+    """
+    Class used to build the ILP to compute the outcome of a Thiele rule.
+
+    Parameters
+    ----------
+    profile: AbstractTrichotomousProfile
+        The profile.
+    max_size_selection: int
+        Maximum number of alternatives to select.
+
+    Attributes
+    ----------
+    profile: AbstractTrichotomousProfile
+        The profile.
+    max_size_selection: int
+        Maximum number of alternatives to select.
+    model: LpProblem
+        ILP model.
+    voters: list[ThieleILPVoter]
+        List of instances of the :py:class:`ThieleILPVoter` class, each instance representing a voter.
+    selection_vars: dict[Alternative, LpVariable]
+        Dictionary mapping each alternative to the decision variable indicating whether a given alternative is selected
+        or not.
+    """
     def __init__(self, profile: AbstractTrichotomousProfile, max_size_selection: int):
         self.profile = profile
         self.max_size_selection = max_size_selection
-        self.model = LpProblem("pav", LpMaximize)
+        self.model = LpProblem("thiele", LpMaximize)
         self.voters = []
         self.selection_vars = {alt: LpVariable(f"y_{alt.name}", cat=LpBinary) for alt in profile.alternatives}
 
@@ -66,7 +140,7 @@ class PAVILPBuilder(abc.ABC):
     def objective(self) -> LpAffineExpression:
         """"""
 
-class PAVILPKraiczy2025(PAVILPBuilder):
+class PAVILPKraiczy2025(ThieleILPBuilder):
     """
     Defines the ILP objective for the PAV ILP solver as defined in Section 3.3 of
     ``Proportionality in Thumbs Up and Down Voting`` (Kraiczy, Papasotiropoulos, Pierczyński and Skowron, 2025).
@@ -76,7 +150,7 @@ class PAVILPKraiczy2025(PAVILPBuilder):
     def init_voters_vars(self) -> None:
         # Init the variables
         for i, ballot in enumerate(self.profile):
-            pav_voter = PAVMipVoter(ballot, multiplicity=self.profile.multiplicity(ballot))
+            pav_voter = ThieleILPVoter(ballot, multiplicity=self.profile.multiplicity(ballot))
             pav_voter.sat_vars = dict()
             for k in range(1, len(self.profile.alternatives) + 1):
                 pav_voter.sat_vars[k] = LpVariable(f"s_{i}_{k}", cat=LpBinary)
@@ -92,7 +166,7 @@ class PAVILPKraiczy2025(PAVILPBuilder):
         return lpSum(lpSum(v / i for i, v in voter.sat_vars.items()) for voter in self.voters)
 
 
-class PAVILPTalmonPage2021(PAVILPBuilder):
+class PAVILPTalmonPage2021(ThieleILPBuilder):
     """
     Defines the ILP objective for the PAV ILP solver as defined in Section 3.3 of
     ``Proportionality in Committee Selection with Negative Feelings`` (Talmon and Page, 2021).
@@ -103,7 +177,7 @@ class PAVILPTalmonPage2021(PAVILPBuilder):
     def init_voters_vars(self) -> None:
         # Init the variables
         for i, ballot in enumerate(self.profile):
-            pav_voter = PAVMipVoter(ballot, multiplicity=self.profile.multiplicity(ballot))
+            pav_voter = ThieleILPVoter(ballot, multiplicity=self.profile.multiplicity(ballot))
             pav_voter.app_sat_vars = dict()
             pav_voter.disapp_dissat_vars = dict()
             for k in range(1, len(self.profile.alternatives) + 1):
@@ -120,7 +194,7 @@ class PAVILPTalmonPage2021(PAVILPBuilder):
         return lpSum(lpSum(v / i for i, v in voter.app_sat_vars.items()) for voter in self.voters) - lpSum(lpSum(v / i for i, v in voter.disapp_dissat_vars.items()) for voter in self.voters)
 
 
-class PAVILPHervouin2025(PAVILPBuilder):
+class PAVILPHervouin2025(ThieleILPBuilder):
     """
     Defines the ILP objective for the PAV ILP solver as defined by Matthieu Hervouin.
     The objective is to maximise the sum of (1) the PAV score in which approved and selected alternatives
@@ -131,7 +205,7 @@ class PAVILPHervouin2025(PAVILPBuilder):
     def init_voters_vars(self) -> None:
         # Init the variables
         for i, ballot in enumerate(self.profile):
-            pav_voter = PAVMipVoter(ballot, multiplicity=self.profile.multiplicity(ballot))
+            pav_voter = ThieleILPVoter(ballot, multiplicity=self.profile.multiplicity(ballot))
             pav_voter.app_sat_vars = dict()
             pav_voter.disapp_dissat_vars = dict()
             for k in range(1, len(self.profile.alternatives) + 1):
@@ -147,20 +221,18 @@ class PAVILPHervouin2025(PAVILPBuilder):
     def objective(self) -> LpAffineExpression:
         return lpSum(lpSum(v / i for i, v in voter.app_sat_vars.items()) for voter in self.voters) + lpSum(lpSum(v / i for i, v in voter.disapp_dissat_vars.items()) for voter in self.voters)
 
-def proportional_approval_voting(
+def thiele_method(
     profile: AbstractTrichotomousProfile,
     max_size_selection: int,
-    ilp_builder_class: type[PAVILPBuilder] = None,
+    ilp_builder_class: type[ThieleILPBuilder],
     initial_selection: Selection | None = None,
     resoluteness: bool = True,
     verbose: bool = False,
     max_seconds: int = 600
 ) -> Selection | list[Selection]:
     """
-    Compute the selections of the Proportional Approval Voting (PAV) rule via Integer Linear Programming (ILP).
-    The ILP is solved with the `pulp` package.
-
-    Different objective functions can be used.
+    Compute the selections of a Thiele rule described in the `ild_builder_class` argument. The selections are computed
+    by solving integer linear programs (ILP) using the `pulp` package.
 
     Parameters
     ----------
@@ -169,7 +241,7 @@ def proportional_approval_voting(
     max_size_selection : int
         Maximum number of alternatives to select.
     ilp_builder_class : type[PAVILPBuilder], optional
-        Builder class for the ILP. Defautls to :py:class:`PAVILPKraiczy2025`.
+        Builder class for the ILP.
     initial_selection : Selection, optional
         An initial partial selection fixing some alternatives as selected or rejected.
         If `implicit_reject` is True in the initial selection, no alternatives are fixed to be rejected.
@@ -256,4 +328,116 @@ def proportional_approval_voting(
         if previous_selection not in all_selections:
             all_selections.append(previous_selection)
 
+    return all_selections
+
+class SequentialThieleVoter:
+
+    def __init__(self, ballot: AbstractTrichotomousBallot, multiplicity: int):
+        self.ballot = ballot
+        self.multiplicity = multiplicity
+        self.satisfaction = 0
+
+def sequential_thiele(
+    profile: AbstractTrichotomousProfile,
+    max_size_selection: int,
+    thiele_score_class: type[ThieleScore],
+    initial_selection: Selection | None = None,
+    tie_breaking: TieBreakingRule | None = None,
+    resoluteness: bool = True,
+) -> Selection | list[Selection]:
+
+    def _sequential_thiele_rec(alternatives: set[Alternative], selection: Selection, skip_remove_phase=False):
+        something_changed = False
+
+        # Remove alternatives that have negative marginal contributions
+        if not skip_remove_phase:
+            min_marginal_contribution = None
+            argmin_marginal_contribution = None
+            for alternative in selection.selected:
+                marginal_contribution = thiele_score.score_selection(profile, selection) - thiele_score.score_selection(profile, selection, extra_reject=[alternative])
+                # print(thiele_score.score_selection(profile, selection), thiele_score.score_selection(profile, selection, extra_reject=[alternative]))
+                if min_marginal_contribution is None or marginal_contribution < min_marginal_contribution:
+                    min_marginal_contribution = marginal_contribution
+                    argmin_marginal_contribution = [alternative]
+                elif min_marginal_contribution == marginal_contribution:
+                    argmin_marginal_contribution.append(alternative)
+            if min_marginal_contribution is not None and min_marginal_contribution < 0:
+                tied_alternatives = tie_breaking.order(profile, argmin_marginal_contribution)
+                if resoluteness:
+                    alt_to_remove = tied_alternatives[0]
+                    selection.remove_selected(alt_to_remove)
+                    alternatives.add(alt_to_remove)
+                    print(f"Removing {alt_to_remove} (marg contr {min_marginal_contribution}) from selection, new is: {selection}")
+                    something_changed = True
+                else:
+                    for alt_to_remove in tied_alternatives:
+                        new_selection = deepcopy(selection)
+                        new_selection.remove_selected(alt_to_remove)
+                        new_alternatives = deepcopy(alternatives)
+                        new_alternatives.add(alt_to_remove)
+                        _sequential_thiele_rec(new_alternatives, new_selection, skip_remove_phase=True)
+        else:
+            something_changed = True
+
+        # Add alternative with maximum marginal contribution
+        if len(selection) < max_size_selection:
+            max_marginal_contribution = None
+            argmax_marginal_contribution = None
+            for alternative in alternatives:
+                marginal_contribution = thiele_score.score_selection(profile, selection, extra_accept=[alternative]) - thiele_score.score_selection(
+                    profile, selection)
+                if max_marginal_contribution is None or marginal_contribution > max_marginal_contribution:
+                    max_marginal_contribution = marginal_contribution
+                    argmax_marginal_contribution = [alternative]
+                elif max_marginal_contribution == marginal_contribution:
+                    argmax_marginal_contribution.append(alternative)
+            if max_marginal_contribution is not None and max_marginal_contribution > 0:
+                tied_alternatives = tie_breaking.order(profile, argmax_marginal_contribution)
+                if resoluteness:
+                    alt_to_add = tied_alternatives[0]
+                    selection.add_selected(alt_to_add)
+                    alternatives.remove(alt_to_add)
+                    print(f"Adding {alt_to_add} (marg contr {max_marginal_contribution}) to selection, new is: {selection}")
+                    something_changed = True
+                else:
+                    for alt_to_add in tied_alternatives:
+                        new_selection = deepcopy(selection)
+                        new_selection.add_selected(alt_to_add)
+                        new_alternatives = deepcopy(alternatives)
+                        new_alternatives.remove(alt_to_add)
+                        _sequential_thiele_rec(new_alternatives, new_selection)
+
+        print(alternatives, selection, something_changed)
+        # If nothing has changed, selection is stable and we stop
+        if not something_changed:
+            if not resoluteness:
+                selection.sort()
+                if selection not in all_selections:
+                    all_selections.append(selection)
+            else:
+                all_selections.append(selection)
+        else:
+            _sequential_thiele_rec(alternatives, selection)
+
+    try:
+        max_size_selection = int(max_size_selection)
+    except ValueError:
+        raise ValueError('max_size_selection must be an integer.')
+
+    if tie_breaking is None:
+        tie_breaking = lexico_tie_breaking
+
+    if initial_selection is not None:
+        max_size_selection -= len(initial_selection)
+    else:
+        initial_selection = Selection(implicit_reject=True)
+
+    initial_alternatives = {a for a in profile.alternatives if a not in initial_selection}
+    all_selections = []
+    thiele_score = thiele_score_class(max_size_selection)
+
+    _sequential_thiele_rec(initial_alternatives, initial_selection)
+
+    if resoluteness:
+        return all_selections[0]
     return all_selections

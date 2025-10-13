@@ -130,6 +130,28 @@ class Selection:
                           "selection may not behave as you think it does.")
         self.rejected.extend(alts)
 
+    def remove_selected(self, alt: Alternative) -> None:
+        """
+        Remove a selected alternative from the selection.
+
+        Parameters
+        ----------
+            alt : Alternative
+                The alternative to remove from the selection list.
+        """
+        self.selected.remove(alt)
+
+    def remove_rejected(self, alt: Alternative) -> None:
+        """
+        Remove a rejected alternative from the selection.
+
+        Parameters
+        ----------
+            alt : Alternative
+                The alternative to remove from the rejection list.
+        """
+        self.rejected.remove(alt)
+
     def sort(self) -> None:
         """
         Sort both selected and rejected alternatives in place.
