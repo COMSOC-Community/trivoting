@@ -14,7 +14,7 @@ class TestSequentialPAV(TestCase):
 
     def test_seq_pav_on_random_instance(self):
         for _ in range(20):
-            for score in [PAVScoreHervouin2025]:
+            for score in [PAVScoreKraiczy2025, PAVScoreTalmonPaige2021, PAVScoreHervouin2025]:
                 profile = get_random_profile(20, 50)
                 print(f"Computing Sequential PAV with {score.__name__} on randomly generated instance: {profile}")
                 max_size = random.randint(1, len(profile.alternatives))

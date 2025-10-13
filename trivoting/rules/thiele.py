@@ -38,14 +38,14 @@ class ThieleScore(abc.ABC):
             num_disapp_sel = 0
             num_disapp_rej = 0
             for a in ballot.approved:
-                if selection.is_selected(a) or a in extra_accept:
+                if (selection.is_selected(a) and a not in extra_reject) or a in extra_accept:
                     num_app_sel += 1
-                elif selection.is_rejected(a) or a in extra_reject:
+                elif (selection.is_rejected(a) and a not in extra_accept) or a in extra_reject:
                     num_app_rej += 1
             for a in ballot.disapproved:
-                if selection.is_rejected(a) or a in extra_reject:
+                if(selection.is_rejected(a) and a not in extra_accept) or a in extra_reject:
                     num_disapp_rej += 1
-                elif selection.is_selected(a) or a in extra_accept:
+                elif (selection.is_selected(a) and a not in extra_reject) or a in extra_accept:
                     num_disapp_sel += 1
             ballot_score = self.score_function(num_app_sel, num_disapp_sel, num_app_rej, num_disapp_rej)
             score += ballot_score * profile.multiplicity(ballot)
@@ -355,7 +355,6 @@ def sequential_thiele(
             argmin_marginal_contribution = None
             for alternative in selection.selected:
                 marginal_contribution = thiele_score.score_selection(profile, selection) - thiele_score.score_selection(profile, selection, extra_reject=[alternative])
-                # print(thiele_score.score_selection(profile, selection), thiele_score.score_selection(profile, selection, extra_reject=[alternative]))
                 if min_marginal_contribution is None or marginal_contribution < min_marginal_contribution:
                     min_marginal_contribution = marginal_contribution
                     argmin_marginal_contribution = [alternative]
@@ -367,7 +366,6 @@ def sequential_thiele(
                     alt_to_remove = tied_alternatives[0]
                     selection.remove_selected(alt_to_remove)
                     alternatives.add(alt_to_remove)
-                    print(f"Removing {alt_to_remove} (marg contr {min_marginal_contribution}) from selection, new is: {selection}")
                     something_changed = True
                 else:
                     for alt_to_remove in tied_alternatives:
@@ -397,7 +395,6 @@ def sequential_thiele(
                     alt_to_add = tied_alternatives[0]
                     selection.add_selected(alt_to_add)
                     alternatives.remove(alt_to_add)
-                    print(f"Adding {alt_to_add} (marg contr {max_marginal_contribution}) to selection, new is: {selection}")
                     something_changed = True
                 else:
                     for alt_to_add in tied_alternatives:
@@ -407,7 +404,6 @@ def sequential_thiele(
                         new_alternatives.remove(alt_to_add)
                         _sequential_thiele_rec(new_alternatives, new_selection)
 
-        print(alternatives, selection, something_changed)
         # If nothing has changed, selection is stable and we stop
         if not something_changed:
             if not resoluteness:
