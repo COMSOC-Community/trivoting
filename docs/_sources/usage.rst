@@ -374,20 +374,21 @@ argument (not all the rules support that). See the :py:mod:`~trivoting.tiebreaki
 Initial selection can usually be passed to the rules via the `initial` argument. The rule then completes the initial
 selection.
 
-Proportional Approval Voting (PAV)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Thiele Methods
+^^^^^^^^^^^^^^
 
-The :py:func:`~trivoting.rules.pav.proportional_approval_voting` function implements the Proportional Approval Voting (PAV)
-rule using Integer Linear Programming (ILP).
+The :py:func:`~trivoting.rules.thiele.thiele_method` function implements a general scheme to compute the outcome of a Thiele method
+using Integer Linear Programming (ILP).
 
-You need to pass a trichotomous profile (implementing the :py:class:`~trivoting.election.trichotomous_profile.AbstractTrichotomousProfile` interface)
-and specify the maximum number of alternatives to select.
+As usual, you need to pass a trichotomous profile (implementing the :py:class:`~trivoting.election.trichotomous_profile.AbstractTrichotomousProfile` interface)
+and specify the maximum number of alternatives to select. You also need an additional `ild_builder_class` argument
+that takes a subclass of the abstract class :py:class:`~trivoting.rules.thiele.ThieleILPBuilder`.
 
 .. code-block:: python
 
-    from trivoting.rules import proportional_approval_voting
+    from trivoting.rules import thiele_method, PAVILPKraiczy2025
 
-    selection = proportional_approval_voting(profile, max_size_selection=3)
+    selection = thiele_method(profile, max_size_selection=3, ilp_builder_class=PAVILPKraiczy2025)
 
     print(result)
 
@@ -395,12 +396,10 @@ By default, the function returns a single optimal selection (resolute). To retri
 
 .. code-block:: python
 
-    results = proportional_approval_voting(profile, max_size_selection=3, resoluteness=False)
+    results = thiele_method(profile, max_size_selection=3, ilp_builder_class=PAVILPKraiczy2025, resoluteness=False)
 
     for selection in results:
         print(selection)
-    # Example output:
-
 
 You can fix certain alternatives to be selected or rejected by providing an initial :py:class:`~trivoting.election.selection.Selection` object.
 
@@ -410,7 +409,7 @@ You can fix certain alternatives to be selected or rejected by providing an init
 
     initial = Selection(selected=[a1], implicit_reject=True)
 
-    result = proportional_approval_voting(profile, max_size_selection=3, initial_selection=initial)
+    result = thiele_method(profile, max_size_selection=3, ilp_builder_class=PAVILPKraiczy2025, initial_selection=initial)
 
 Additional options for the ILP solver can be passed:
 
@@ -419,9 +418,10 @@ Additional options for the ILP solver can be passed:
 
 .. code-block:: python
 
-    result = proportional_approval_voting(
+    result = thiele_method(
         profile,
         max_size_selection=4,
+        ilp_builder_class=PAVILPKraiczy2025
         resoluteness=True,
         verbose=True,
         max_seconds=300

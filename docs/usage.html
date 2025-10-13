@@ -36,7 +36,7 @@
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="_static/documentation_options.js?v=4acdca81"></script>
+    <script src="_static/documentation_options.js?v=dfd84850"></script>
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
@@ -342,7 +342,7 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#random-generation-of-profiles">Random Generation of Profiles</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#selection">Selection</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rules">Rules</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#proportional-approval-voting-pav">Proportional Approval Voting (PAV)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#thiele-methods">Thiele Methods</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sequential-phragmen">Sequential Phragmén</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tax-pb-rule-scheme">Tax PB Rule Scheme</a></li>
 </ul>
@@ -689,25 +689,25 @@ The tie breaking rule to use can typically be specified via the <cite>tie_breaki
 argument (not all the rules support that). See the <a class="reference internal" href="reference/tiebreaking.html#module-trivoting.tiebreaking" title="trivoting.tiebreaking"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tiebreaking</span></code></a> module for more information.
 Initial selection can usually be passed to the rules via the <cite>initial</cite> argument. The rule then completes the initial
 selection.</p>
-<section id="proportional-approval-voting-pav">
-<h3>Proportional Approval Voting (PAV)<a class="headerlink" href="#proportional-approval-voting-pav" title="Link to this heading">#</a></h3>
-<p>The <a class="reference internal" href="reference/rules/index.html#trivoting.rules.pav.proportional_approval_voting" title="trivoting.rules.pav.proportional_approval_voting"><code class="xref py py-func docutils literal notranslate"><span class="pre">proportional_approval_voting()</span></code></a> function implements the Proportional Approval Voting (PAV)
-rule using Integer Linear Programming (ILP).</p>
-<p>You need to pass a trichotomous profile (implementing the <a class="reference internal" href="reference/election/index.html#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile" title="trivoting.election.trichotomous_profile.AbstractTrichotomousProfile"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractTrichotomousProfile</span></code></a> interface)
-and specify the maximum number of alternatives to select.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.rules</span><span class="w"> </span><span class="kn">import</span> <span class="n">proportional_approval_voting</span>
+<section id="thiele-methods">
+<h3>Thiele Methods<a class="headerlink" href="#thiele-methods" title="Link to this heading">#</a></h3>
+<p>The <a class="reference internal" href="reference/rules/index.html#trivoting.rules.thiele.thiele_method" title="trivoting.rules.thiele.thiele_method"><code class="xref py py-func docutils literal notranslate"><span class="pre">thiele_method()</span></code></a> function implements a general scheme to compute the outcome of a Thiele method
+using Integer Linear Programming (ILP).</p>
+<p>As usual, you need to pass a trichotomous profile (implementing the <a class="reference internal" href="reference/election/index.html#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile" title="trivoting.election.trichotomous_profile.AbstractTrichotomousProfile"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractTrichotomousProfile</span></code></a> interface)
+and specify the maximum number of alternatives to select. You also need an additional <cite>ild_builder_class</cite> argument
+that takes a subclass of the abstract class <a class="reference internal" href="reference/rules/index.html#trivoting.rules.thiele.ThieleILPBuilder" title="trivoting.rules.thiele.ThieleILPBuilder"><code class="xref py py-class docutils literal notranslate"><span class="pre">ThieleILPBuilder</span></code></a>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.rules</span><span class="w"> </span><span class="kn">import</span> <span class="n">thiele_method</span><span class="p">,</span> <span class="n">PAVILPKraiczy2025</span>
 
-<span class="n">selection</span> <span class="o">=</span> <span class="n">proportional_approval_voting</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">max_size_selection</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">selection</span> <span class="o">=</span> <span class="n">thiele_method</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">max_size_selection</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">ilp_builder_class</span><span class="o">=</span><span class="n">PAVILPKraiczy2025</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>By default, the function returns a single optimal selection (resolute). To retrieve all optimal selections (if multiple exist), set <cite>resoluteness=False</cite>.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">results</span> <span class="o">=</span> <span class="n">proportional_approval_voting</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">max_size_selection</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">resoluteness</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">results</span> <span class="o">=</span> <span class="n">thiele_method</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">max_size_selection</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">ilp_builder_class</span><span class="o">=</span><span class="n">PAVILPKraiczy2025</span><span class="p">,</span> <span class="n">resoluteness</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
 <span class="k">for</span> <span class="n">selection</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">selection</span><span class="p">)</span>
-<span class="c1"># Example output:</span>
 </pre></div>
 </div>
 <p>You can fix certain alternatives to be selected or rejected by providing an initial <a class="reference internal" href="reference/election/index.html#trivoting.election.selection.Selection" title="trivoting.election.selection.Selection"><code class="xref py py-class docutils literal notranslate"><span class="pre">Selection</span></code></a> object.</p>
@@ -715,7 +715,7 @@ and specify the maximum number of alternatives to select.</p>
 
 <span class="n">initial</span> <span class="o">=</span> <span class="n">Selection</span><span class="p">(</span><span class="n">selected</span><span class="o">=</span><span class="p">[</span><span class="n">a1</span><span class="p">],</span> <span class="n">implicit_reject</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-<span class="n">result</span> <span class="o">=</span> <span class="n">proportional_approval_voting</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">max_size_selection</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">initial_selection</span><span class="o">=</span><span class="n">initial</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">thiele_method</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">max_size_selection</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">ilp_builder_class</span><span class="o">=</span><span class="n">PAVILPKraiczy2025</span><span class="p">,</span> <span class="n">initial_selection</span><span class="o">=</span><span class="n">initial</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Additional options for the ILP solver can be passed:</p>
@@ -723,9 +723,10 @@ and specify the maximum number of alternatives to select.</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">verbose=True</span></code> enables output from the ILP solver.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">max_seconds</span></code> can be used to limit the computation time (default: 600 seconds).</p></li>
 </ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">proportional_approval_voting</span><span class="p">(</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">thiele_method</span><span class="p">(</span>
     <span class="n">profile</span><span class="p">,</span>
     <span class="n">max_size_selection</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+    <span class="n">ilp_builder_class</span><span class="o">=</span><span class="n">PAVILPKraiczy2025</span>
     <span class="n">resoluteness</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">max_seconds</span><span class="o">=</span><span class="mi">300</span>
@@ -987,7 +988,7 @@ handle fractions. To change this, simply change the value of the <cite>FRACTION<
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#random-generation-of-profiles">Random Generation of Profiles</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#selection">Selection</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rules">Rules</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#proportional-approval-voting-pav">Proportional Approval Voting (PAV)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#thiele-methods">Thiele Methods</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sequential-phragmen">Sequential Phragmén</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tax-pb-rule-scheme">Tax PB Rule Scheme</a></li>
 </ul>
