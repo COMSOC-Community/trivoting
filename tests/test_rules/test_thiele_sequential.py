@@ -23,6 +23,7 @@ class TestSequentialPAV(TestCase):
 
     def test_seq_pav_on_trivial_instances(self):
         for score in [PAVScoreKraiczy2025, PAVScoreTalmonPaige2021, PAVScoreHervouin2025]:
+            print(f"Computing Sequential PAV with {score.__name__} on trivial instances")
             # Empty profile
             profile = TrichotomousProfile()
             self.assertEqual(sequential_thiele(profile, 0, score), Selection())

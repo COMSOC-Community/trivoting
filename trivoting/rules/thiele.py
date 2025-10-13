@@ -61,7 +61,7 @@ class PAVScoreTalmonPaige2021(ThieleScore):
 
 class PAVScoreHervouin2025(ThieleScore):
     def score_function(self, num_app_sel=0, num_disapp_sel=0, num_app_rej=0, num_disapp_rej=0):
-        return harmonic_sum(num_app_sel) + harmonic_sum(self.max_size_selection - num_disapp_rej)
+        return harmonic_sum(num_app_sel) + harmonic_sum(self.max_size_selection - num_disapp_sel)
 
 
 class ThieleILPVoter:
@@ -384,6 +384,7 @@ def sequential_thiele(
             for alternative in alternatives:
                 marginal_contribution = thiele_score.score_selection(profile, selection, extra_accept=[alternative]) - thiele_score.score_selection(
                     profile, selection)
+                # print(alternative, thiele_score.score_selection(profile, selection, extra_accept=[alternative]), thiele_score.score_selection(profile, selection))
                 if max_marginal_contribution is None or marginal_contribution > max_marginal_contribution:
                     max_marginal_contribution = marginal_contribution
                     argmax_marginal_contribution = [alternative]
@@ -391,6 +392,7 @@ def sequential_thiele(
                     argmax_marginal_contribution.append(alternative)
             if max_marginal_contribution is not None and max_marginal_contribution > 0:
                 tied_alternatives = tie_breaking.order(profile, argmax_marginal_contribution)
+                # print(f"Adding one of {tied_alternatives} ({max_marginal_contribution})")
                 if resoluteness:
                     alt_to_add = tied_alternatives[0]
                     selection.add_selected(alt_to_add)
