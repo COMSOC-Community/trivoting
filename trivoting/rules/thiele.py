@@ -63,6 +63,13 @@ class PAVScoreHervouin2025(ThieleScore):
     def score_function(self, num_app_sel=0, num_disapp_sel=0, num_app_rej=0, num_disapp_rej=0):
         return harmonic_sum(num_app_sel) + harmonic_sum(self.max_size_selection - num_disapp_sel)
 
+class ApprovalOnlyScore(ThieleScore):
+    def score_function(self, num_app_sel=0, num_disapp_sel=0, num_app_rej=0, num_disapp_rej=0):
+        return num_app_sel
+
+class SatisfactionScore(ThieleScore):
+    def score_function(self, num_app_sel=0, num_disapp_sel=0, num_app_rej=0, num_disapp_rej=0):
+        return num_app_sel - num_disapp_sel
 
 class ThieleILPVoter:
     """
@@ -348,6 +355,7 @@ def sequential_thiele(
 
     def _sequential_thiele_rec(alternatives: set[Alternative], selection: Selection, skip_remove_phase=False):
         something_changed = False
+        branched = False
 
         # Remove alternatives that have negative marginal contributions
         if not skip_remove_phase:
@@ -362,6 +370,7 @@ def sequential_thiele(
                     argmin_marginal_contribution.append(alternative)
             if min_marginal_contribution is not None and min_marginal_contribution < 0:
                 tied_alternatives = tie_breaking.order(profile, argmin_marginal_contribution)
+                # print(f"Removing one of {tied_alternatives} ({min_marginal_contribution})")
                 if resoluteness:
                     alt_to_remove = tied_alternatives[0]
                     selection.remove_selected(alt_to_remove)
@@ -374,6 +383,7 @@ def sequential_thiele(
                         new_alternatives = deepcopy(alternatives)
                         new_alternatives.add(alt_to_remove)
                         _sequential_thiele_rec(new_alternatives, new_selection, skip_remove_phase=True)
+                        branched = True
         else:
             something_changed = True
 
@@ -405,15 +415,17 @@ def sequential_thiele(
                         new_alternatives = deepcopy(alternatives)
                         new_alternatives.remove(alt_to_add)
                         _sequential_thiele_rec(new_alternatives, new_selection)
+                        branched = True
 
-        # If nothing has changed, selection is stable and we stop
+        # If nothing has changed, selection is stable and we stop (only if a recursive call has not been launched)
         if not something_changed:
-            if not resoluteness:
-                selection.sort()
-                if selection not in all_selections:
+            if not branched:
+                if not resoluteness:
+                    selection.sort()
+                    if selection not in all_selections:
+                        all_selections.append(selection)
+                else:
                     all_selections.append(selection)
-            else:
-                all_selections.append(selection)
         else:
             _sequential_thiele_rec(alternatives, selection)
 

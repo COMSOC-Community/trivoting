@@ -1,4 +1,5 @@
 import os
+from collections.abc import Iterable
 from multiprocessing import Pool
 
 import yaml
@@ -6,7 +7,8 @@ import yaml
 from unittest import TestCase
 
 from trivoting.election.abcvoting import parse_abcvoting_yaml
-from trivoting.rules.thiele import thiele_method
+from trivoting.rules.thiele import thiele_method, PAVILPKraiczy2025, PAVILPTalmonPage2021, PAVILPHervouin2025, \
+    sequential_thiele, ApprovalOnlyScore, SatisfactionScore
 from trivoting.rules.phragmen import sequential_phragmen
 
 
@@ -55,7 +57,16 @@ def irresolute_res_representation(budget_allocations, profile):
 
 RULE_MAPPING = {
     "seqphragmen": sequential_phragmen,
-    "pav": thiele_method,
+    "pav": [
+        lambda p, m, resoluteness=True: thiele_method(p, m, ilp_builder_class=PAVILPKraiczy2025, resoluteness=resoluteness),
+        lambda p, m, resoluteness=True: thiele_method(p, m, ilp_builder_class=PAVILPTalmonPage2021,
+                                                      resoluteness=resoluteness),
+        lambda p, m, resoluteness=True: thiele_method(p, m, ilp_builder_class=PAVILPHervouin2025, resoluteness=resoluteness),
+    ],
+    "av": [
+        lambda p, m, resoluteness=True: sequential_thiele(p, m, thiele_score_class=ApprovalOnlyScore, resoluteness=resoluteness),
+        lambda p, m, resoluteness=True: sequential_thiele(p, m, thiele_score_class=SatisfactionScore, resoluteness=resoluteness),
+    ]
 }
 
 def process_yaml_file(yaml_file_path: str):
@@ -65,21 +76,24 @@ def process_yaml_file(yaml_file_path: str):
 
     expected_result = read_abcvoting_expected_result(yaml_file_path, profile)
 
-    for rule_id, rule in RULE_MAPPING.items():
-        potential_results_repr = expected_result[rule_id]
-        try:
-            selection = rule(profile, profile.max_size_selection, resoluteness=True)
-            selection_repr = resolute_res_representation(selection.selected, profile)
-            assert selection_repr in potential_results_repr
-        except NotImplementedError:
-            pass
+    for rule_id, rules in RULE_MAPPING.items():
+        if not isinstance(rules, Iterable):
+            rules = [rules]
+        for rule in rules:
+            potential_results_repr = expected_result[rule_id]
+            try:
+                selection = rule(profile, profile.max_size_selection, resoluteness=True)
+                selection_repr = resolute_res_representation(selection.selected, profile)
+                assert selection_repr in potential_results_repr
+            except NotImplementedError:
+                pass
 
-        try:
-            selections = rule(profile, profile.max_size_selection, resoluteness=False)
-            selections_repr = irresolute_res_representation([s.selected for s in selections], profile)
-            assert selections_repr == potential_results_repr
-        except NotImplementedError:
-            pass
+            try:
+                selections = rule(profile, profile.max_size_selection, resoluteness=False)
+                selections_repr = irresolute_res_representation([s.selected for s in selections], profile)
+                assert selections_repr == potential_results_repr
+            except NotImplementedError:
+                pass
 
     return True
 
@@ -90,6 +104,6 @@ class TestOnABCVoting(TestCase):
         all_yaml_files = os.listdir(yaml_dir_path)
         yaml_paths = [os.path.join(yaml_dir_path, f) for f in all_yaml_files]
 
-        with Pool() as pool:
+        with Pool(processes=1) as pool:
             for res in pool.imap_unordered(process_yaml_file, yaml_paths):
                 self.assertTrue(res)
