@@ -90,7 +90,7 @@ def process_yaml_file(yaml_file_path: str):
             try:
                 selection = rule(profile, profile.max_size_selection, resoluteness=True)
                 selection_repr = resolute_res_representation(selection.selected, profile)
-                print("R", selection_repr, potential_results_repr)
+                # print("R", selection_repr, potential_results_repr)
                 assert selection_repr in potential_results_repr
             except NotImplementedError:
                 pass
@@ -98,7 +98,7 @@ def process_yaml_file(yaml_file_path: str):
             try:
                 selections = rule(profile, profile.max_size_selection, resoluteness=False)
                 selections_repr = irresolute_res_representation([s.selected for s in selections], profile)
-                print("IR", selections_repr, potential_results_repr)
+                # print("IR", selections_repr, potential_results_repr)
                 assert selections_repr == potential_results_repr
             except NotImplementedError:
                 pass
