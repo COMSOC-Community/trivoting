@@ -1,7 +1,8 @@
 import string
 from unittest import TestCase
 
-from trivoting.utils import generate_two_list_partitions
+from trivoting.fractions import frac
+from trivoting.utils import generate_two_list_partitions, harmonic_sum
 
 
 class TestUtils(TestCase):
@@ -20,3 +21,11 @@ class TestUtils(TestCase):
             if l > 0:
                 full_size = list(generate_two_list_partitions(iterable))
                 self.assertEqual(len(full_size), 3**l)
+
+    def test_harmonic(self):
+        self.assertEqual(harmonic_sum(0), 0)
+        self.assertEqual(harmonic_sum(1), 1)
+        self.assertEqual(harmonic_sum(2), frac(3, 2))
+        self.assertEqual(harmonic_sum(3), frac(11, 6))
+        self.assertEqual(harmonic_sum(-1), 0)
+        self.assertEqual(harmonic_sum(-2), 0)

@@ -1,6 +1,8 @@
 from collections.abc import Iterable, Iterator
 from itertools import combinations
 
+from trivoting.fractions import frac
+
 
 def generate_subsets(it: Iterable, *, min_size: int = None, max_size: int = None) -> Iterator[Iterable]:
     """
@@ -60,3 +62,7 @@ def generate_two_list_partitions(iterable: Iterable, first_list_max_size=None) -
                     part1_set = set(part1)
                     part2 = [e for e in subset if e not in part1_set]
                     yield list(part1), part2
+
+
+def harmonic_sum(k: int):
+    return sum(frac(1, i) for i in range(1, k + 1))

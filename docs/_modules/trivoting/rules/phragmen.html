@@ -35,7 +35,7 @@
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="../../../_static/documentation_options.js?v=4acdca81"></script>
+    <script src="../../../_static/documentation_options.js?v=dfd84850"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
@@ -379,7 +379,7 @@ document.write(`
             <span class="n">min_new_maxload</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="n">arg_min_new_maxload</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="k">for</span> <span class="n">alt</span> <span class="ow">in</span> <span class="n">alternatives</span><span class="p">:</span>
-                <span class="k">for</span> <span class="n">considered_voters</span><span class="p">,</span> <span class="n">veto</span> <span class="ow">in</span> <span class="p">((</span><span class="n">supporters</span><span class="p">[</span><span class="n">alt</span><span class="p">],</span> <span class="kc">False</span><span class="p">),</span> <span class="p">(</span><span class="n">opposants</span><span class="p">[</span><span class="n">alt</span><span class="p">],</span> <span class="kc">True</span><span class="p">)):</span>
+                <span class="k">for</span> <span class="n">considered_voters</span><span class="p">,</span> <span class="n">veto</span> <span class="ow">in</span> <span class="p">((</span><span class="n">supporters</span><span class="p">[</span><span class="n">alt</span><span class="p">],</span> <span class="kc">False</span><span class="p">),</span> <span class="p">(</span><span class="n">opponents</span><span class="p">[</span><span class="n">alt</span><span class="p">],</span> <span class="kc">True</span><span class="p">)):</span>
                     <span class="n">num_considered_voters</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">considered_voters</span><span class="p">)</span>
                     <span class="k">if</span> <span class="n">num_considered_voters</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                         <span class="n">new_maxload</span> <span class="o">=</span> <span class="n">frac</span><span class="p">(</span>
@@ -440,7 +440,7 @@ document.write(`
         <span class="p">]</span>
 
     <span class="n">supporters</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="n">opposants</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">opponents</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="n">initial_alternatives</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">alt</span> <span class="ow">in</span> <span class="n">profile</span><span class="o">.</span><span class="n">alternatives</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">alt</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">initial_selection</span><span class="o">.</span><span class="n">rejected</span><span class="p">:</span>
@@ -448,7 +448,7 @@ document.write(`
             <span class="n">opps</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">initial_voters</span><span class="p">)</span> <span class="k">if</span> <span class="n">alt</span> <span class="ow">in</span> <span class="n">v</span><span class="o">.</span><span class="n">ballot</span><span class="o">.</span><span class="n">disapproved</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">supps</span> <span class="ow">or</span> <span class="n">opps</span><span class="p">:</span>
                 <span class="n">supporters</span><span class="p">[</span><span class="n">alt</span><span class="p">]</span> <span class="o">=</span> <span class="n">supps</span>
-                <span class="n">opposants</span><span class="p">[</span><span class="n">alt</span><span class="p">]</span> <span class="o">=</span> <span class="n">opps</span>
+                <span class="n">opponents</span><span class="p">[</span><span class="n">alt</span><span class="p">]</span> <span class="o">=</span> <span class="n">opps</span>
                 <span class="n">initial_alternatives</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">alt</span><span class="p">)</span>
 
     <span class="n">all_selections</span> <span class="o">=</span> <span class="p">[]</span>

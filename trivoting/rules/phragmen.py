@@ -96,7 +96,7 @@ def sequential_phragmen(
             min_new_maxload = None
             arg_min_new_maxload = None
             for alt in alternatives:
-                for considered_voters, veto in ((supporters[alt], False), (opposants[alt], True)):
+                for considered_voters, veto in ((supporters[alt], False), (opponents[alt], True)):
                     num_considered_voters = len(considered_voters)
                     if num_considered_voters > 0:
                         new_maxload = frac(
@@ -157,7 +157,7 @@ def sequential_phragmen(
         ]
 
     supporters = {}
-    opposants = {}
+    opponents = {}
     initial_alternatives = set()
     for alt in profile.alternatives:
         if alt not in initial_selection.rejected:
@@ -165,7 +165,7 @@ def sequential_phragmen(
             opps = [i for i, v in enumerate(initial_voters) if alt in v.ballot.disapproved]
             if supps or opps:
                 supporters[alt] = supps
-                opposants[alt] = opps
+                opponents[alt] = opps
                 initial_alternatives.add(alt)
 
     all_selections = []

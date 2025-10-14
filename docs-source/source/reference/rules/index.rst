@@ -3,12 +3,31 @@ Rules module
 
 .. automodule:: trivoting.rules
 
-Proportional Approval Voting
-----------------------------
+Thiele Methods
+--------------
 
-.. automodule:: trivoting.rules.proportional_approval_voting
+.. automodule:: trivoting.rules.thiele
 
-.. autofunction:: trivoting.rules.pav.proportional_approval_voting
+.. autofunction:: trivoting.rules.thiele.thiele_method
+
+.. autoclass:: trivoting.rules.thiele.ThieleILPBuilder
+
+.. autoclass:: trivoting.rules.thiele.PAVILPKraiczy2025
+
+.. autoclass:: trivoting.rules.thiele.PAVILPTalmonPage2021
+
+.. autoclass:: trivoting.rules.thiele.PAVILPHervouin2025
+
+.. autofunction:: trivoting.rules.thiele.sequential_thiele
+
+.. autoclass:: trivoting.rules.thiele.ThieleScore
+
+.. autoclass:: trivoting.rules.thiele.PAVScoreKraiczy2025
+
+.. autoclass:: trivoting.rules.thiele.PAVScoreTalmonPaige2021
+
+.. autoclass:: trivoting.rules.thiele.PAVScoreHervouin2025
+
 
 Sequential Phragmén's Rule
 --------------------------

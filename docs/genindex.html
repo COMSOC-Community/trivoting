@@ -35,7 +35,7 @@
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="_static/documentation_options.js?v=4acdca81"></script>
+    <script src="_static/documentation_options.js?v=dfd84850"></script>
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
@@ -299,6 +299,7 @@ document.write(`
  | <a href="#S"><strong>S</strong></a>
  | <a href="#T"><strong>T</strong></a>
  | <a href="#U"><strong>U</strong></a>
+ | <a href="#V"><strong>V</strong></a>
  
 </div>
 <h2 id="_">_</h2>
@@ -551,12 +552,16 @@ document.write(`
       <li><a href="reference/election/index.html#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile.max_size_selection">max_size_selection (AbstractTrichotomousProfile attribute)</a>
 
       <ul>
+        <li><a href="reference/rules/index.html#trivoting.rules.thiele.ThieleILPBuilder.max_size_selection">(ThieleILPBuilder attribute)</a>
+</li>
         <li><a href="reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.max_size_selection">(TrichotomousMultiProfile attribute)</a>
 </li>
         <li><a href="reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousProfile.max_size_selection">(TrichotomousProfile attribute)</a>
 </li>
       </ul></li>
       <li><a href="reference/utils.html#pabutools.utils.mean_generator">mean_generator() (in module pabutools.utils)</a>
+</li>
+      <li><a href="reference/rules/index.html#trivoting.rules.thiele.ThieleILPBuilder.model">model (ThieleILPBuilder attribute)</a>
 </li>
       <li>
     module
@@ -592,9 +597,9 @@ document.write(`
 </li>
         <li><a href="reference/rules/index.html#module-trivoting.rules.phragmen">trivoting.rules.phragmen</a>
 </li>
-        <li><a href="reference/rules/index.html#module-trivoting.rules.proportional_approval_voting">trivoting.rules.proportional_approval_voting</a>
-</li>
         <li><a href="reference/rules/index.html#module-trivoting.rules.tax_rules">trivoting.rules.tax_rules</a>
+</li>
+        <li><a href="reference/rules/index.html#module-trivoting.rules.thiele">trivoting.rules.thiele</a>
 </li>
         <li><a href="reference/tiebreaking.html#module-trivoting.tiebreaking">trivoting.tiebreaking</a>
 </li>
@@ -656,8 +661,20 @@ document.write(`
 </li>
       <li><a href="reference/election/index.html#trivoting.election.preflib.parse_preflib">parse_preflib() (in module trivoting.election.preflib)</a>
 </li>
+      <li><a href="reference/rules/index.html#trivoting.rules.thiele.PAVILPHervouin2025">PAVILPHervouin2025 (class in trivoting.rules.thiele)</a>
+</li>
+      <li><a href="reference/rules/index.html#trivoting.rules.thiele.PAVILPKraiczy2025">PAVILPKraiczy2025 (class in trivoting.rules.thiele)</a>
+</li>
+      <li><a href="reference/rules/index.html#trivoting.rules.thiele.PAVILPTalmonPage2021">PAVILPTalmonPage2021 (class in trivoting.rules.thiele)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="reference/rules/index.html#trivoting.rules.thiele.PAVScoreHervouin2025">PAVScoreHervouin2025 (class in trivoting.rules.thiele)</a>
+</li>
+      <li><a href="reference/rules/index.html#trivoting.rules.thiele.PAVScoreKraiczy2025">PAVScoreKraiczy2025 (class in trivoting.rules.thiele)</a>
+</li>
+      <li><a href="reference/rules/index.html#trivoting.rules.thiele.PAVScoreTalmonPaige2021">PAVScoreTalmonPaige2021 (class in trivoting.rules.thiele)</a>
+</li>
       <li><a href="reference/election/index.html#trivoting.election.pabulib.pb_approval_ballot_to_trichotomous_ballot">pb_approval_ballot_to_trichotomous_ballot() (in module trivoting.election.pabulib)</a>
 </li>
       <li><a href="reference/election/index.html#trivoting.election.pabulib.pb_approval_profile_to_trichotomous_profile">pb_approval_profile_to_trichotomous_profile() (in module trivoting.election.pabulib)</a>
@@ -666,7 +683,7 @@ document.write(`
 </li>
       <li><a href="reference/utils.html#pabutools.utils.powerset">powerset() (in module pabutools.utils)</a>
 </li>
-      <li><a href="reference/rules/index.html#trivoting.rules.pav.proportional_approval_voting">proportional_approval_voting() (in module trivoting.rules.pav)</a>
+      <li><a href="reference/rules/index.html#trivoting.rules.thiele.ThieleILPBuilder.profile">profile (ThieleILPBuilder attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -678,9 +695,13 @@ document.write(`
 </li>
       <li><a href="reference/election/index.html#trivoting.election.selection.Selection.rejected">rejected (Selection attribute)</a>
 </li>
+      <li><a href="reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousProfile.remove">remove() (TrichotomousProfile method)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousProfile.remove">remove() (TrichotomousProfile method)</a>
+      <li><a href="reference/election/index.html#trivoting.election.selection.Selection.remove_rejected">remove_rejected() (Selection method)</a>
+</li>
+      <li><a href="reference/election/index.html#trivoting.election.selection.Selection.remove_selected">remove_selected() (Selection method)</a>
 </li>
       <li><a href="reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousProfile.reverse">reverse() (TrichotomousProfile method)</a>
 </li>
@@ -696,14 +717,18 @@ document.write(`
 </li>
       <li><a href="reference/election/index.html#trivoting.election.selection.Selection">Selection (class in trivoting.election.selection)</a>
 </li>
+      <li><a href="reference/rules/index.html#trivoting.rules.thiele.ThieleILPBuilder.selection_vars">selection_vars (ThieleILPBuilder attribute)</a>
+</li>
       <li><a href="reference/rules/index.html#trivoting.rules.phragmen.sequential_phragmen">sequential_phragmen() (in module trivoting.rules.phragmen)</a>
+</li>
+      <li><a href="reference/rules/index.html#trivoting.rules.thiele.sequential_thiele">sequential_thiele() (in module trivoting.rules.thiele)</a>
 </li>
       <li><a href="reference/election/index.html#trivoting.election.selection.Selection.sort">sort() (Selection method)</a>
 </li>
-      <li><a href="reference/fractions.html#trivoting.fractions.str_as_frac">str_as_frac() (in module trivoting.fractions)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="reference/fractions.html#trivoting.fractions.str_as_frac">str_as_frac() (in module trivoting.fractions)</a>
+</li>
       <li><a href="reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.support">support() (TrichotomousMultiProfile method)</a>
 
       <ul>
@@ -735,6 +760,12 @@ document.write(`
       <li><a href="reference/rules/index.html#trivoting.rules.tax_rules.TaxFunction">TaxFunction (class in trivoting.rules.tax_rules)</a>
 </li>
       <li><a href="reference/rules/index.html#trivoting.rules.tax_rules.TaxKraiczy2025">TaxKraiczy2025 (class in trivoting.rules.tax_rules)</a>
+</li>
+      <li><a href="reference/rules/index.html#trivoting.rules.thiele.thiele_method">thiele_method() (in module trivoting.rules.thiele)</a>
+</li>
+      <li><a href="reference/rules/index.html#trivoting.rules.thiele.ThieleILPBuilder">ThieleILPBuilder (class in trivoting.rules.thiele)</a>
+</li>
+      <li><a href="reference/rules/index.html#trivoting.rules.thiele.ThieleScore">ThieleScore (class in trivoting.rules.thiele)</a>
 </li>
       <li><a href="reference/tiebreaking.html#trivoting.tiebreaking.TieBreakingException">TieBreakingException</a>
 </li>
@@ -851,17 +882,17 @@ document.write(`
 </li>
       </ul></li>
       <li>
-    trivoting.rules.proportional_approval_voting
-
-      <ul>
-        <li><a href="reference/rules/index.html#module-trivoting.rules.proportional_approval_voting">module</a>
-</li>
-      </ul></li>
-      <li>
     trivoting.rules.tax_rules
 
       <ul>
         <li><a href="reference/rules/index.html#module-trivoting.rules.tax_rules">module</a>
+</li>
+      </ul></li>
+      <li>
+    trivoting.rules.thiele
+
+      <ul>
+        <li><a href="reference/rules/index.html#module-trivoting.rules.thiele">module</a>
 </li>
       </ul></li>
       <li>
@@ -882,6 +913,14 @@ document.write(`
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.update">update() (TrichotomousMultiProfile method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="V">V</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="reference/rules/index.html#trivoting.rules.thiele.ThieleILPBuilder.voters">voters (ThieleILPBuilder attribute)</a>
 </li>
   </ul></td>
 </tr></table>
