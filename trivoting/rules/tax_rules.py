@@ -137,6 +137,7 @@ def tax_pb_instance(
         pb_profile.append(
             pb_election.FrozenApprovalBallot(alt_to_project[alt] for alt in ballot.approved if alt in running_alternatives)
         )
+    print(pb_instance, pb_profile)
     return pb_instance, pb_profile, project_to_alt
 
 def tax_pb_rule_scheme(

@@ -1,5 +1,6 @@
 import os
 from collections.abc import Iterable
+from functools import partial
 from multiprocessing import Pool
 
 import yaml
@@ -7,6 +8,7 @@ import yaml
 from unittest import TestCase
 
 from trivoting.election.abcvoting import parse_abcvoting_yaml
+from trivoting.rules import tax_method_of_equal_shares, TaxKraiczy2025, DisapprovalLinearTax
 from trivoting.rules.thiele import thiele_method, PAVILPKraiczy2025, PAVILPTalmonPage2021, PAVILPHervouin2025, \
     sequential_thiele, ApprovalOnlyScore, SatisfactionScore
 from trivoting.rules.phragmen import sequential_phragmen
@@ -58,15 +60,19 @@ def irresolute_res_representation(budget_allocations, profile):
 RULE_MAPPING = {
     "seqphragmen": sequential_phragmen,
     "pav": [
-        lambda p, m, resoluteness=True: thiele_method(p, m, ilp_builder_class=PAVILPKraiczy2025, resoluteness=resoluteness),
-        lambda p, m, resoluteness=True: thiele_method(p, m, ilp_builder_class=PAVILPTalmonPage2021,
-                                                      resoluteness=resoluteness),
-        lambda p, m, resoluteness=True: thiele_method(p, m, ilp_builder_class=PAVILPHervouin2025, resoluteness=resoluteness),
+        partial(thiele_method, ilp_builder_class=PAVILPKraiczy2025),
+        partial(thiele_method, ilp_builder_class=PAVILPTalmonPage2021),
+        partial(thiele_method, ilp_builder_class=PAVILPHervouin2025),
     ],
     "av": [
-        lambda p, m, resoluteness=True: sequential_thiele(p, m, thiele_score_class=ApprovalOnlyScore, resoluteness=resoluteness),
-        lambda p, m, resoluteness=True: sequential_thiele(p, m, thiele_score_class=SatisfactionScore, resoluteness=resoluteness),
-    ]
+        partial(sequential_thiele, thiele_score_class=ApprovalOnlyScore),
+        partial(sequential_thiele, thiele_score_class=SatisfactionScore),
+    ],
+    # ABCvoting only has MES with completion...
+    # "equal-shares": [
+    #     partial(tax_method_of_equal_shares, tax_function=DisapprovalLinearTax.initialize(1)),
+    #     partial(tax_method_of_equal_shares, tax_function=TaxKraiczy2025),
+    # ]
 }
 
 def process_yaml_file(yaml_file_path: str):
@@ -84,6 +90,7 @@ def process_yaml_file(yaml_file_path: str):
             try:
                 selection = rule(profile, profile.max_size_selection, resoluteness=True)
                 selection_repr = resolute_res_representation(selection.selected, profile)
+                print("R", selection_repr, potential_results_repr)
                 assert selection_repr in potential_results_repr
             except NotImplementedError:
                 pass
@@ -91,6 +98,7 @@ def process_yaml_file(yaml_file_path: str):
             try:
                 selections = rule(profile, profile.max_size_selection, resoluteness=False)
                 selections_repr = irresolute_res_representation([s.selected for s in selections], profile)
+                print("IR", selections_repr, potential_results_repr)
                 assert selections_repr == potential_results_repr
             except NotImplementedError:
                 pass
