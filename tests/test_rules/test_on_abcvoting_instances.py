@@ -7,8 +7,10 @@ import yaml
 
 from unittest import TestCase
 
+from trivoting.election import AbstractTrichotomousProfile
 from trivoting.election.abcvoting import parse_abcvoting_yaml
 from trivoting.rules import tax_method_of_equal_shares, TaxKraiczy2025, DisapprovalLinearTax
+from trivoting.rules.chamberlin_courant import chamberlin_courant_ilp
 from trivoting.rules.thiele import thiele_method, PAVILPKraiczy2025, PAVILPTalmonPage2021, PAVILPHervouin2025, \
     sequential_thiele, ApprovalOnlyScore, SatisfactionScore
 from trivoting.rules.phragmen import sequential_phragmen
@@ -57,6 +59,28 @@ def irresolute_res_representation(budget_allocations, profile):
             res.append(alloc_repr)
     return sorted(res)
 
+def exhaustivee_cc(profile: AbstractTrichotomousProfile, max_size_selection: int, resoluteness=True):
+    raw_res = chamberlin_courant_ilp(profile, max_size_selection, resoluteness=resoluteness)
+
+    if resoluteness:
+        res_list = [raw_res]
+    else:
+        res_list = raw_res
+    new_res = []
+    for res in res_list:
+        if len(res.selected) < max_size_selection:
+            for alt in profile.alternatives:
+                if alt not in res.selected:
+                    res.add_selected(alt)
+                if len(res.selected) == max_size_selection:
+                    new_res.append(res)
+                    break
+        else:
+            new_res.append(res)
+    if resoluteness:
+        return new_res[0]
+    return new_res
+
 RULE_MAPPING = {
     "seqphragmen": sequential_phragmen,
     "pav": [
@@ -68,6 +92,7 @@ RULE_MAPPING = {
         partial(sequential_thiele, thiele_score_class=ApprovalOnlyScore),
         partial(sequential_thiele, thiele_score_class=SatisfactionScore),
     ],
+    "cc": exhaustivee_cc,
     # ABCvoting only has MES with completion...
     # "equal-shares": [
     #     partial(tax_method_of_equal_shares, tax_function=DisapprovalLinearTax.initialize(1)),
@@ -86,11 +111,12 @@ def process_yaml_file(yaml_file_path: str):
         if not isinstance(rules, Iterable):
             rules = [rules]
         for rule in rules:
+            print(rule)
             potential_results_repr = expected_result[rule_id]
             try:
                 selection = rule(profile, profile.max_size_selection, resoluteness=True)
                 selection_repr = resolute_res_representation(selection.selected, profile)
-                # print("R", selection_repr, potential_results_repr)
+                print("R", selection_repr, potential_results_repr)
                 assert selection_repr in potential_results_repr
             except NotImplementedError:
                 pass
@@ -98,11 +124,10 @@ def process_yaml_file(yaml_file_path: str):
             try:
                 selections = rule(profile, profile.max_size_selection, resoluteness=False)
                 selections_repr = irresolute_res_representation([s.selected for s in selections], profile)
-                # print("IR", selections_repr, potential_results_repr)
+                print("IR", selections_repr, potential_results_repr)
                 assert selections_repr == potential_results_repr
             except NotImplementedError:
                 pass
-
     return True
 
 class TestOnABCVoting(TestCase):

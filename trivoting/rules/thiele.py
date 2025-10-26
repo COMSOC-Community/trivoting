@@ -170,7 +170,7 @@ class PAVILPKraiczy2025(ThieleILPBuilder):
                 1 - self.selection_vars[alt] for alt in voter.ballot.disapproved)
 
     def objective(self) -> LpAffineExpression:
-        return lpSum(lpSum(v / i for i, v in voter.sat_vars.items()) for voter in self.voters)
+        return lpSum(lpSum(v / i for i, v in voter.sat_vars.items()) * voter.multiplicity for voter in self.voters)
 
 
 class PAVILPTalmonPage2021(ThieleILPBuilder):
@@ -198,7 +198,7 @@ class PAVILPTalmonPage2021(ThieleILPBuilder):
             self.model += lpSum(voter.disapp_dissat_vars.values()) == lpSum(self.selection_vars[alt] for alt in voter.ballot.disapproved)
 
     def objective(self) -> LpAffineExpression:
-        return lpSum(lpSum(v / i for i, v in voter.app_sat_vars.items()) for voter in self.voters) - lpSum(lpSum(v / i for i, v in voter.disapp_dissat_vars.items()) for voter in self.voters)
+        return lpSum(lpSum(v / i for i, v in voter.app_sat_vars.items()) * voter.multiplicity for voter in self.voters) - lpSum(lpSum(v / i for i, v in voter.disapp_dissat_vars.items()) * voter.multiplicity for voter in self.voters)
 
 
 class PAVILPHervouin2025(ThieleILPBuilder):
@@ -226,7 +226,32 @@ class PAVILPHervouin2025(ThieleILPBuilder):
             self.model += lpSum(voter.disapp_dissat_vars.values()) == self.max_size_selection - lpSum(self.selection_vars[alt] for alt in voter.ballot.disapproved)
 
     def objective(self) -> LpAffineExpression:
-        return lpSum(lpSum(v / i for i, v in voter.app_sat_vars.items()) for voter in self.voters) + lpSum(lpSum(v / i for i, v in voter.disapp_dissat_vars.items()) for voter in self.voters)
+        return lpSum(lpSum(v / i for i, v in voter.app_sat_vars.items()) * voter.multiplicity for voter in self.voters) + lpSum(lpSum(v / i for i, v in voter.disapp_dissat_vars.items()) * voter.multiplicity for voter in self.voters)
+
+class MaxNetSatisfactionILPBuilder(ThieleILPBuilder):
+    """
+    Defines the ILP objective for maximising the total net satisfaction of the voters. For a given voter, the net
+    satisfaction is defined as the number of approved and selected alternatives minus the number of disapproved but
+    selected alternatives.
+    """
+
+    def init_voters_vars(self) -> None:
+        # Init the variables
+        for i, ballot in enumerate(self.profile):
+            voter = ThieleILPVoter(ballot, multiplicity=self.profile.multiplicity(ballot))
+            voter.sat_vars = dict()
+            for k in range(1, len(self.profile.alternatives) + 1):
+                voter.sat_vars[k] = LpVariable(f"s_{i}_{k}", cat=LpBinary)
+            self.voters.append(voter)
+
+        # Constraint them to ensure proper counting
+        for voter in self.voters:
+            self.model += lpSum(voter.sat_vars.values()) == lpSum(
+                self.selection_vars[alt] for alt in voter.ballot.approved) - lpSum(
+                self.selection_vars[alt] for alt in voter.ballot.disapproved)
+
+    def objective(self) -> LpAffineExpression:
+        return lpSum(lpSum(voter.sat_vars.values()) * voter.multiplicity for voter in self.voters)
 
 def thiele_method(
     profile: AbstractTrichotomousProfile,

@@ -1,4 +1,4 @@
-from trivoting.rules.thiele import thiele_method, sequential_thiele, PAVScoreKraiczy2025, PAVILPKraiczy2025, PAVILPTalmonPage2021, PAVScoreTalmonPaige2021, PAVILPHervouin2025, PAVScoreHervouin2025
+from trivoting.rules.thiele import thiele_method, sequential_thiele, PAVScoreKraiczy2025, PAVILPKraiczy2025, PAVILPTalmonPage2021, PAVScoreTalmonPaige2021, PAVILPHervouin2025, PAVScoreHervouin2025, MaxNetSatisfactionILPBuilder
 from trivoting.rules.tax_rules import tax_pb_rule_scheme, tax_sequential_phragmen, tax_method_of_equal_shares, TaxKraiczy2025, DisapprovalLinearTax
 from trivoting.rules.phragmen import sequential_phragmen
 
@@ -7,6 +7,7 @@ __all__ = [
     'PAVILPHervouin2025',
     'PAVILPKraiczy2025',
     'PAVILPTalmonPage2021',
+    'MaxNetSatisfactionILPBuilder',
     'sequential_thiele',
     'PAVScoreKraiczy2025',
     'PAVScoreTalmonPaige2021',
