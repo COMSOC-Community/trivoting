@@ -114,12 +114,12 @@ def process_yaml_file(yaml_file_path: str):
             if not isinstance(rules, Iterable):
                 rules = [rules]
             for rule in rules:
-                print("\t", rule)
+                # print("\t", rule)
                 potential_results_repr = expected_result[rule_id]
                 try:
                     selection = rule(profile, profile.max_size_selection, resoluteness=True)
                     selection_repr = resolute_res_representation(selection.selected, profile)
-                    print("\t", "R", selection_repr, potential_results_repr)
+                    # print("\t", "R", selection_repr, potential_results_repr)
                     assert selection_repr in potential_results_repr
                 except NotImplementedError:
                     pass
@@ -127,8 +127,7 @@ def process_yaml_file(yaml_file_path: str):
                 try:
                     selections = rule(profile, profile.max_size_selection, resoluteness=False)
                     selections_repr = irresolute_res_representation([s.selected for s in selections], profile)
-                    print("\t",
-                          "IR", selections_repr, potential_results_repr)
+                    # print("\t", "IR", selections_repr, potential_results_repr)
                     assert selections_repr == potential_results_repr
                 except NotImplementedError:
                     pass

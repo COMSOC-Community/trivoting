@@ -1,4 +1,5 @@
-from pulp import LpMaximize, LpProblem, lpSum, PULP_CBC_CMD, LpStatusOptimal, value, LpBinary, LpVariable, LpInteger
+from pulp import LpMaximize, LpProblem, lpSum, LpStatusOptimal, value, LpBinary, LpVariable, LpInteger, \
+    HiGHS
 
 from trivoting.election import AbstractTrichotomousProfile, Selection
 
@@ -43,7 +44,7 @@ def chamberlin_courant_ilp(profile: AbstractTrichotomousProfile, max_size_select
     # Objective: max PAV score
     model += lpSum(voter["cc_var"] for voter in voter_details)
 
-    status = model.solve(PULP_CBC_CMD(msg=verbose, timeLimit=max_seconds))
+    status = model.solve(HiGHS(msg=verbose, timeLimit=max_seconds))
 
     all_selections = []
 
@@ -75,7 +76,7 @@ def chamberlin_courant_ilp(profile: AbstractTrichotomousProfile, max_size_select
                          lpSum(selection_vars[a] for a in selection_vars if a not in previous_selection)
                  ) <= len(previous_selection) - 1
 
-        status = model.solve(PULP_CBC_CMD(msg=verbose, timeLimit=max_seconds))
+        status = model.solve(HiGHS(msg=verbose, timeLimit=max_seconds))
 
         if status != LpStatusOptimal:
             break

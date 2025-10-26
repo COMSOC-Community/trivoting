@@ -8,8 +8,8 @@ from copy import deepcopy
 from trivoting.election import AbstractTrichotomousBallot, Alternative
 from trivoting.election.trichotomous_profile import AbstractTrichotomousProfile
 
-from pulp import LpProblem, LpMaximize, LpBinary, LpVariable, lpSum, LpStatusOptimal, value, PULP_CBC_CMD, \
-    LpAffineExpression
+from pulp import LpProblem, LpMaximize, LpBinary, LpVariable, lpSum, LpStatusOptimal, value, \
+    LpAffineExpression, HiGHS
 
 from trivoting.election.selection import Selection
 from trivoting.fractions import Numeric
@@ -319,7 +319,7 @@ def thiele_method(
     # Objective: max PAV score
     model += ilp_builder.objective()
 
-    status = model.solve(PULP_CBC_CMD(msg=verbose, timeLimit=max_seconds))
+    status = model.solve(HiGHS(msg=verbose, timeLimit=max_seconds))
 
     all_selections = []
 
@@ -351,7 +351,7 @@ def thiele_method(
                              lpSum(selection_vars[a] for a in selection_vars if a not in previous_selection)
                      ) <= len(previous_selection) - 1
 
-        status = model.solve(PULP_CBC_CMD(msg=verbose, timeLimit=max_seconds))
+        status = model.solve(HiGHS(msg=verbose, timeLimit=max_seconds))
 
         if status != LpStatusOptimal:
             break
