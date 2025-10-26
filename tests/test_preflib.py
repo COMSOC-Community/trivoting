@@ -10,4 +10,4 @@ class TestPreflib(TestCase):
         preflib_file_path = os.path.join(current_file_path, "data", "preflib_cat_instance.cat")
 
         profile = parse_preflib(preflib_file_path)
-        self.assertEqual(len(profile), 100)
+        self.assertEqual(profile.num_ballots(), 100)

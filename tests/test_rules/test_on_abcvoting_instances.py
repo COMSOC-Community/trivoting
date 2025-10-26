@@ -101,34 +101,48 @@ RULE_MAPPING = {
 }
 
 def process_yaml_file(yaml_file_path: str):
-    profile = parse_abcvoting_yaml(yaml_file_path)
+    profile_raw = parse_abcvoting_yaml(yaml_file_path)
 
-    print(f"Testing on {os.path.basename(yaml_file_path)}: {len(profile.alternatives)} alternatives and {profile.num_ballots()} voters")
+    for profile in [profile_raw, profile_raw.as_multiprofile()]:
+        print(f"Testing on {os.path.basename(yaml_file_path)}: {len(profile.alternatives)} alternatives and {profile.num_ballots()} voters")
 
-    expected_result = read_abcvoting_expected_result(yaml_file_path, profile)
+        expected_result = read_abcvoting_expected_result(yaml_file_path, profile)
 
     for rule_id, rules in RULE_MAPPING.items():
         if not isinstance(rules, Iterable):
             rules = [rules]
         for rule in rules:
-            print(rule)
+            # print(rule)
             potential_results_repr = expected_result[rule_id]
             try:
                 selection = rule(profile, profile.max_size_selection, resoluteness=True)
                 selection_repr = resolute_res_representation(selection.selected, profile)
-                print("R", selection_repr, potential_results_repr)
+                # print("R", selection_repr, potential_results_repr)
                 assert selection_repr in potential_results_repr
             except NotImplementedError:
                 pass
+        for rule_id, rules in RULE_MAPPING.items():
+            if not isinstance(rules, Iterable):
+                rules = [rules]
+            for rule in rules:
+                potential_results_repr = expected_result[rule_id]
+                try:
+                    selection = rule(profile, profile.max_size_selection, resoluteness=True)
+                    selection_repr = resolute_res_representation(selection.selected, profile)
+                    # print("R", selection_repr, potential_results_repr)
+                    assert selection_repr in potential_results_repr
+                except NotImplementedError:
+                    pass
 
-            try:
-                selections = rule(profile, profile.max_size_selection, resoluteness=False)
-                selections_repr = irresolute_res_representation([s.selected for s in selections], profile)
-                print("IR", selections_repr, potential_results_repr)
-                assert selections_repr == potential_results_repr
-            except NotImplementedError:
-                pass
-    return True
+                try:
+                    selections = rule(profile, profile.max_size_selection, resoluteness=False)
+                    selections_repr = irresolute_res_representation([s.selected for s in selections], profile)
+                    # print("IR", selections_repr, potential_results_repr)
+                    assert selections_repr == potential_results_repr
+                except NotImplementedError:
+                    pass
+
+        return True
 
 class TestOnABCVoting(TestCase):
     def test_rules_on_abcvoting(self):
