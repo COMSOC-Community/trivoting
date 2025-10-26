@@ -35,7 +35,7 @@
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="../../_static/documentation_options.js?v=dfd84850"></script>
+    <script src="../../_static/documentation_options.js?v=6424ca4d"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
@@ -282,7 +282,10 @@ document.write(`
 <span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Iterable</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.election.trichotomous_profile</span><span class="w"> </span><span class="kn">import</span> <span class="n">TrichotomousProfile</span><span class="p">,</span> <span class="n">AbstractTrichotomousProfile</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.election.trichotomous_profile</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">TrichotomousProfile</span><span class="p">,</span>
+    <span class="n">AbstractTrichotomousProfile</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.election.alternative</span><span class="w"> </span><span class="kn">import</span> <span class="n">Alternative</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.fractions</span><span class="w"> </span><span class="kn">import</span> <span class="n">Numeric</span>
 
@@ -313,7 +316,9 @@ document.write(`
 <span class="sd">            project will be sorted.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">AbstractTrichotomousProfile</span><span class="p">,</span> <span class="n">Alternative</span><span class="p">],</span> <span class="n">Numeric</span><span class="p">]):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">AbstractTrichotomousProfile</span><span class="p">,</span> <span class="n">Alternative</span><span class="p">],</span> <span class="n">Numeric</span><span class="p">]</span>
+    <span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">func</span> <span class="o">=</span> <span class="n">func</span>
 
 <div class="viewcode-block" id="TieBreakingRule.order">
@@ -399,25 +404,23 @@ document.write(`
 <span class="sd">Implements lexicographic tie breaking, i.e., tie-breaking based on the name of the alternatives.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="n">support_tie_breaking</span> <span class="o">=</span> <span class="n">TieBreakingRule</span><span class="p">(</span>
-    <span class="k">lambda</span> <span class="n">prof</span><span class="p">,</span> <span class="n">alt</span><span class="p">:</span> <span class="o">-</span><span class="n">prof</span><span class="o">.</span><span class="n">support</span><span class="p">(</span><span class="n">alt</span><span class="p">)</span>
-<span class="p">)</span>
+<span class="n">support_tie_breaking</span> <span class="o">=</span> <span class="n">TieBreakingRule</span><span class="p">(</span><span class="k">lambda</span> <span class="n">prof</span><span class="p">,</span> <span class="n">alt</span><span class="p">:</span> <span class="o">-</span><span class="n">prof</span><span class="o">.</span><span class="n">support</span><span class="p">(</span><span class="n">alt</span><span class="p">))</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Implements tie breaking based on the support where the projects with the highest support in the profile is selected.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="n">app_score_tie_breaking</span> <span class="o">=</span> <span class="n">TieBreakingRule</span><span class="p">(</span>
-    <span class="k">lambda</span> <span class="n">prof</span><span class="p">,</span> <span class="n">alt</span><span class="p">:</span> <span class="o">-</span><span class="n">prof</span><span class="o">.</span><span class="n">approval_score</span><span class="p">(</span><span class="n">alt</span><span class="p">)</span>
-<span class="p">)</span>
+<span class="n">app_score_tie_breaking</span> <span class="o">=</span> <span class="n">TieBreakingRule</span><span class="p">(</span><span class="k">lambda</span> <span class="n">prof</span><span class="p">,</span> <span class="n">alt</span><span class="p">:</span> <span class="o">-</span><span class="n">prof</span><span class="o">.</span><span class="n">approval_score</span><span class="p">(</span><span class="n">alt</span><span class="p">))</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Implements tie breaking based on the approval score where the projects with the highest approval score in the profile</span>
 <span class="sd"> is selected.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
+
 <div class="viewcode-block" id="refuse_tie_breaking">
 <a class="viewcode-back" href="../../reference/tiebreaking.html#trivoting.tiebreaking.refuse_tie_breaking">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">refuse_tie_breaking</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">alternative</span><span class="p">):</span>
     <span class="k">raise</span> <span class="n">TieBreakingException</span><span class="p">(</span><span class="s2">&quot;A tie occurred, but no tie-breaking rule was provided.&quot;</span><span class="p">)</span></div>
+
 
 
 <span class="n">refuse_tie_breaking</span> <span class="o">=</span> <span class="n">TieBreakingRule</span><span class="p">(</span><span class="n">refuse_tie_breaking</span><span class="p">)</span>

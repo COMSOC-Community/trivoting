@@ -27,13 +27,17 @@ class TestPhragmen(TestCase):
 
         # Only disapproved
         alternatives = [Alternative(i) for i in range(10)]
-        negative_ballots = [TrichotomousBallot(disapproved=alternatives[:6]) for _ in range(10)]
+        negative_ballots = [
+            TrichotomousBallot(disapproved=alternatives[:6]) for _ in range(10)
+        ]
         profile = TrichotomousProfile(negative_ballots, alternatives=alternatives)
         res = sequential_phragmen(profile, len(alternatives))
         self.assertEqual(len(res), 0)
 
         # Separated ballots
-        positive_ballots = [TrichotomousBallot(approved=alternatives[6:]) for _ in range(100)]
+        positive_ballots = [
+            TrichotomousBallot(approved=alternatives[6:]) for _ in range(100)
+        ]
         profile.extend(positive_ballots)
         res = sequential_phragmen(profile, len(alternatives))
         self.assertEqual(len(res), 4)

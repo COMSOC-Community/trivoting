@@ -9,11 +9,22 @@ from unittest import TestCase
 
 from trivoting.election import AbstractTrichotomousProfile
 from trivoting.election.abcvoting import parse_abcvoting_yaml
-from trivoting.rules import tax_method_of_equal_shares, TaxKraiczy2025, DisapprovalLinearTax, \
-    MaxNetSatisfactionILPBuilder
-from trivoting.rules.chamberlin_courant import chamberlin_courant_ilp
-from trivoting.rules.thiele import thiele_method, PAVILPKraiczy2025, PAVILPTalmonPage2021, PAVILPHervouin2025, \
-    sequential_thiele, ApprovalOnlyScore, SatisfactionScore
+from trivoting.rules import (
+    tax_method_of_equal_shares,
+    TaxKraiczy2025,
+    DisapprovalLinearTax,
+    MaxSatisfactionILPBuilder,
+)
+from trivoting.rules.chamberlin_courant import chamberlin_courant
+from trivoting.rules.thiele import (
+    thiele_method,
+    PAVILPKraiczy2025,
+    PAVILPTalmonPage2021,
+    PAVILPHervouin2025,
+    sequential_thiele,
+    ApprovalOnlyScore,
+    SatisfactionScore,
+)
 from trivoting.rules.phragmen import sequential_phragmen
 
 
@@ -44,13 +55,17 @@ def read_abcvoting_expected_result(file_path, profile):
             expected_results[entry["rule_id"]] = potential_results_representation
     return expected_results
 
+
 def resolute_res_representation(budget_allocation, profile):
     # Alternative that have support
     supported_alternatives = set()
     for alt in profile.alternatives:
         if profile.support(alt) > 0:
             supported_alternatives.add(alt)
-    return sorted([int(a.name) for a in budget_allocation if a in supported_alternatives])
+    return sorted(
+        [int(a.name) for a in budget_allocation if a in supported_alternatives]
+    )
+
 
 def irresolute_res_representation(budget_allocations, profile):
     res = []
@@ -60,8 +75,13 @@ def irresolute_res_representation(budget_allocations, profile):
             res.append(alloc_repr)
     return sorted(res)
 
-def exhaustivee_cc(profile: AbstractTrichotomousProfile, max_size_selection: int, resoluteness=True):
-    raw_res = chamberlin_courant_ilp(profile, max_size_selection, resoluteness=resoluteness)
+
+def exhaustivee_cc(
+    profile: AbstractTrichotomousProfile, max_size_selection: int, resoluteness=True
+):
+    raw_res = chamberlin_courant(
+        profile, max_size_selection, resoluteness=resoluteness
+    )
 
     if resoluteness:
         res_list = [raw_res]
@@ -82,6 +102,7 @@ def exhaustivee_cc(profile: AbstractTrichotomousProfile, max_size_selection: int
         return new_res[0]
     return new_res
 
+
 RULE_MAPPING = {
     "seqphragmen": sequential_phragmen,
     "pav": [
@@ -92,7 +113,7 @@ RULE_MAPPING = {
     "av": [
         partial(sequential_thiele, thiele_score_class=ApprovalOnlyScore),
         partial(sequential_thiele, thiele_score_class=SatisfactionScore),
-        partial(thiele_method, ilp_builder_class=MaxNetSatisfactionILPBuilder),
+        partial(thiele_method, ilp_builder_class=MaxSatisfactionILPBuilder),
     ],
     "cc": exhaustivee_cc,
     # ABCvoting only has MES with completion...
@@ -102,11 +123,14 @@ RULE_MAPPING = {
     # ]
 }
 
+
 def process_yaml_file(yaml_file_path: str):
     profile_raw = parse_abcvoting_yaml(yaml_file_path)
 
     for profile in [profile_raw, profile_raw.as_multiprofile()]:
-        print(f"Testing on {os.path.basename(yaml_file_path)}: {len(profile.alternatives)} alternatives and {profile.num_ballots()} voters")
+        print(
+            f"Testing on {os.path.basename(yaml_file_path)}: {len(profile.alternatives)} alternatives and {profile.num_ballots()} voters"
+        )
 
         expected_result = read_abcvoting_expected_result(yaml_file_path, profile)
 
@@ -117,22 +141,31 @@ def process_yaml_file(yaml_file_path: str):
                 # print("\t", rule)
                 potential_results_repr = expected_result[rule_id]
                 try:
-                    selection = rule(profile, profile.max_size_selection, resoluteness=True)
-                    selection_repr = resolute_res_representation(selection.selected, profile)
+                    selection = rule(
+                        profile, profile.max_size_selection, resoluteness=True
+                    )
+                    selection_repr = resolute_res_representation(
+                        selection.selected, profile
+                    )
                     # print("\t", "R", selection_repr, potential_results_repr)
                     assert selection_repr in potential_results_repr
                 except NotImplementedError:
                     pass
 
                 try:
-                    selections = rule(profile, profile.max_size_selection, resoluteness=False)
-                    selections_repr = irresolute_res_representation([s.selected for s in selections], profile)
+                    selections = rule(
+                        profile, profile.max_size_selection, resoluteness=False
+                    )
+                    selections_repr = irresolute_res_representation(
+                        [s.selected for s in selections], profile
+                    )
                     # print("\t", "IR", selections_repr, potential_results_repr)
                     assert selections_repr == potential_results_repr
                 except NotImplementedError:
                     pass
 
         return True
+
 
 class TestOnABCVoting(TestCase):
     def test_rules_on_abcvoting(self):

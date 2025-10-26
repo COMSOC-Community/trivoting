@@ -84,7 +84,11 @@ def sequential_phragmen(
         if irresolute (:code:`resoluteness == False`).
     """
 
-    def _sequential_phragmen_rec(alternatives: set[Alternative], voters: list[PhragmenVoter], selection: Selection):
+    def _sequential_phragmen_rec(
+        alternatives: set[Alternative],
+        voters: list[PhragmenVoter],
+        selection: Selection,
+    ):
         if len(alternatives) == 0 or len(selection) == max_size_selection:
             if not resoluteness:
                 selection.sort()
@@ -96,11 +100,15 @@ def sequential_phragmen(
             min_new_maxload = None
             arg_min_new_maxload = None
             for alt in alternatives:
-                for considered_voters, veto in ((supporters[alt], False), (opponents[alt], True)):
+                for considered_voters, veto in (
+                    (supporters[alt], False),
+                    (opponents[alt], True),
+                ):
                     num_considered_voters = len(considered_voters)
                     if num_considered_voters > 0:
                         new_maxload = frac(
-                            sum(voters[i].total_load() for i in considered_voters) + 1, num_considered_voters,
+                            sum(voters[i].total_load() for i in considered_voters) + 1,
+                            num_considered_voters,
                         )
                         if min_new_maxload is None or new_maxload < min_new_maxload:
                             min_new_maxload = new_maxload
@@ -108,7 +116,9 @@ def sequential_phragmen(
                         elif min_new_maxload == new_maxload:
                             arg_min_new_maxload.append((alt, veto))
 
-            tied_alternatives = tie_breaking.order(profile, arg_min_new_maxload, key=lambda x: x[0])
+            tied_alternatives = tie_breaking.order(
+                profile, arg_min_new_maxload, key=lambda x: x[0]
+            )
             if resoluteness:
                 selected_alternative, vetoed = tied_alternatives[0]
                 for voter in voters:
@@ -126,19 +136,23 @@ def sequential_phragmen(
                     for voter in new_voters:
                         if not vetoed and selected_alternative in voter.ballot.approved:
                             voter.load = min_new_maxload
-                        elif vetoed and selected_alternative in voter.ballot.disapproved:
+                        elif (
+                            vetoed and selected_alternative in voter.ballot.disapproved
+                        ):
                             voter.load = min_new_maxload
                     new_selection = deepcopy(selection)
                     if not vetoed:
                         new_selection.add_selected(selected_alternative)
                     new_alternatives = deepcopy(alternatives)
                     new_alternatives.remove(selected_alternative)
-                    _sequential_phragmen_rec(new_alternatives, new_voters, new_selection)
+                    _sequential_phragmen_rec(
+                        new_alternatives, new_voters, new_selection
+                    )
 
     try:
         max_size_selection = int(max_size_selection)
     except ValueError:
-        raise ValueError('max_size_selection must be an integer.')
+        raise ValueError("max_size_selection must be an integer.")
 
     if tie_breaking is None:
         tie_breaking = lexico_tie_breaking
@@ -161,8 +175,12 @@ def sequential_phragmen(
     initial_alternatives = set()
     for alt in profile.alternatives:
         if alt not in initial_selection.rejected:
-            supps = [i for i, v in enumerate(initial_voters) if alt in v.ballot.approved]
-            opps = [i for i, v in enumerate(initial_voters) if alt in v.ballot.disapproved]
+            supps = [
+                i for i, v in enumerate(initial_voters) if alt in v.ballot.approved
+            ]
+            opps = [
+                i for i, v in enumerate(initial_voters) if alt in v.ballot.disapproved
+            ]
             if supps or opps:
                 supporters[alt] = supps
                 opponents[alt] = opps

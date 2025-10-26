@@ -10,9 +10,15 @@ class TestProfile(TestCase):
     def test_profile(self):
         alternatives = [Alternative(i) for i in range(20)]
         ballots = [
-            TrichotomousBallot(approved=alternatives[1:10], disapproved=alternatives[11:14]),
-            TrichotomousBallot(approved=alternatives[15:18], disapproved=alternatives[0:5]),
-            TrichotomousBallot(approved=alternatives[18:19], disapproved=alternatives[4:9]),
+            TrichotomousBallot(
+                approved=alternatives[1:10], disapproved=alternatives[11:14]
+            ),
+            TrichotomousBallot(
+                approved=alternatives[15:18], disapproved=alternatives[0:5]
+            ),
+            TrichotomousBallot(
+                approved=alternatives[18:19], disapproved=alternatives[4:9]
+            ),
             TrichotomousBallot(),
         ]
 
@@ -41,20 +47,47 @@ class TestProfile(TestCase):
                     self.assertGreaterEqual(app_score, 0)
                     self.assertGreaterEqual(disapp_score, 0)
                     self.assertEqual(support, app_score - disapp_score)
-                    self.assertEqual(profile.approval_disapproval_score(alt), (app_score, disapp_score))
+                    self.assertEqual(
+                        profile.approval_disapproval_score(alt),
+                        (app_score, disapp_score),
+                    )
                 self.assertEqual(
-                    profile.approval_score_dict(), {alt: profile.approval_score(alt) for alt in profile.alternatives if profile.approval_score(alt) > 0},
+                    profile.approval_score_dict(),
+                    {
+                        alt: profile.approval_score(alt)
+                        for alt in profile.alternatives
+                        if profile.approval_score(alt) > 0
+                    },
                 )
                 self.assertEqual(
-                    profile.disapproval_score_dict(), {alt: profile.disapproval_score(alt) for alt in profile.alternatives if profile.disapproval_score(alt) > 0},
+                    profile.disapproval_score_dict(),
+                    {
+                        alt: profile.disapproval_score(alt)
+                        for alt in profile.alternatives
+                        if profile.disapproval_score(alt) > 0
+                    },
                 )
                 self.assertEqual(
-                    profile.support_dict(), {alt: profile.support(alt) for alt in profile.alternatives if sum(profile.approval_disapproval_score(alt)) > 0},
+                    profile.support_dict(),
+                    {
+                        alt: profile.support(alt)
+                        for alt in profile.alternatives
+                        if sum(profile.approval_disapproval_score(alt)) > 0
+                    },
                 )
                 reconstructed_app_disapp_dict = (
-                    {alt: profile.approval_score(alt) for alt in profile.alternatives if profile.approval_score(alt) > 0},
-                    {alt: profile.disapproval_score(alt) for alt in profile.alternatives if profile.disapproval_score(alt) > 0},
+                    {
+                        alt: profile.approval_score(alt)
+                        for alt in profile.alternatives
+                        if profile.approval_score(alt) > 0
+                    },
+                    {
+                        alt: profile.disapproval_score(alt)
+                        for alt in profile.alternatives
+                        if profile.disapproval_score(alt) > 0
+                    },
                 )
                 self.assertEqual(
-                    profile.approval_disapproval_score_dict(), reconstructed_app_disapp_dict
+                    profile.approval_disapproval_score_dict(),
+                    reconstructed_app_disapp_dict,
                 )

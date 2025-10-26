@@ -30,10 +30,10 @@ class Selection:
     """
 
     def __init__(
-            self,
-            selected: Iterable[Alternative] = None,
-            rejected: Iterable[Alternative] = None,
-            implicit_reject: bool = True
+        self,
+        selected: Iterable[Alternative] = None,
+        rejected: Iterable[Alternative] = None,
+        implicit_reject: bool = True,
     ):
         if selected is None:
             self.selected = list()
@@ -112,8 +112,10 @@ class Selection:
                 The alternative to add to the rejection list.
         """
         if self.implicit_reject:
-            warnings.warn("You are adding rejected alternatives to a selection that has implicit_reject=True. The "
-                          "selection may not behave as you think it does.")
+            warnings.warn(
+                "You are adding rejected alternatives to a selection that has implicit_reject=True. The "
+                "selection may not behave as you think it does."
+            )
         self.rejected.append(alt)
 
     def extend_rejected(self, alts: Iterable[Alternative]) -> None:
@@ -126,8 +128,10 @@ class Selection:
                 An iterable of alternatives to add to the rejection list.
         """
         if self.implicit_reject:
-            warnings.warn("You are adding rejected alternatives to a selection that has implicit_reject=True. The "
-                          "selection may not behave as you think it does.")
+            warnings.warn(
+                "You are adding rejected alternatives to a selection that has implicit_reject=True. The "
+                "selection may not behave as you think it does."
+            )
         self.rejected.extend(alts)
 
     def remove_selected(self, alt: Alternative) -> None:
@@ -178,13 +182,13 @@ class Selection:
 
     def total_len(self) -> int:
         """
-            Get the total number of alternatives (selected and rejected).
+        Get the total number of alternatives (selected and rejected).
 
-            Returns
-            -------
-                int
-                    Total count of selected and rejected alternatives.
-            """
+        Returns
+        -------
+            int
+                Total count of selected and rejected alternatives.
+        """
         return len(self.selected) + len(self.rejected)
 
     def __str__(self):
@@ -205,4 +209,3 @@ class Selection:
         if isinstance(other, Selection):
             return self.selected < other.selected
         return NotImplemented
-

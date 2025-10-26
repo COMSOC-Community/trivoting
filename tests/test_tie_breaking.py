@@ -1,8 +1,13 @@
 import unittest
 
 from tests.random_instances import get_random_profile
-from trivoting.tiebreaking import lexico_tie_breaking, app_score_tie_breaking, support_tie_breaking, \
-    TieBreakingException, refuse_tie_breaking
+from trivoting.tiebreaking import (
+    lexico_tie_breaking,
+    app_score_tie_breaking,
+    support_tie_breaking,
+    TieBreakingException,
+    refuse_tie_breaking,
+)
 
 
 class TestTieBreaking(unittest.TestCase):

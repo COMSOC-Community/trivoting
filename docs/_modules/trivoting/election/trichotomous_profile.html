@@ -35,7 +35,7 @@
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="../../../_static/documentation_options.js?v=dfd84850"></script>
+    <script src="../../../_static/documentation_options.js?v=6424ca4d"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
@@ -283,13 +283,22 @@ document.write(`
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">Counter</span><span class="p">,</span> <span class="n">defaultdict</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">MutableSequence</span><span class="p">,</span> <span class="n">MutableMapping</span><span class="p">,</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">Collection</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Iterable</span><span class="p">,</span>
+    <span class="n">MutableSequence</span><span class="p">,</span>
+    <span class="n">MutableMapping</span><span class="p">,</span>
+    <span class="n">Iterator</span><span class="p">,</span>
+    <span class="n">Collection</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">product</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.election.alternative</span><span class="w"> </span><span class="kn">import</span> <span class="n">Alternative</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.election.selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">Selection</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.election.trichotomous_ballot</span><span class="w"> </span><span class="kn">import</span> <span class="n">TrichotomousBallot</span><span class="p">,</span> <span class="n">AbstractTrichotomousBallot</span><span class="p">,</span> \
-    <span class="n">FrozenTrichotomousBallot</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.election.trichotomous_ballot</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">TrichotomousBallot</span><span class="p">,</span>
+    <span class="n">AbstractTrichotomousBallot</span><span class="p">,</span>
+    <span class="n">FrozenTrichotomousBallot</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.fractions</span><span class="w"> </span><span class="kn">import</span> <span class="n">Numeric</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">generate_subsets</span><span class="p">,</span> <span class="n">generate_two_list_partitions</span>
 
@@ -309,7 +318,9 @@ document.write(`
 <span class="sd">        The maximum number of alternatives that can be selected in a feasible selection (optional).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alternatives</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Alternative</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">max_size_selection</span> <span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">alternatives</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Alternative</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">max_size_selection</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">):</span>
         <span class="k">if</span> <span class="n">alternatives</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">alternatives</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
@@ -396,7 +407,7 @@ document.write(`
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the support of an alternative, i.e., the net number of voters supporting it (the number of approvers</span>
 <span class="sd">        minus the number of disapprovers).</span>
-<span class="sd">        </span>
+
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">            alternative: Alternative</span>
@@ -420,12 +431,12 @@ document.write(`
 <span class="sd">                Alternatives never appearing (approved or disapproved) in any ballot will be absent, but accessing them</span>
 <span class="sd">                returns 0.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">approval_score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alternative</span><span class="p">:</span> <span class="n">Alternative</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the approval score of an alternative, i.e., the number of voters approving of it.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">            alternative: Alternative</span>
@@ -448,13 +459,12 @@ document.write(`
 <span class="sd">                The approval score of each alternative appearing in at least one ballot.</span>
 <span class="sd">                Alternatives never approved in any ballot will be absent, but accessing them returns 0.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        
 
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">disapproval_score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alternative</span><span class="p">:</span> <span class="n">Alternative</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the disapproval score of an alternative, i.e., the number of voters disapproving of it.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">            alternative: Alternative</span>
@@ -465,7 +475,6 @@ document.write(`
 <span class="sd">            int</span>
 <span class="sd">                The disapproval score of the alternative.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-       
 
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">disapproval_score_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">defaultdict</span><span class="p">[</span><span class="n">Alternative</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
@@ -483,7 +492,7 @@ document.write(`
     <span class="k">def</span><span class="w"> </span><span class="nf">approval_disapproval_score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alternative</span><span class="p">:</span> <span class="n">Alternative</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the approval and disapproval score of an alternative together at the same time.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">            alternative: Alternative</span>
@@ -494,10 +503,11 @@ document.write(`
 <span class="sd">            tuple[int, int]</span>
 <span class="sd">                The approval and the disapproval score of the alternative.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-       
 
     <span class="nd">@abstractmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">approval_disapproval_score_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">defaultdict</span><span class="p">[</span><span class="n">Alternative</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">defaultdict</span><span class="p">[</span><span class="n">Alternative</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">approval_disapproval_score_dict</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">defaultdict</span><span class="p">[</span><span class="n">Alternative</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">defaultdict</span><span class="p">[</span><span class="n">Alternative</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the dictionaries of the approval score and of the disapproval score.</span>
 
@@ -524,7 +534,9 @@ document.write(`
 <span class="sd">                An iterator that yields all feasible (partial) selections.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">for</span> <span class="n">l1</span><span class="p">,</span> <span class="n">l2</span> <span class="ow">in</span> <span class="n">generate_two_list_partitions</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alternatives</span><span class="p">,</span> <span class="n">first_list_max_size</span><span class="o">=</span><span class="n">max_size_selection</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">l1</span><span class="p">,</span> <span class="n">l2</span> <span class="ow">in</span> <span class="n">generate_two_list_partitions</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">alternatives</span><span class="p">,</span> <span class="n">first_list_max_size</span><span class="o">=</span><span class="n">max_size_selection</span>
+        <span class="p">):</span>
             <span class="k">yield</span> <span class="n">Selection</span><span class="p">(</span><span class="n">selected</span><span class="o">=</span><span class="n">l1</span><span class="p">,</span> <span class="n">rejected</span><span class="o">=</span><span class="n">l2</span><span class="p">,</span> <span class="n">implicit_reject</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="nd">@abstractmethod</span>
@@ -548,7 +560,9 @@ document.write(`
 <span class="sd">            set[Alternative]</span>
 <span class="sd">                The set of alternatives commonly approved by all ballots.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="nb">set</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">ballot</span><span class="o">.</span><span class="n">approved</span><span class="p">)</span> <span class="k">for</span> <span class="n">ballot</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ballot_container</span><span class="p">))</span>
+        <span class="k">return</span> <span class="nb">set</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span>
+            <span class="o">*</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">ballot</span><span class="o">.</span><span class="n">approved</span><span class="p">)</span> <span class="k">for</span> <span class="n">ballot</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ballot_container</span><span class="p">)</span>
+        <span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">commonly_disapproved_alternatives</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">set</span><span class="p">[</span><span class="n">Alternative</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -561,12 +575,17 @@ document.write(`
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ballot_container</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="nb">set</span><span class="p">()</span>
-        <span class="k">return</span> <span class="nb">set</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">ballot</span><span class="o">.</span><span class="n">disapproved</span><span class="p">)</span> <span class="k">for</span> <span class="n">ballot</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ballot_container</span><span class="p">))</span></div>
+        <span class="k">return</span> <span class="nb">set</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span>
+            <span class="o">*</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">ballot</span><span class="o">.</span><span class="n">disapproved</span><span class="p">)</span> <span class="k">for</span> <span class="n">ballot</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ballot_container</span><span class="p">)</span>
+        <span class="p">)</span></div>
+
 
 
 <div class="viewcode-block" id="TrichotomousProfile">
 <a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousProfile">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">TrichotomousProfile</span><span class="p">(</span><span class="n">AbstractTrichotomousProfile</span><span class="p">,</span> <span class="n">MutableSequence</span><span class="p">[</span><span class="n">TrichotomousBallot</span><span class="p">]):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TrichotomousProfile</span><span class="p">(</span>
+    <span class="n">AbstractTrichotomousProfile</span><span class="p">,</span> <span class="n">MutableSequence</span><span class="p">[</span><span class="n">TrichotomousBallot</span><span class="p">]</span>
+<span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Represents a trichotomous profile, i.e., a collection of trichotomous ballots, one per voter.</span>
 
@@ -587,7 +606,6 @@ document.write(`
 <span class="sd">    max_size_selection : int or None</span>
 <span class="sd">        The maximum number of alternatives to be selected when computing the outcome of a rule on the profile.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -686,7 +704,9 @@ document.write(`
 
 <div class="viewcode-block" id="TrichotomousProfile.approval_disapproval_score_dict">
 <a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousProfile.approval_disapproval_score_dict">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">approval_disapproval_score_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">defaultdict</span><span class="p">[</span><span class="n">Alternative</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">defaultdict</span><span class="p">[</span><span class="n">Alternative</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">approval_disapproval_score_dict</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">defaultdict</span><span class="p">[</span><span class="n">Alternative</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">defaultdict</span><span class="p">[</span><span class="n">Alternative</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
         <span class="n">app_scores</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
         <span class="n">disapp_scores</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">ballot</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
@@ -743,7 +763,11 @@ document.write(`
 <span class="sd">            The multiprofile representation of this profile with frozen ballots.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">return</span> <span class="n">TrichotomousMultiProfile</span><span class="p">([</span><span class="n">ballot</span><span class="o">.</span><span class="n">freeze</span><span class="p">()</span> <span class="k">for</span> <span class="n">ballot</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">],</span> <span class="n">alternatives</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">alternatives</span><span class="p">,</span> <span class="n">max_size_selection</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_size_selection</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">TrichotomousMultiProfile</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">ballot</span><span class="o">.</span><span class="n">freeze</span><span class="p">()</span> <span class="k">for</span> <span class="n">ballot</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">],</span>
+            <span class="n">alternatives</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">alternatives</span><span class="p">,</span>
+            <span class="n">max_size_selection</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_size_selection</span><span class="p">,</span>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="TrichotomousProfile.all_sub_profiles">
@@ -761,7 +785,11 @@ document.write(`
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">for</span> <span class="n">subset</span> <span class="ow">in</span> <span class="n">generate_subsets</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ballots_list</span><span class="p">):</span>
-            <span class="k">yield</span> <span class="n">TrichotomousProfile</span><span class="p">(</span><span class="n">subset</span><span class="p">,</span> <span class="n">alternatives</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">alternatives</span><span class="p">,</span> <span class="n">max_size_selection</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_size_selection</span><span class="p">)</span></div>
+            <span class="k">yield</span> <span class="n">TrichotomousProfile</span><span class="p">(</span>
+                <span class="n">subset</span><span class="p">,</span>
+                <span class="n">alternatives</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">alternatives</span><span class="p">,</span>
+                <span class="n">max_size_selection</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_size_selection</span><span class="p">,</span>
+            <span class="p">)</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
@@ -889,7 +917,9 @@ document.write(`
 
 <div class="viewcode-block" id="TrichotomousMultiProfile">
 <a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousMultiProfile">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">TrichotomousMultiProfile</span><span class="p">(</span><span class="n">AbstractTrichotomousProfile</span><span class="p">,</span> <span class="n">MutableMapping</span><span class="p">[</span><span class="n">FrozenTrichotomousBallot</span><span class="p">,</span> <span class="nb">int</span><span class="p">]):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TrichotomousMultiProfile</span><span class="p">(</span>
+    <span class="n">AbstractTrichotomousProfile</span><span class="p">,</span> <span class="n">MutableMapping</span><span class="p">[</span><span class="n">FrozenTrichotomousBallot</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
+<span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Represents a trichotomous multi-profile, i.e., a collection of trichotomous ballots where identical ballots</span>
 <span class="sd">    are stored together with their multiplicities.</span>
@@ -989,6 +1019,7 @@ document.write(`
                 <span class="n">res</span><span class="p">[</span><span class="n">alt</span><span class="p">]</span> <span class="o">+=</span> <span class="n">count</span>
         <span class="k">return</span> <span class="n">res</span></div>
 
+
 <div class="viewcode-block" id="TrichotomousMultiProfile.disapproval_score">
 <a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.disapproval_score">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">disapproval_score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alternative</span><span class="p">:</span> <span class="n">Alternative</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
@@ -1024,7 +1055,9 @@ document.write(`
 
 <div class="viewcode-block" id="TrichotomousMultiProfile.approval_disapproval_score_dict">
 <a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.approval_disapproval_score_dict">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">approval_disapproval_score_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">defaultdict</span><span class="p">[</span><span class="n">Alternative</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">defaultdict</span><span class="p">[</span><span class="n">Alternative</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">approval_disapproval_score_dict</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">defaultdict</span><span class="p">[</span><span class="n">Alternative</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">defaultdict</span><span class="p">[</span><span class="n">Alternative</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
         <span class="n">app_scores</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
         <span class="n">disapp_scores</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">ballot</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -1068,8 +1101,10 @@ document.write(`
 <span class="sd">            The frozen ballot to add.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ballot</span><span class="p">,</span> <span class="n">TrichotomousBallot</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;You are trying to add a non-frozen ballot to a multiprofile. This is not possible, &quot;</span>
-                             <span class="s2">&quot;please freeze the ballot via ballot.freeze() before adding it.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;You are trying to add a non-frozen ballot to a multiprofile. This is not possible, &quot;</span>
+                <span class="s2">&quot;please freeze the ballot via ballot.freeze() before adding it.&quot;</span>
+            <span class="p">)</span>
         <span class="bp">self</span><span class="p">[</span><span class="n">ballot</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span></div>
 
 
@@ -1108,9 +1143,11 @@ document.write(`
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">items</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ballots_counter</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
         <span class="k">for</span> <span class="n">counts</span> <span class="ow">in</span> <span class="n">product</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">count</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">items</span><span class="p">)):</span>
-            <span class="n">sub_profile</span> <span class="o">=</span> <span class="n">TrichotomousMultiProfile</span><span class="p">({</span><span class="n">key</span><span class="p">:</span> <span class="n">count</span> <span class="k">for</span> <span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">_</span><span class="p">),</span> <span class="n">count</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">counts</span><span class="p">)</span> <span class="k">if</span> <span class="n">count</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">},</span>
-                                              <span class="n">alternatives</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">alternatives</span><span class="p">,</span>
-                                              <span class="n">max_size_selection</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_size_selection</span><span class="p">,)</span>
+            <span class="n">sub_profile</span> <span class="o">=</span> <span class="n">TrichotomousMultiProfile</span><span class="p">(</span>
+                <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">count</span> <span class="k">for</span> <span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">_</span><span class="p">),</span> <span class="n">count</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">counts</span><span class="p">)</span> <span class="k">if</span> <span class="n">count</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">},</span>
+                <span class="n">alternatives</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">alternatives</span><span class="p">,</span>
+                <span class="n">max_size_selection</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_size_selection</span><span class="p">,</span>
+            <span class="p">)</span>
             <span class="k">yield</span> <span class="n">sub_profile</span></div>
 
 
@@ -1144,7 +1181,9 @@ document.write(`
     <span class="k">def</span><span class="w"> </span><span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="n">new_profile</span> <span class="o">=</span> <span class="n">TrichotomousMultiProfile</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">TrichotomousMultiProfile</span><span class="p">):</span>
-            <span class="n">new_profile</span><span class="o">.</span><span class="n">_ballots_counter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ballots_counter</span> <span class="o">+</span> <span class="n">other</span><span class="o">.</span><span class="n">_ballots_counter</span>
+            <span class="n">new_profile</span><span class="o">.</span><span class="n">_ballots_counter</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_ballots_counter</span> <span class="o">+</span> <span class="n">other</span><span class="o">.</span><span class="n">_ballots_counter</span>
+            <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">new_profile</span><span class="o">.</span><span class="n">_ballots_counter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ballots_counter</span> <span class="o">+</span> <span class="n">other</span>
         <span class="k">return</span> <span class="n">new_profile</span>
@@ -1159,7 +1198,9 @@ document.write(`
     <span class="k">def</span><span class="w"> </span><span class="fm">__sub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="n">new_profile</span> <span class="o">=</span> <span class="n">TrichotomousMultiProfile</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">TrichotomousMultiProfile</span><span class="p">):</span>
-            <span class="n">new_profile</span><span class="o">.</span><span class="n">_ballots_counter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ballots_counter</span> <span class="o">-</span> <span class="n">other</span><span class="o">.</span><span class="n">_ballots_counter</span>
+            <span class="n">new_profile</span><span class="o">.</span><span class="n">_ballots_counter</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_ballots_counter</span> <span class="o">-</span> <span class="n">other</span><span class="o">.</span><span class="n">_ballots_counter</span>
+            <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">new_profile</span><span class="o">.</span><span class="n">_ballots_counter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ballots_counter</span> <span class="o">-</span> <span class="n">other</span>
         <span class="k">return</span> <span class="n">new_profile</span>
@@ -1174,7 +1215,9 @@ document.write(`
     <span class="k">def</span><span class="w"> </span><span class="fm">__or__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="n">new_profile</span> <span class="o">=</span> <span class="n">TrichotomousMultiProfile</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">TrichotomousMultiProfile</span><span class="p">):</span>
-            <span class="n">new_profile</span><span class="o">.</span><span class="n">_ballots_counter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ballots_counter</span> <span class="o">|</span> <span class="n">other</span><span class="o">.</span><span class="n">_ballots_counter</span>
+            <span class="n">new_profile</span><span class="o">.</span><span class="n">_ballots_counter</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_ballots_counter</span> <span class="o">|</span> <span class="n">other</span><span class="o">.</span><span class="n">_ballots_counter</span>
+            <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">new_profile</span><span class="o">.</span><span class="n">_ballots_counter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ballots_counter</span> <span class="o">|</span> <span class="n">other</span>
         <span class="k">return</span> <span class="n">new_profile</span>
@@ -1189,7 +1232,9 @@ document.write(`
     <span class="k">def</span><span class="w"> </span><span class="fm">__and__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="n">new_profile</span> <span class="o">=</span> <span class="n">TrichotomousMultiProfile</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">TrichotomousMultiProfile</span><span class="p">):</span>
-            <span class="n">new_profile</span><span class="o">.</span><span class="n">_ballots_counter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ballots_counter</span> <span class="o">&amp;</span> <span class="n">other</span><span class="o">.</span><span class="n">_ballots_counter</span>
+            <span class="n">new_profile</span><span class="o">.</span><span class="n">_ballots_counter</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_ballots_counter</span> <span class="o">&amp;</span> <span class="n">other</span><span class="o">.</span><span class="n">_ballots_counter</span>
+            <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">new_profile</span><span class="o">.</span><span class="n">_ballots_counter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ballots_counter</span> <span class="o">&amp;</span> <span class="n">other</span>
         <span class="k">return</span> <span class="n">new_profile</span>

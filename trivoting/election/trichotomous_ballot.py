@@ -5,6 +5,7 @@ from collections.abc import Iterable, Collection
 
 from trivoting.election.alternative import Alternative
 
+
 class AbstractTrichotomousBallot(ABC):
     """
     Abstract base class for a trichotomous ballot.
@@ -24,6 +25,7 @@ class AbstractTrichotomousBallot(ABC):
     @abstractmethod
     def disapproved(self) -> Collection[Alternative]:
         pass
+
 
 class TrichotomousBallot(AbstractTrichotomousBallot):
     """
@@ -45,7 +47,12 @@ class TrichotomousBallot(AbstractTrichotomousBallot):
         The alternatives the voter disapproves of.
     """
 
-    def __init__(self, *, approved: Iterable[Alternative] = None, disapproved: Iterable[Alternative] = None):
+    def __init__(
+        self,
+        *,
+        approved: Iterable[Alternative] = None,
+        disapproved: Iterable[Alternative] = None,
+    ):
         if approved is None:
             self._approved = set()
         else:
@@ -144,7 +151,10 @@ class TrichotomousBallot(AbstractTrichotomousBallot):
 
     def __eq__(self, other):
         if isinstance(other, TrichotomousBallot):
-            return self.approved == other.approved and self.disapproved == other.disapproved
+            return (
+                self.approved == other.approved
+                and self.disapproved == other.disapproved
+            )
         return NotImplemented
 
     def __lt__(self, other):
@@ -174,7 +184,12 @@ class FrozenTrichotomousBallot(AbstractTrichotomousBallot):
         The alternatives the voter disapproves of.
     """
 
-    def __init__(self,  *, approved: Iterable[Alternative] = None, disapproved: Iterable[Alternative] = None):
+    def __init__(
+        self,
+        *,
+        approved: Iterable[Alternative] = None,
+        disapproved: Iterable[Alternative] = None,
+    ):
         if approved is None:
             self._approved = tuple()
         else:
@@ -229,12 +244,18 @@ class FrozenTrichotomousBallot(AbstractTrichotomousBallot):
 
     def __eq__(self, other):
         if isinstance(other, FrozenTrichotomousBallot):
-            return self.approved == other.approved and self.disapproved == other.disapproved
+            return (
+                self.approved == other.approved
+                and self.disapproved == other.disapproved
+            )
         return NotImplemented
 
     def __lt__(self, other):
         if isinstance(other, FrozenTrichotomousBallot):
-            return (self.approved, self.disapproved) < (other.approved, other.disapproved)
+            return (self.approved, self.disapproved) < (
+                other.approved,
+                other.disapproved,
+            )
         return NotImplemented
 
     def __hash__(self):

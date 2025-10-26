@@ -35,7 +35,7 @@
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="../../../_static/documentation_options.js?v=dfd84850"></script>
+    <script src="../../../_static/documentation_options.js?v=6424ca4d"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
@@ -289,8 +289,17 @@ document.write(`
 <span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.election</span><span class="w"> </span><span class="kn">import</span> <span class="n">AbstractTrichotomousBallot</span><span class="p">,</span> <span class="n">Alternative</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.election.trichotomous_profile</span><span class="w"> </span><span class="kn">import</span> <span class="n">AbstractTrichotomousProfile</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">pulp</span><span class="w"> </span><span class="kn">import</span> <span class="n">LpProblem</span><span class="p">,</span> <span class="n">LpMaximize</span><span class="p">,</span> <span class="n">LpBinary</span><span class="p">,</span> <span class="n">LpVariable</span><span class="p">,</span> <span class="n">lpSum</span><span class="p">,</span> <span class="n">LpStatusOptimal</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">PULP_CBC_CMD</span><span class="p">,</span> \
-    <span class="n">LpAffineExpression</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pulp</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">LpProblem</span><span class="p">,</span>
+    <span class="n">LpMaximize</span><span class="p">,</span>
+    <span class="n">LpBinary</span><span class="p">,</span>
+    <span class="n">LpVariable</span><span class="p">,</span>
+    <span class="n">lpSum</span><span class="p">,</span>
+    <span class="n">LpStatusOptimal</span><span class="p">,</span>
+    <span class="n">value</span><span class="p">,</span>
+    <span class="n">LpAffineExpression</span><span class="p">,</span>
+    <span class="n">HiGHS</span><span class="p">,</span>
+<span class="p">)</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.election.selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">Selection</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.fractions</span><span class="w"> </span><span class="kn">import</span> <span class="n">Numeric</span>
@@ -301,15 +310,23 @@ document.write(`
 <div class="viewcode-block" id="ThieleScore">
 <a class="viewcode-back" href="../../../reference/rules/index.html#trivoting.rules.thiele.ThieleScore">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ThieleScore</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class used to define score function for Thiele methods. The class is used for the sequential Thiele rules.&quot;&quot;&quot;</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_size_selection</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">max_size_selection</span> <span class="o">=</span> <span class="n">max_size_selection</span>
 
     <span class="nd">@abstractmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">score_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_app_sel</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_disapp_sel</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_app_rej</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_disapp_rej</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">score_function</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">num_app_sel</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_disapp_sel</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_app_rej</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_disapp_rej</span><span class="o">=</span><span class="mi">0</span>
+    <span class="p">):</span>
         <span class="k">pass</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">score_selection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">profile</span><span class="p">:</span> <span class="n">AbstractTrichotomousProfile</span><span class="p">,</span> <span class="n">selection</span><span class="p">:</span> <span class="n">Selection</span><span class="p">,</span> <span class="n">extra_reject</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Alternative</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">extra_accept</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Alternative</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-                        <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Numeric</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">score_selection</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">profile</span><span class="p">:</span> <span class="n">AbstractTrichotomousProfile</span><span class="p">,</span>
+        <span class="n">selection</span><span class="p">:</span> <span class="n">Selection</span><span class="p">,</span>
+        <span class="n">extra_reject</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Alternative</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">extra_accept</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Alternative</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Numeric</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">extra_reject</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">extra_reject</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">if</span> <span class="n">extra_accept</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -321,48 +338,82 @@ document.write(`
             <span class="n">num_disapp_sel</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="n">num_disapp_rej</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">ballot</span><span class="o">.</span><span class="n">approved</span><span class="p">:</span>
-                <span class="k">if</span> <span class="p">(</span><span class="n">selection</span><span class="o">.</span><span class="n">is_selected</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="ow">and</span> <span class="n">a</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">extra_reject</span><span class="p">)</span> <span class="ow">or</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">extra_accept</span><span class="p">:</span>
+                <span class="k">if</span> <span class="p">(</span>
+                    <span class="n">selection</span><span class="o">.</span><span class="n">is_selected</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="ow">and</span> <span class="n">a</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">extra_reject</span>
+                <span class="p">)</span> <span class="ow">or</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">extra_accept</span><span class="p">:</span>
                     <span class="n">num_app_sel</span> <span class="o">+=</span> <span class="mi">1</span>
-                <span class="k">elif</span> <span class="p">(</span><span class="n">selection</span><span class="o">.</span><span class="n">is_rejected</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="ow">and</span> <span class="n">a</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">extra_accept</span><span class="p">)</span> <span class="ow">or</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">extra_reject</span><span class="p">:</span>
+                <span class="k">elif</span> <span class="p">(</span>
+                    <span class="n">selection</span><span class="o">.</span><span class="n">is_rejected</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="ow">and</span> <span class="n">a</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">extra_accept</span>
+                <span class="p">)</span> <span class="ow">or</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">extra_reject</span><span class="p">:</span>
                     <span class="n">num_app_rej</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">ballot</span><span class="o">.</span><span class="n">disapproved</span><span class="p">:</span>
-                <span class="k">if</span><span class="p">(</span><span class="n">selection</span><span class="o">.</span><span class="n">is_rejected</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="ow">and</span> <span class="n">a</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">extra_accept</span><span class="p">)</span> <span class="ow">or</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">extra_reject</span><span class="p">:</span>
+                <span class="k">if</span> <span class="p">(</span>
+                    <span class="n">selection</span><span class="o">.</span><span class="n">is_rejected</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="ow">and</span> <span class="n">a</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">extra_accept</span>
+                <span class="p">)</span> <span class="ow">or</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">extra_reject</span><span class="p">:</span>
                     <span class="n">num_disapp_rej</span> <span class="o">+=</span> <span class="mi">1</span>
-                <span class="k">elif</span> <span class="p">(</span><span class="n">selection</span><span class="o">.</span><span class="n">is_selected</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="ow">and</span> <span class="n">a</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">extra_reject</span><span class="p">)</span> <span class="ow">or</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">extra_accept</span><span class="p">:</span>
+                <span class="k">elif</span> <span class="p">(</span>
+                    <span class="n">selection</span><span class="o">.</span><span class="n">is_selected</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="ow">and</span> <span class="n">a</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">extra_reject</span>
+                <span class="p">)</span> <span class="ow">or</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">extra_accept</span><span class="p">:</span>
                     <span class="n">num_disapp_sel</span> <span class="o">+=</span> <span class="mi">1</span>
-            <span class="n">ballot_score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">score_function</span><span class="p">(</span><span class="n">num_app_sel</span><span class="p">,</span> <span class="n">num_disapp_sel</span><span class="p">,</span> <span class="n">num_app_rej</span><span class="p">,</span> <span class="n">num_disapp_rej</span><span class="p">)</span>
+            <span class="n">ballot_score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">score_function</span><span class="p">(</span>
+                <span class="n">num_app_sel</span><span class="p">,</span> <span class="n">num_disapp_sel</span><span class="p">,</span> <span class="n">num_app_rej</span><span class="p">,</span> <span class="n">num_disapp_rej</span>
+            <span class="p">)</span>
             <span class="n">score</span> <span class="o">+=</span> <span class="n">ballot_score</span> <span class="o">*</span> <span class="n">profile</span><span class="o">.</span><span class="n">multiplicity</span><span class="p">(</span><span class="n">ballot</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">score</span></div>
+
 
 
 <div class="viewcode-block" id="PAVScoreKraiczy2025">
 <a class="viewcode-back" href="../../../reference/rules/index.html#trivoting.rules.thiele.PAVScoreKraiczy2025">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">PAVScoreKraiczy2025</span><span class="p">(</span><span class="n">ThieleScore</span><span class="p">):</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">score_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_app_sel</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_disapp_sel</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_app_rej</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_disapp_rej</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">score_function</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">num_app_sel</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_disapp_sel</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_app_rej</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_disapp_rej</span><span class="o">=</span><span class="mi">0</span>
+    <span class="p">):</span>
         <span class="k">return</span> <span class="n">harmonic_sum</span><span class="p">(</span><span class="n">num_app_sel</span> <span class="o">+</span> <span class="n">num_disapp_rej</span><span class="p">)</span></div>
+
 
 
 <div class="viewcode-block" id="PAVScoreTalmonPaige2021">
 <a class="viewcode-back" href="../../../reference/rules/index.html#trivoting.rules.thiele.PAVScoreTalmonPaige2021">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">PAVScoreTalmonPaige2021</span><span class="p">(</span><span class="n">ThieleScore</span><span class="p">):</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">score_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_app_sel</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_disapp_sel</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_app_rej</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_disapp_rej</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">score_function</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">num_app_sel</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_disapp_sel</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_app_rej</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_disapp_rej</span><span class="o">=</span><span class="mi">0</span>
+    <span class="p">):</span>
         <span class="k">return</span> <span class="n">harmonic_sum</span><span class="p">(</span><span class="n">num_app_sel</span><span class="p">)</span> <span class="o">-</span> <span class="n">harmonic_sum</span><span class="p">(</span><span class="n">num_disapp_sel</span><span class="p">)</span></div>
+
 
 
 <div class="viewcode-block" id="PAVScoreHervouin2025">
 <a class="viewcode-back" href="../../../reference/rules/index.html#trivoting.rules.thiele.PAVScoreHervouin2025">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">PAVScoreHervouin2025</span><span class="p">(</span><span class="n">ThieleScore</span><span class="p">):</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">score_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_app_sel</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_disapp_sel</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_app_rej</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_disapp_rej</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">harmonic_sum</span><span class="p">(</span><span class="n">num_app_sel</span><span class="p">)</span> <span class="o">+</span> <span class="n">harmonic_sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_size_selection</span> <span class="o">-</span> <span class="n">num_disapp_sel</span><span class="p">)</span></div>
+    <span class="k">def</span><span class="w"> </span><span class="nf">score_function</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">num_app_sel</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_disapp_sel</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_app_rej</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_disapp_rej</span><span class="o">=</span><span class="mi">0</span>
+    <span class="p">):</span>
+        <span class="k">return</span> <span class="n">harmonic_sum</span><span class="p">(</span><span class="n">num_app_sel</span><span class="p">)</span> <span class="o">+</span> <span class="n">harmonic_sum</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">max_size_selection</span> <span class="o">-</span> <span class="n">num_disapp_sel</span>
+        <span class="p">)</span></div>
 
 
+
+<div class="viewcode-block" id="ApprovalOnlyScore">
+<a class="viewcode-back" href="../../../reference/rules/index.html#trivoting.rules.thiele.ApprovalOnlyScore">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ApprovalOnlyScore</span><span class="p">(</span><span class="n">ThieleScore</span><span class="p">):</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">score_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_app_sel</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_disapp_sel</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_app_rej</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_disapp_rej</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">num_app_sel</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">score_function</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">num_app_sel</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_disapp_sel</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_app_rej</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_disapp_rej</span><span class="o">=</span><span class="mi">0</span>
+    <span class="p">):</span>
+        <span class="k">return</span> <span class="n">num_app_sel</span></div>
 
+
+
+<div class="viewcode-block" id="SatisfactionScore">
+<a class="viewcode-back" href="../../../reference/rules/index.html#trivoting.rules.thiele.SatisfactionScore">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SatisfactionScore</span><span class="p">(</span><span class="n">ThieleScore</span><span class="p">):</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">score_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_app_sel</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_disapp_sel</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_app_rej</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_disapp_rej</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">num_app_sel</span> <span class="o">-</span> <span class="n">num_disapp_sel</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">score_function</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">num_app_sel</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_disapp_sel</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_app_rej</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_disapp_rej</span><span class="o">=</span><span class="mi">0</span>
+    <span class="p">):</span>
+        <span class="k">return</span> <span class="n">num_app_sel</span> <span class="o">-</span> <span class="n">num_disapp_sel</span></div>
+
+
 
 <span class="k">class</span><span class="w"> </span><span class="nc">ThieleILPVoter</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -390,6 +441,7 @@ document.write(`
 <span class="sd">    disapp_dissat_vars : dict[int, LpVariable]</span>
 <span class="sd">        Decision variables counting the number of disapproved alternative that have been selected. The higher, the worst.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ballot</span><span class="p">,</span> <span class="n">multiplicity</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ballot</span> <span class="o">=</span> <span class="n">ballot</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">multiplicity</span> <span class="o">=</span> <span class="n">multiplicity</span>
@@ -399,6 +451,7 @@ document.write(`
         <span class="bp">self</span><span class="o">.</span><span class="n">disapp_dissat_vars</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sat_vars</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dissat_vars</span> <span class="o">=</span> <span class="kc">None</span>
+
 
 <div class="viewcode-block" id="ThieleILPBuilder">
 <a class="viewcode-back" href="../../../reference/rules/index.html#trivoting.rules.thiele.ThieleILPBuilder">[docs]</a>
@@ -427,12 +480,16 @@ document.write(`
 <span class="sd">        Dictionary mapping each alternative to the decision variable indicating whether a given alternative is selected</span>
 <span class="sd">        or not.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">profile</span><span class="p">:</span> <span class="n">AbstractTrichotomousProfile</span><span class="p">,</span> <span class="n">max_size_selection</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">profile</span> <span class="o">=</span> <span class="n">profile</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">max_size_selection</span> <span class="o">=</span> <span class="n">max_size_selection</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">LpProblem</span><span class="p">(</span><span class="s2">&quot;thiele&quot;</span><span class="p">,</span> <span class="n">LpMaximize</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">voters</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">selection_vars</span> <span class="o">=</span> <span class="p">{</span><span class="n">alt</span><span class="p">:</span> <span class="n">LpVariable</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;y_</span><span class="si">{</span><span class="n">alt</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="n">LpBinary</span><span class="p">)</span> <span class="k">for</span> <span class="n">alt</span> <span class="ow">in</span> <span class="n">profile</span><span class="o">.</span><span class="n">alternatives</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">selection_vars</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">alt</span><span class="p">:</span> <span class="n">LpVariable</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;y_</span><span class="si">{</span><span class="n">alt</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="n">LpBinary</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">alt</span> <span class="ow">in</span> <span class="n">profile</span><span class="o">.</span><span class="n">alternatives</span>
+        <span class="p">}</span>
 
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">init_voters_vars</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -441,6 +498,7 @@ document.write(`
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">objective</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LpAffineExpression</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;&quot;&quot;&quot;</span></div>
+
 
 
 <div class="viewcode-block" id="PAVILPKraiczy2025">
@@ -452,10 +510,13 @@ document.write(`
 <span class="sd">    The objective is to maximise the PAV score where both approved and selected, and disapproved and not selected</span>
 <span class="sd">    alternatives contribute positively.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span><span class="w"> </span><span class="nf">init_voters_vars</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># Init the variables</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">ballot</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="p">):</span>
-            <span class="n">pav_voter</span> <span class="o">=</span> <span class="n">ThieleILPVoter</span><span class="p">(</span><span class="n">ballot</span><span class="p">,</span> <span class="n">multiplicity</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">multiplicity</span><span class="p">(</span><span class="n">ballot</span><span class="p">))</span>
+            <span class="n">pav_voter</span> <span class="o">=</span> <span class="n">ThieleILPVoter</span><span class="p">(</span>
+                <span class="n">ballot</span><span class="p">,</span> <span class="n">multiplicity</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">multiplicity</span><span class="p">(</span><span class="n">ballot</span><span class="p">)</span>
+            <span class="p">)</span>
             <span class="n">pav_voter</span><span class="o">.</span><span class="n">sat_vars</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
             <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">alternatives</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
                 <span class="n">pav_voter</span><span class="o">.</span><span class="n">sat_vars</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">LpVariable</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;s_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="n">LpBinary</span><span class="p">)</span>
@@ -464,11 +525,14 @@ document.write(`
         <span class="c1"># Constraint them to ensure proper counting</span>
         <span class="k">for</span> <span class="n">voter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">voters</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">+=</span> <span class="n">lpSum</span><span class="p">(</span><span class="n">voter</span><span class="o">.</span><span class="n">sat_vars</span><span class="o">.</span><span class="n">values</span><span class="p">())</span> <span class="o">==</span> <span class="n">lpSum</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">selection_vars</span><span class="p">[</span><span class="n">alt</span><span class="p">]</span> <span class="k">for</span> <span class="n">alt</span> <span class="ow">in</span> <span class="n">voter</span><span class="o">.</span><span class="n">ballot</span><span class="o">.</span><span class="n">approved</span><span class="p">)</span> <span class="o">+</span> <span class="n">lpSum</span><span class="p">(</span>
-                <span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">selection_vars</span><span class="p">[</span><span class="n">alt</span><span class="p">]</span> <span class="k">for</span> <span class="n">alt</span> <span class="ow">in</span> <span class="n">voter</span><span class="o">.</span><span class="n">ballot</span><span class="o">.</span><span class="n">disapproved</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">selection_vars</span><span class="p">[</span><span class="n">alt</span><span class="p">]</span> <span class="k">for</span> <span class="n">alt</span> <span class="ow">in</span> <span class="n">voter</span><span class="o">.</span><span class="n">ballot</span><span class="o">.</span><span class="n">approved</span>
+            <span class="p">)</span> <span class="o">+</span> <span class="n">lpSum</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">selection_vars</span><span class="p">[</span><span class="n">alt</span><span class="p">]</span> <span class="k">for</span> <span class="n">alt</span> <span class="ow">in</span> <span class="n">voter</span><span class="o">.</span><span class="n">ballot</span><span class="o">.</span><span class="n">disapproved</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">objective</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LpAffineExpression</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">lpSum</span><span class="p">(</span><span class="n">lpSum</span><span class="p">(</span><span class="n">v</span> <span class="o">/</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">voter</span><span class="o">.</span><span class="n">sat_vars</span><span class="o">.</span><span class="n">items</span><span class="p">())</span> <span class="k">for</span> <span class="n">voter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">voters</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">lpSum</span><span class="p">(</span>
+            <span class="n">lpSum</span><span class="p">(</span><span class="n">v</span> <span class="o">/</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">voter</span><span class="o">.</span><span class="n">sat_vars</span><span class="o">.</span><span class="n">items</span><span class="p">())</span> <span class="o">*</span> <span class="n">voter</span><span class="o">.</span><span class="n">multiplicity</span>
+            <span class="k">for</span> <span class="n">voter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">voters</span>
+        <span class="p">)</span></div>
 
 
 
@@ -485,21 +549,36 @@ document.write(`
     <span class="k">def</span><span class="w"> </span><span class="nf">init_voters_vars</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># Init the variables</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">ballot</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="p">):</span>
-            <span class="n">pav_voter</span> <span class="o">=</span> <span class="n">ThieleILPVoter</span><span class="p">(</span><span class="n">ballot</span><span class="p">,</span> <span class="n">multiplicity</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">multiplicity</span><span class="p">(</span><span class="n">ballot</span><span class="p">))</span>
+            <span class="n">pav_voter</span> <span class="o">=</span> <span class="n">ThieleILPVoter</span><span class="p">(</span>
+                <span class="n">ballot</span><span class="p">,</span> <span class="n">multiplicity</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">multiplicity</span><span class="p">(</span><span class="n">ballot</span><span class="p">)</span>
+            <span class="p">)</span>
             <span class="n">pav_voter</span><span class="o">.</span><span class="n">app_sat_vars</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
             <span class="n">pav_voter</span><span class="o">.</span><span class="n">disapp_dissat_vars</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
             <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">alternatives</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
                 <span class="n">pav_voter</span><span class="o">.</span><span class="n">app_sat_vars</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">LpVariable</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;as_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="n">LpBinary</span><span class="p">)</span>
-                <span class="n">pav_voter</span><span class="o">.</span><span class="n">disapp_dissat_vars</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">LpVariable</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;dd_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="n">LpBinary</span><span class="p">)</span>
+                <span class="n">pav_voter</span><span class="o">.</span><span class="n">disapp_dissat_vars</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">LpVariable</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;dd_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="n">LpBinary</span>
+                <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">voters</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pav_voter</span><span class="p">)</span>
 
         <span class="c1"># Constraint them to ensure proper counting</span>
         <span class="k">for</span> <span class="n">voter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">voters</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">+=</span> <span class="n">lpSum</span><span class="p">(</span><span class="n">voter</span><span class="o">.</span><span class="n">app_sat_vars</span><span class="o">.</span><span class="n">values</span><span class="p">())</span> <span class="o">==</span> <span class="n">lpSum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">selection_vars</span><span class="p">[</span><span class="n">alt</span><span class="p">]</span> <span class="k">for</span> <span class="n">alt</span> <span class="ow">in</span> <span class="n">voter</span><span class="o">.</span><span class="n">ballot</span><span class="o">.</span><span class="n">approved</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">+=</span> <span class="n">lpSum</span><span class="p">(</span><span class="n">voter</span><span class="o">.</span><span class="n">disapp_dissat_vars</span><span class="o">.</span><span class="n">values</span><span class="p">())</span> <span class="o">==</span> <span class="n">lpSum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">selection_vars</span><span class="p">[</span><span class="n">alt</span><span class="p">]</span> <span class="k">for</span> <span class="n">alt</span> <span class="ow">in</span> <span class="n">voter</span><span class="o">.</span><span class="n">ballot</span><span class="o">.</span><span class="n">disapproved</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">+=</span> <span class="n">lpSum</span><span class="p">(</span><span class="n">voter</span><span class="o">.</span><span class="n">app_sat_vars</span><span class="o">.</span><span class="n">values</span><span class="p">())</span> <span class="o">==</span> <span class="n">lpSum</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">selection_vars</span><span class="p">[</span><span class="n">alt</span><span class="p">]</span> <span class="k">for</span> <span class="n">alt</span> <span class="ow">in</span> <span class="n">voter</span><span class="o">.</span><span class="n">ballot</span><span class="o">.</span><span class="n">approved</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">+=</span> <span class="n">lpSum</span><span class="p">(</span><span class="n">voter</span><span class="o">.</span><span class="n">disapp_dissat_vars</span><span class="o">.</span><span class="n">values</span><span class="p">())</span> <span class="o">==</span> <span class="n">lpSum</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">selection_vars</span><span class="p">[</span><span class="n">alt</span><span class="p">]</span> <span class="k">for</span> <span class="n">alt</span> <span class="ow">in</span> <span class="n">voter</span><span class="o">.</span><span class="n">ballot</span><span class="o">.</span><span class="n">disapproved</span>
+            <span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">objective</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LpAffineExpression</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">lpSum</span><span class="p">(</span><span class="n">lpSum</span><span class="p">(</span><span class="n">v</span> <span class="o">/</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">voter</span><span class="o">.</span><span class="n">app_sat_vars</span><span class="o">.</span><span class="n">items</span><span class="p">())</span> <span class="k">for</span> <span class="n">voter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">voters</span><span class="p">)</span> <span class="o">-</span> <span class="n">lpSum</span><span class="p">(</span><span class="n">lpSum</span><span class="p">(</span><span class="n">v</span> <span class="o">/</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">voter</span><span class="o">.</span><span class="n">disapp_dissat_vars</span><span class="o">.</span><span class="n">items</span><span class="p">())</span> <span class="k">for</span> <span class="n">voter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">voters</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">lpSum</span><span class="p">(</span>
+            <span class="n">lpSum</span><span class="p">(</span><span class="n">v</span> <span class="o">/</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">voter</span><span class="o">.</span><span class="n">app_sat_vars</span><span class="o">.</span><span class="n">items</span><span class="p">())</span> <span class="o">*</span> <span class="n">voter</span><span class="o">.</span><span class="n">multiplicity</span>
+            <span class="k">for</span> <span class="n">voter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">voters</span>
+        <span class="p">)</span> <span class="o">-</span> <span class="n">lpSum</span><span class="p">(</span>
+            <span class="n">lpSum</span><span class="p">(</span><span class="n">v</span> <span class="o">/</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">voter</span><span class="o">.</span><span class="n">disapp_dissat_vars</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+            <span class="o">*</span> <span class="n">voter</span><span class="o">.</span><span class="n">multiplicity</span>
+            <span class="k">for</span> <span class="n">voter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">voters</span>
+        <span class="p">)</span></div>
 
 
 
@@ -516,21 +595,72 @@ document.write(`
     <span class="k">def</span><span class="w"> </span><span class="nf">init_voters_vars</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># Init the variables</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">ballot</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="p">):</span>
-            <span class="n">pav_voter</span> <span class="o">=</span> <span class="n">ThieleILPVoter</span><span class="p">(</span><span class="n">ballot</span><span class="p">,</span> <span class="n">multiplicity</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">multiplicity</span><span class="p">(</span><span class="n">ballot</span><span class="p">))</span>
+            <span class="n">pav_voter</span> <span class="o">=</span> <span class="n">ThieleILPVoter</span><span class="p">(</span>
+                <span class="n">ballot</span><span class="p">,</span> <span class="n">multiplicity</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">multiplicity</span><span class="p">(</span><span class="n">ballot</span><span class="p">)</span>
+            <span class="p">)</span>
             <span class="n">pav_voter</span><span class="o">.</span><span class="n">app_sat_vars</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
             <span class="n">pav_voter</span><span class="o">.</span><span class="n">disapp_dissat_vars</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
             <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">alternatives</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
                 <span class="n">pav_voter</span><span class="o">.</span><span class="n">app_sat_vars</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">LpVariable</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;as_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="n">LpBinary</span><span class="p">)</span>
-                <span class="n">pav_voter</span><span class="o">.</span><span class="n">disapp_dissat_vars</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">LpVariable</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;dd_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="n">LpBinary</span><span class="p">)</span>
+                <span class="n">pav_voter</span><span class="o">.</span><span class="n">disapp_dissat_vars</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">LpVariable</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;dd_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="n">LpBinary</span>
+                <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">voters</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pav_voter</span><span class="p">)</span>
 
         <span class="c1"># Constraint them to ensure proper counting</span>
         <span class="k">for</span> <span class="n">voter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">voters</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">+=</span> <span class="n">lpSum</span><span class="p">(</span><span class="n">voter</span><span class="o">.</span><span class="n">app_sat_vars</span><span class="o">.</span><span class="n">values</span><span class="p">())</span> <span class="o">==</span> <span class="n">lpSum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">selection_vars</span><span class="p">[</span><span class="n">alt</span><span class="p">]</span> <span class="k">for</span> <span class="n">alt</span> <span class="ow">in</span> <span class="n">voter</span><span class="o">.</span><span class="n">ballot</span><span class="o">.</span><span class="n">approved</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">+=</span> <span class="n">lpSum</span><span class="p">(</span><span class="n">voter</span><span class="o">.</span><span class="n">disapp_dissat_vars</span><span class="o">.</span><span class="n">values</span><span class="p">())</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_size_selection</span> <span class="o">-</span> <span class="n">lpSum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">selection_vars</span><span class="p">[</span><span class="n">alt</span><span class="p">]</span> <span class="k">for</span> <span class="n">alt</span> <span class="ow">in</span> <span class="n">voter</span><span class="o">.</span><span class="n">ballot</span><span class="o">.</span><span class="n">disapproved</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">+=</span> <span class="n">lpSum</span><span class="p">(</span><span class="n">voter</span><span class="o">.</span><span class="n">app_sat_vars</span><span class="o">.</span><span class="n">values</span><span class="p">())</span> <span class="o">==</span> <span class="n">lpSum</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">selection_vars</span><span class="p">[</span><span class="n">alt</span><span class="p">]</span> <span class="k">for</span> <span class="n">alt</span> <span class="ow">in</span> <span class="n">voter</span><span class="o">.</span><span class="n">ballot</span><span class="o">.</span><span class="n">approved</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">+=</span> <span class="n">lpSum</span><span class="p">(</span>
+                <span class="n">voter</span><span class="o">.</span><span class="n">disapp_dissat_vars</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+            <span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_size_selection</span> <span class="o">-</span> <span class="n">lpSum</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">selection_vars</span><span class="p">[</span><span class="n">alt</span><span class="p">]</span> <span class="k">for</span> <span class="n">alt</span> <span class="ow">in</span> <span class="n">voter</span><span class="o">.</span><span class="n">ballot</span><span class="o">.</span><span class="n">disapproved</span>
+            <span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">objective</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LpAffineExpression</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">lpSum</span><span class="p">(</span><span class="n">lpSum</span><span class="p">(</span><span class="n">v</span> <span class="o">/</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">voter</span><span class="o">.</span><span class="n">app_sat_vars</span><span class="o">.</span><span class="n">items</span><span class="p">())</span> <span class="k">for</span> <span class="n">voter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">voters</span><span class="p">)</span> <span class="o">+</span> <span class="n">lpSum</span><span class="p">(</span><span class="n">lpSum</span><span class="p">(</span><span class="n">v</span> <span class="o">/</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">voter</span><span class="o">.</span><span class="n">disapp_dissat_vars</span><span class="o">.</span><span class="n">items</span><span class="p">())</span> <span class="k">for</span> <span class="n">voter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">voters</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">lpSum</span><span class="p">(</span>
+            <span class="n">lpSum</span><span class="p">(</span><span class="n">v</span> <span class="o">/</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">voter</span><span class="o">.</span><span class="n">app_sat_vars</span><span class="o">.</span><span class="n">items</span><span class="p">())</span> <span class="o">*</span> <span class="n">voter</span><span class="o">.</span><span class="n">multiplicity</span>
+            <span class="k">for</span> <span class="n">voter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">voters</span>
+        <span class="p">)</span> <span class="o">+</span> <span class="n">lpSum</span><span class="p">(</span>
+            <span class="n">lpSum</span><span class="p">(</span><span class="n">v</span> <span class="o">/</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">voter</span><span class="o">.</span><span class="n">disapp_dissat_vars</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+            <span class="o">*</span> <span class="n">voter</span><span class="o">.</span><span class="n">multiplicity</span>
+            <span class="k">for</span> <span class="n">voter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">voters</span>
+        <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="MaxSatisfactionILPBuilder">
+<a class="viewcode-back" href="../../../reference/rules/index.html#trivoting.rules.thiele.MaxSatisfactionILPBuilder">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">MaxSatisfactionILPBuilder</span><span class="p">(</span><span class="n">ThieleILPBuilder</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Defines the ILP objective for maximising the total satisfaction of the voters. For a given voter, the satisfaction</span>
+<span class="sd">    is defined as the number of approved and selected alternatives minus the number of disapproved but</span>
+<span class="sd">    selected alternatives.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">init_voters_vars</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Init the variables</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">ballot</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="p">):</span>
+            <span class="n">voter</span> <span class="o">=</span> <span class="n">ThieleILPVoter</span><span class="p">(</span>
+                <span class="n">ballot</span><span class="p">,</span> <span class="n">multiplicity</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">multiplicity</span><span class="p">(</span><span class="n">ballot</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="n">voter</span><span class="o">.</span><span class="n">sat_vars</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">alternatives</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="n">voter</span><span class="o">.</span><span class="n">sat_vars</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">LpVariable</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;s_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="n">LpBinary</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">voters</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">voter</span><span class="p">)</span>
+
+        <span class="c1"># Constraint them to ensure proper counting</span>
+        <span class="k">for</span> <span class="n">voter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">voters</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">+=</span> <span class="n">lpSum</span><span class="p">(</span><span class="n">voter</span><span class="o">.</span><span class="n">sat_vars</span><span class="o">.</span><span class="n">values</span><span class="p">())</span> <span class="o">==</span> <span class="n">lpSum</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">selection_vars</span><span class="p">[</span><span class="n">alt</span><span class="p">]</span> <span class="k">for</span> <span class="n">alt</span> <span class="ow">in</span> <span class="n">voter</span><span class="o">.</span><span class="n">ballot</span><span class="o">.</span><span class="n">approved</span>
+            <span class="p">)</span> <span class="o">-</span> <span class="n">lpSum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">selection_vars</span><span class="p">[</span><span class="n">alt</span><span class="p">]</span> <span class="k">for</span> <span class="n">alt</span> <span class="ow">in</span> <span class="n">voter</span><span class="o">.</span><span class="n">ballot</span><span class="o">.</span><span class="n">disapproved</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">objective</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LpAffineExpression</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">lpSum</span><span class="p">(</span>
+            <span class="n">lpSum</span><span class="p">(</span><span class="n">voter</span><span class="o">.</span><span class="n">sat_vars</span><span class="o">.</span><span class="n">values</span><span class="p">())</span> <span class="o">*</span> <span class="n">voter</span><span class="o">.</span><span class="n">multiplicity</span> <span class="k">for</span> <span class="n">voter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">voters</span>
+        <span class="p">)</span></div>
+
 
 
 <div class="viewcode-block" id="thiele_method">
@@ -542,7 +672,7 @@ document.write(`
     <span class="n">initial_selection</span><span class="p">:</span> <span class="n">Selection</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">resoluteness</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="n">max_seconds</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">600</span>
+    <span class="n">max_seconds</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">600</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Selection</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="n">Selection</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute the selections of a Thiele rule described in the `ild_builder_class` argument. The selections are computed</span>
@@ -601,7 +731,7 @@ document.write(`
     <span class="c1"># Objective: max PAV score</span>
     <span class="n">model</span> <span class="o">+=</span> <span class="n">ilp_builder</span><span class="o">.</span><span class="n">objective</span><span class="p">()</span>
 
-    <span class="n">status</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">PULP_CBC_CMD</span><span class="p">(</span><span class="n">msg</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="n">timeLimit</span><span class="o">=</span><span class="n">max_seconds</span><span class="p">))</span>
+    <span class="n">status</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">HiGHS</span><span class="p">(</span><span class="n">msg</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="n">timeLimit</span><span class="o">=</span><span class="n">max_seconds</span><span class="p">))</span>
 
     <span class="n">all_selections</span> <span class="o">=</span> <span class="p">[]</span>
 
@@ -612,7 +742,9 @@ document.write(`
                 <span class="n">selection</span><span class="o">.</span><span class="n">add_selected</span><span class="p">(</span><span class="n">alt</span><span class="p">)</span>
         <span class="n">all_selections</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">selection</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Solver did not find an optimal solution, status is </span><span class="si">{</span><span class="n">status</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Solver did not find an optimal solution, status is </span><span class="si">{</span><span class="n">status</span><span class="si">}</span><span class="s2">.&quot;</span>
+        <span class="p">)</span>
 
     <span class="k">if</span> <span class="n">resoluteness</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">all_selections</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -624,25 +756,38 @@ document.write(`
     <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
         <span class="c1"># See http://yetanothermathprogrammingconsultant.blogspot.com/2011/10/integer-cuts.html</span>
         <span class="n">model</span> <span class="o">+=</span> <span class="p">(</span>
-                             <span class="n">lpSum</span><span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="n">selection_vars</span><span class="p">[</span><span class="n">a</span><span class="p">])</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">previous_selection</span><span class="o">.</span><span class="n">selected</span><span class="p">)</span> <span class="o">+</span>
-                             <span class="n">lpSum</span><span class="p">(</span><span class="n">selection_vars</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">selection_vars</span> <span class="k">if</span> <span class="n">a</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">previous_selection</span><span class="p">)</span>
-                     <span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">1</span>
+            <span class="n">lpSum</span><span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="n">selection_vars</span><span class="p">[</span><span class="n">a</span><span class="p">])</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">previous_selection</span><span class="o">.</span><span class="n">selected</span><span class="p">)</span>
+            <span class="o">+</span> <span class="n">lpSum</span><span class="p">(</span>
+                <span class="n">selection_vars</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">selection_vars</span> <span class="k">if</span> <span class="n">a</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">previous_selection</span>
+            <span class="p">)</span>
+        <span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">1</span>
 
         <span class="n">model</span> <span class="o">+=</span> <span class="p">(</span>
-                             <span class="n">lpSum</span><span class="p">(</span><span class="n">selection_vars</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">previous_selection</span><span class="o">.</span><span class="n">selected</span><span class="p">)</span> <span class="o">-</span>
-                             <span class="n">lpSum</span><span class="p">(</span><span class="n">selection_vars</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">selection_vars</span> <span class="k">if</span> <span class="n">a</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">previous_selection</span><span class="p">)</span>
-                     <span class="p">)</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">previous_selection</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="n">lpSum</span><span class="p">(</span><span class="n">selection_vars</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">previous_selection</span><span class="o">.</span><span class="n">selected</span><span class="p">)</span>
+            <span class="o">-</span> <span class="n">lpSum</span><span class="p">(</span>
+                <span class="n">selection_vars</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">selection_vars</span> <span class="k">if</span> <span class="n">a</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">previous_selection</span>
+            <span class="p">)</span>
+        <span class="p">)</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">previous_selection</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
 
-        <span class="n">status</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">PULP_CBC_CMD</span><span class="p">(</span><span class="n">msg</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="n">timeLimit</span><span class="o">=</span><span class="n">max_seconds</span><span class="p">))</span>
+        <span class="n">status</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">HiGHS</span><span class="p">(</span><span class="n">msg</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="n">timeLimit</span><span class="o">=</span><span class="n">max_seconds</span><span class="p">))</span>
 
         <span class="k">if</span> <span class="n">status</span> <span class="o">!=</span> <span class="n">LpStatusOptimal</span><span class="p">:</span>
             <span class="k">break</span>
 
-        <span class="n">previous_selection</span> <span class="o">=</span> <span class="n">Selection</span><span class="p">([</span><span class="n">a</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">selection_vars</span> <span class="k">if</span> <span class="n">value</span><span class="p">(</span><span class="n">selection_vars</span><span class="p">[</span><span class="n">a</span><span class="p">])</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">value</span><span class="p">(</span><span class="n">selection_vars</span><span class="p">[</span><span class="n">a</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="mf">0.9</span><span class="p">],</span> <span class="n">implicit_reject</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">previous_selection</span> <span class="o">=</span> <span class="n">Selection</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="n">a</span>
+                <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">selection_vars</span>
+                <span class="k">if</span> <span class="n">value</span><span class="p">(</span><span class="n">selection_vars</span><span class="p">[</span><span class="n">a</span><span class="p">])</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                <span class="ow">and</span> <span class="n">value</span><span class="p">(</span><span class="n">selection_vars</span><span class="p">[</span><span class="n">a</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="mf">0.9</span>
+            <span class="p">],</span>
+            <span class="n">implicit_reject</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
         <span class="k">if</span> <span class="n">previous_selection</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">all_selections</span><span class="p">:</span>
             <span class="n">all_selections</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">previous_selection</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">all_selections</span></div>
+
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">SequentialThieleVoter</span><span class="p">:</span>
@@ -651,6 +796,7 @@ document.write(`
         <span class="bp">self</span><span class="o">.</span><span class="n">ballot</span> <span class="o">=</span> <span class="n">ballot</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">multiplicity</span> <span class="o">=</span> <span class="n">multiplicity</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">satisfaction</span> <span class="o">=</span> <span class="mi">0</span>
+
 
 <div class="viewcode-block" id="sequential_thiele">
 <a class="viewcode-back" href="../../../reference/rules/index.html#trivoting.rules.thiele.sequential_thiele">[docs]</a>
@@ -663,7 +809,9 @@ document.write(`
     <span class="n">resoluteness</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Selection</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="n">Selection</span><span class="p">]:</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_sequential_thiele_rec</span><span class="p">(</span><span class="n">alternatives</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="n">Alternative</span><span class="p">],</span> <span class="n">selection</span><span class="p">:</span> <span class="n">Selection</span><span class="p">,</span> <span class="n">skip_remove_phase</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_sequential_thiele_rec</span><span class="p">(</span>
+        <span class="n">alternatives</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="n">Alternative</span><span class="p">],</span> <span class="n">selection</span><span class="p">:</span> <span class="n">Selection</span><span class="p">,</span> <span class="n">skip_remove_phase</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">):</span>
         <span class="n">something_changed</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="n">branched</span> <span class="o">=</span> <span class="kc">False</span>
 
@@ -672,14 +820,23 @@ document.write(`
             <span class="n">min_marginal_contribution</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="n">argmin_marginal_contribution</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="k">for</span> <span class="n">alternative</span> <span class="ow">in</span> <span class="n">selection</span><span class="o">.</span><span class="n">selected</span><span class="p">:</span>
-                <span class="n">marginal_contribution</span> <span class="o">=</span> <span class="n">thiele_score</span><span class="o">.</span><span class="n">score_selection</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">selection</span><span class="p">)</span> <span class="o">-</span> <span class="n">thiele_score</span><span class="o">.</span><span class="n">score_selection</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">selection</span><span class="p">,</span> <span class="n">extra_reject</span><span class="o">=</span><span class="p">[</span><span class="n">alternative</span><span class="p">])</span>
-                <span class="k">if</span> <span class="n">min_marginal_contribution</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">marginal_contribution</span> <span class="o">&lt;</span> <span class="n">min_marginal_contribution</span><span class="p">:</span>
+                <span class="n">marginal_contribution</span> <span class="o">=</span> <span class="n">thiele_score</span><span class="o">.</span><span class="n">score_selection</span><span class="p">(</span>
+                    <span class="n">profile</span><span class="p">,</span> <span class="n">selection</span>
+                <span class="p">)</span> <span class="o">-</span> <span class="n">thiele_score</span><span class="o">.</span><span class="n">score_selection</span><span class="p">(</span>
+                    <span class="n">profile</span><span class="p">,</span> <span class="n">selection</span><span class="p">,</span> <span class="n">extra_reject</span><span class="o">=</span><span class="p">[</span><span class="n">alternative</span><span class="p">]</span>
+                <span class="p">)</span>
+                <span class="k">if</span> <span class="p">(</span>
+                    <span class="n">min_marginal_contribution</span> <span class="ow">is</span> <span class="kc">None</span>
+                    <span class="ow">or</span> <span class="n">marginal_contribution</span> <span class="o">&lt;</span> <span class="n">min_marginal_contribution</span>
+                <span class="p">):</span>
                     <span class="n">min_marginal_contribution</span> <span class="o">=</span> <span class="n">marginal_contribution</span>
                     <span class="n">argmin_marginal_contribution</span> <span class="o">=</span> <span class="p">[</span><span class="n">alternative</span><span class="p">]</span>
                 <span class="k">elif</span> <span class="n">min_marginal_contribution</span> <span class="o">==</span> <span class="n">marginal_contribution</span><span class="p">:</span>
                     <span class="n">argmin_marginal_contribution</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">alternative</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">min_marginal_contribution</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">min_marginal_contribution</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">tied_alternatives</span> <span class="o">=</span> <span class="n">tie_breaking</span><span class="o">.</span><span class="n">order</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">argmin_marginal_contribution</span><span class="p">)</span>
+                <span class="n">tied_alternatives</span> <span class="o">=</span> <span class="n">tie_breaking</span><span class="o">.</span><span class="n">order</span><span class="p">(</span>
+                    <span class="n">profile</span><span class="p">,</span> <span class="n">argmin_marginal_contribution</span>
+                <span class="p">)</span>
                 <span class="c1"># print(f&quot;Removing one of {tied_alternatives} ({min_marginal_contribution})&quot;)</span>
                 <span class="k">if</span> <span class="n">resoluteness</span><span class="p">:</span>
                     <span class="n">alt_to_remove</span> <span class="o">=</span> <span class="n">tied_alternatives</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -692,7 +849,9 @@ document.write(`
                         <span class="n">new_selection</span><span class="o">.</span><span class="n">remove_selected</span><span class="p">(</span><span class="n">alt_to_remove</span><span class="p">)</span>
                         <span class="n">new_alternatives</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">alternatives</span><span class="p">)</span>
                         <span class="n">new_alternatives</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">alt_to_remove</span><span class="p">)</span>
-                        <span class="n">_sequential_thiele_rec</span><span class="p">(</span><span class="n">new_alternatives</span><span class="p">,</span> <span class="n">new_selection</span><span class="p">,</span> <span class="n">skip_remove_phase</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                        <span class="n">_sequential_thiele_rec</span><span class="p">(</span>
+                            <span class="n">new_alternatives</span><span class="p">,</span> <span class="n">new_selection</span><span class="p">,</span> <span class="n">skip_remove_phase</span><span class="o">=</span><span class="kc">True</span>
+                        <span class="p">)</span>
                         <span class="n">branched</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">something_changed</span> <span class="o">=</span> <span class="kc">True</span>
@@ -702,16 +861,22 @@ document.write(`
             <span class="n">max_marginal_contribution</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="n">argmax_marginal_contribution</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="k">for</span> <span class="n">alternative</span> <span class="ow">in</span> <span class="n">alternatives</span><span class="p">:</span>
-                <span class="n">marginal_contribution</span> <span class="o">=</span> <span class="n">thiele_score</span><span class="o">.</span><span class="n">score_selection</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">selection</span><span class="p">,</span> <span class="n">extra_accept</span><span class="o">=</span><span class="p">[</span><span class="n">alternative</span><span class="p">])</span> <span class="o">-</span> <span class="n">thiele_score</span><span class="o">.</span><span class="n">score_selection</span><span class="p">(</span>
-                    <span class="n">profile</span><span class="p">,</span> <span class="n">selection</span><span class="p">)</span>
+                <span class="n">marginal_contribution</span> <span class="o">=</span> <span class="n">thiele_score</span><span class="o">.</span><span class="n">score_selection</span><span class="p">(</span>
+                    <span class="n">profile</span><span class="p">,</span> <span class="n">selection</span><span class="p">,</span> <span class="n">extra_accept</span><span class="o">=</span><span class="p">[</span><span class="n">alternative</span><span class="p">]</span>
+                <span class="p">)</span> <span class="o">-</span> <span class="n">thiele_score</span><span class="o">.</span><span class="n">score_selection</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">selection</span><span class="p">)</span>
                 <span class="c1"># print(alternative, thiele_score.score_selection(profile, selection, extra_accept=[alternative]), thiele_score.score_selection(profile, selection))</span>
-                <span class="k">if</span> <span class="n">max_marginal_contribution</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">marginal_contribution</span> <span class="o">&gt;</span> <span class="n">max_marginal_contribution</span><span class="p">:</span>
+                <span class="k">if</span> <span class="p">(</span>
+                    <span class="n">max_marginal_contribution</span> <span class="ow">is</span> <span class="kc">None</span>
+                    <span class="ow">or</span> <span class="n">marginal_contribution</span> <span class="o">&gt;</span> <span class="n">max_marginal_contribution</span>
+                <span class="p">):</span>
                     <span class="n">max_marginal_contribution</span> <span class="o">=</span> <span class="n">marginal_contribution</span>
                     <span class="n">argmax_marginal_contribution</span> <span class="o">=</span> <span class="p">[</span><span class="n">alternative</span><span class="p">]</span>
                 <span class="k">elif</span> <span class="n">max_marginal_contribution</span> <span class="o">==</span> <span class="n">marginal_contribution</span><span class="p">:</span>
                     <span class="n">argmax_marginal_contribution</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">alternative</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">max_marginal_contribution</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">max_marginal_contribution</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">tied_alternatives</span> <span class="o">=</span> <span class="n">tie_breaking</span><span class="o">.</span><span class="n">order</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">argmax_marginal_contribution</span><span class="p">)</span>
+                <span class="n">tied_alternatives</span> <span class="o">=</span> <span class="n">tie_breaking</span><span class="o">.</span><span class="n">order</span><span class="p">(</span>
+                    <span class="n">profile</span><span class="p">,</span> <span class="n">argmax_marginal_contribution</span>
+                <span class="p">)</span>
                 <span class="c1"># print(f&quot;Adding one of {tied_alternatives} ({max_marginal_contribution})&quot;)</span>
                 <span class="k">if</span> <span class="n">resoluteness</span><span class="p">:</span>
                     <span class="n">alt_to_add</span> <span class="o">=</span> <span class="n">tied_alternatives</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -742,7 +907,7 @@ document.write(`
     <span class="k">try</span><span class="p">:</span>
         <span class="n">max_size_selection</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">max_size_selection</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;max_size_selection must be an integer.&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;max_size_selection must be an integer.&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">tie_breaking</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">tie_breaking</span> <span class="o">=</span> <span class="n">lexico_tie_breaking</span>
@@ -752,7 +917,9 @@ document.write(`
     <span class="k">else</span><span class="p">:</span>
         <span class="n">initial_selection</span> <span class="o">=</span> <span class="n">Selection</span><span class="p">(</span><span class="n">implicit_reject</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="n">initial_alternatives</span> <span class="o">=</span> <span class="p">{</span><span class="n">a</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">profile</span><span class="o">.</span><span class="n">alternatives</span> <span class="k">if</span> <span class="n">a</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">initial_selection</span><span class="p">}</span>
+    <span class="n">initial_alternatives</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">a</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">profile</span><span class="o">.</span><span class="n">alternatives</span> <span class="k">if</span> <span class="n">a</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">initial_selection</span>
+    <span class="p">}</span>
     <span class="n">all_selections</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">thiele_score</span> <span class="o">=</span> <span class="n">thiele_score_class</span><span class="p">(</span><span class="n">max_size_selection</span><span class="p">)</span>
 

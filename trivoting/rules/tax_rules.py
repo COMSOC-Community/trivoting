@@ -37,15 +37,20 @@ class TaxFunction(abc.ABC):
         alternative is added to the PB instance.
         """
 
+
 class TaxKraiczy2025(TaxFunction):
     """
     Tax function proposed in ``Proportionality in Thumbs Up and Down Voting`` (Kraiczy, Papasotiropoulos, Pierczyński
     and Skowron, 2025). The cost of a project is equal to its approval score divided by its support (approval minus disapproval score).
     If the support is negative, then the project is skipped.
     """
+
     def preprocess(self) -> None:
         app_scores, disapp_scores = self.profile.approval_disapproval_score_dict()
-        self.preprocessed_data = {"app_scores": app_scores, "disapp_scores": disapp_scores}
+        self.preprocessed_data = {
+            "app_scores": app_scores,
+            "disapp_scores": disapp_scores,
+        }
 
     def tax_alternative(self, alternative: Alternative) -> Numeric | None:
         app_score = self.preprocessed_data["app_scores"][alternative]
@@ -55,21 +60,38 @@ class TaxKraiczy2025(TaxFunction):
             return frac(app_score, support)
         return None
 
+
 class DisapprovalLinearTax(TaxFunction):
     """
     Disapproval linear tax function for which the cost of a project is equal to its disapproval multiplied by a fixed
     factor.
     """
-    def __init__(self, profile: AbstractTrichotomousProfile, max_size_selection: int, weight=None, class_method_call=False):
+
+    def __init__(
+        self,
+        profile: AbstractTrichotomousProfile,
+        max_size_selection: int,
+        weight=None,
+        class_method_call=False,
+    ):
         if not class_method_call:
-            raise RuntimeError("To create a disapproval linear tax, use the initialize() class method instead of using the class itself.")
+            raise RuntimeError(
+                "To create a disapproval linear tax, use the initialize() class method instead of using the class itself."
+            )
         TaxFunction.__init__(self, profile, max_size_selection)
         self.weight = weight
 
     @classmethod
-    def initialize(cls, weight: Numeric) -> Callable[AbstractTrichotomousProfile, int, DisapprovalLinearTax]:
-        def constructor(profile: AbstractTrichotomousProfile, max_size_selection: int) -> DisapprovalLinearTax:
-            return cls(profile, max_size_selection, weight=weight, class_method_call=True)
+    def initialize(
+        cls, weight: Numeric
+    ) -> Callable[AbstractTrichotomousProfile, int, DisapprovalLinearTax]:
+        def constructor(
+            profile: AbstractTrichotomousProfile, max_size_selection: int
+        ) -> DisapprovalLinearTax:
+            return cls(
+                profile, max_size_selection, weight=weight, class_method_call=True
+            )
+
         return constructor
 
     def preprocess(self) -> None:
@@ -80,11 +102,15 @@ class DisapprovalLinearTax(TaxFunction):
 
 
 def tax_pb_instance(
-        profile: AbstractTrichotomousProfile,
-        max_size_selection: int,
-        initial_selection: Selection | None = None,
-        tax_function: type[TaxFunction] = None,
-) -> tuple[pb_election.Instance, pb_election.ApprovalMultiProfile, dict[pb_election.Project, Alternative]]:
+    profile: AbstractTrichotomousProfile,
+    max_size_selection: int,
+    initial_selection: Selection | None = None,
+    tax_function: type[TaxFunction] = None,
+) -> tuple[
+    pb_election.Instance,
+    pb_election.ApprovalMultiProfile,
+    dict[pb_election.Project, Alternative],
+]:
     """
     Construct a Participatory Budgeting (PB) instance and PB profile from a trichotomous profile.
 
@@ -122,12 +148,16 @@ def tax_pb_instance(
     alt_to_project = dict()
     project_to_alt = dict()
     running_alternatives = set()
-    pb_instance = pb_election.Instance(budget_limit=max_size_selection - len(initial_selection))
+    pb_instance = pb_election.Instance(
+        budget_limit=max_size_selection - len(initial_selection)
+    )
     for alt in profile.alternatives:
         if alt not in initial_selection:
             cost = tax_function.tax_alternative(alt)
             if cost is not None:
-                project = pb_election.Project(alt.name, cost=tax_function.tax_alternative(alt))
+                project = pb_election.Project(
+                    alt.name, cost=tax_function.tax_alternative(alt)
+                )
                 pb_instance.add(project)
                 running_alternatives.add(alt)
                 alt_to_project[alt] = project
@@ -135,9 +165,14 @@ def tax_pb_instance(
     pb_profile = pb_election.ApprovalMultiProfile(instance=pb_instance)
     for ballot in profile:
         pb_profile.append(
-            pb_election.FrozenApprovalBallot(alt_to_project[alt] for alt in ballot.approved if alt in running_alternatives)
+            pb_election.FrozenApprovalBallot(
+                alt_to_project[alt]
+                for alt in ballot.approved
+                if alt in running_alternatives
+            )
         )
     return pb_instance, pb_profile, project_to_alt
+
 
 def tax_pb_rule_scheme(
     profile: AbstractTrichotomousProfile,
@@ -203,24 +238,27 @@ def tax_pb_rule_scheme(
     if profile.num_ballots() == 0:
         return initial_selection if resoluteness else [initial_selection]
 
-    pb_instance, pb_profile, project_to_alt = tax_pb_instance(profile, max_size_selection, initial_selection, tax_function=tax_function)
+    pb_instance, pb_profile, project_to_alt = tax_pb_instance(
+        profile, max_size_selection, initial_selection, tax_function=tax_function
+    )
 
     budget_allocation = pb_rule(
-        pb_instance,
-        pb_profile,
-        resoluteness=resoluteness,
-        **pb_rule_kwargs
+        pb_instance, pb_profile, resoluteness=resoluteness, **pb_rule_kwargs
     )
 
     if resoluteness:
         selected_alts = [project_to_alt[p] for p in budget_allocation]
         # We need to deal with the case when too many projects are selected on the PB side.
         if len(budget_allocation) > remaining_max_size:
-            initial_selection.extend_selected(tie_breaking.order(profile, selected_alts)[:remaining_max_size])
+            initial_selection.extend_selected(
+                tie_breaking.order(profile, selected_alts)[:remaining_max_size]
+            )
         else:
             initial_selection.extend_selected(selected_alts)
         if not initial_selection.implicit_reject:
-            initial_selection.extend_rejected(project_to_alt[p] for p in pb_instance if p not in budget_allocation)
+            initial_selection.extend_rejected(
+                project_to_alt[p] for p in pb_instance if p not in budget_allocation
+            )
         return initial_selection
     else:
         all_selections = []
@@ -228,16 +266,23 @@ def tax_pb_rule_scheme(
             selected_alts = [project_to_alt[p] for p in alloc]
             # We need to deal with the case when too many projects are selected on the PB side.
             if len(alloc) > remaining_max_size:
-                subselections = generate_subsets(selected_alts, min_size=remaining_max_size, max_size=remaining_max_size)
+                subselections = generate_subsets(
+                    selected_alts,
+                    min_size=remaining_max_size,
+                    max_size=remaining_max_size,
+                )
             else:
                 subselections = [selected_alts]
             for subselection in subselections:
                 selection = initial_selection.copy()
                 selection.extend_selected(subselection)
                 if not selection.implicit_reject:
-                    selection.extend_rejected(project_to_alt[p] for p in pb_instance if p not in alloc)
+                    selection.extend_rejected(
+                        project_to_alt[p] for p in pb_instance if p not in alloc
+                    )
                 all_selections.append(selection)
         return all_selections
+
 
 def tax_method_of_equal_shares(
     profile: AbstractTrichotomousProfile,
@@ -283,8 +328,9 @@ def tax_method_of_equal_shares(
         initial_selection=initial_selection,
         tie_breaking=tie_breaking,
         resoluteness=resoluteness,
-        pb_rule_kwargs={"sat_class": pb_election.Cardinality_Sat}
+        pb_rule_kwargs={"sat_class": pb_election.Cardinality_Sat},
     )
+
 
 def tax_sequential_phragmen(
     profile: AbstractTrichotomousProfile,
@@ -331,5 +377,11 @@ def tax_sequential_phragmen(
         initial_selection=initial_selection,
         tie_breaking=tie_breaking,
         resoluteness=resoluteness,
-        pb_rule_kwargs={"global_max_load": frac(max_size_selection, profile.num_ballots()) if profile.num_ballots() else None}
+        pb_rule_kwargs={
+            "global_max_load": (
+                frac(max_size_selection, profile.num_ballots())
+                if profile.num_ballots()
+                else None
+            )
+        },
     )

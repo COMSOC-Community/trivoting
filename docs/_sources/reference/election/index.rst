@@ -73,7 +73,7 @@ Link with PrefLib
 
 .. autofunction:: trivoting.election.preflib.cat_instance_to_trichotomous_profile
 
-.. autofunction:: trivoting.election.preflib.cat_preferences_to_trichotomous_ballot
+.. autofunction:: trivoting.election.preflib.cat_preferences_to_frozen_trichotomous_ballot
 
 Generate Random Profile
 -----------------------

@@ -4,12 +4,17 @@ from trivoting.election.alternative import Alternative
 from trivoting.election.trichotomous_ballot import TrichotomousBallot
 from trivoting.election.trichotomous_profile import TrichotomousProfile
 
-from pabutools.election import AbstractApprovalProfile, AbstractApprovalBallot, Instance, Project
+from pabutools.election import (
+    AbstractApprovalProfile,
+    AbstractApprovalBallot,
+    Instance,
+    Project,
+)
 from pabutools.election import parse_pabulib as pabutools_parse_pabulib
 
+
 def pb_approval_ballot_to_trichotomous_ballot(
-        app_ballot: AbstractApprovalBallot,
-        alt_map: dict[Project, Alternative]
+    app_ballot: AbstractApprovalBallot, alt_map: dict[Project, Alternative]
 ) -> TrichotomousBallot:
     """
     Converts an approval ballot from a PaBuLib profile into a trichotomous ballot.
@@ -28,9 +33,9 @@ def pb_approval_ballot_to_trichotomous_ballot(
     """
     return TrichotomousBallot(approved=[alt_map[p] for p in app_ballot])
 
+
 def pb_approval_profile_to_trichotomous_profile(
-        instance: Instance,
-        app_profile: AbstractApprovalProfile
+    instance: Instance, app_profile: AbstractApprovalProfile
 ) -> TrichotomousProfile:
     """
     Converts a PaBuLib approval profile into a trichotomous profile.
@@ -54,6 +59,7 @@ def pb_approval_profile_to_trichotomous_profile(
             profile.append(pb_approval_ballot_to_trichotomous_ballot(ballot, alt_map))
     return profile
 
+
 def parse_pabulib(file_path: str) -> TrichotomousProfile:
     """
     Parses a PaBuLib file and returns the corresponding trichotomous profile.
@@ -73,4 +79,6 @@ def parse_pabulib(file_path: str) -> TrichotomousProfile:
         profile = pb_approval_profile_to_trichotomous_profile(pb_instance, pb_profile)
         profile.max_size_selection = pb_instance.budget_limit
         return profile
-    raise ValueError(f"PaBuLib profiles of type {type(pb_instance)} cannot be converted as a trichotomous profile.")
+    raise ValueError(
+        f"PaBuLib profiles of type {type(pb_instance)} cannot be converted as a trichotomous profile."
+    )

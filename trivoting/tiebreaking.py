@@ -1,7 +1,10 @@
 from __future__ import annotations
 
 from collections.abc import Callable, Iterable
-from trivoting.election.trichotomous_profile import TrichotomousProfile, AbstractTrichotomousProfile
+from trivoting.election.trichotomous_profile import (
+    TrichotomousProfile,
+    AbstractTrichotomousProfile,
+)
 from trivoting.election.alternative import Alternative
 from trivoting.fractions import Numeric
 
@@ -27,7 +30,9 @@ class TieBreakingRule:
             project will be sorted.
     """
 
-    def __init__(self, func: Callable[[AbstractTrichotomousProfile, Alternative], Numeric]):
+    def __init__(
+        self, func: Callable[[AbstractTrichotomousProfile, Alternative], Numeric]
+    ):
         self.func = func
 
     def order(
@@ -106,23 +111,21 @@ lexico_tie_breaking = TieBreakingRule(lambda prof, alt: alt.name)
 Implements lexicographic tie breaking, i.e., tie-breaking based on the name of the alternatives.
 """
 
-support_tie_breaking = TieBreakingRule(
-    lambda prof, alt: -prof.support(alt)
-)
+support_tie_breaking = TieBreakingRule(lambda prof, alt: -prof.support(alt))
 """
 Implements tie breaking based on the support where the projects with the highest support in the profile is selected.
 """
 
-app_score_tie_breaking = TieBreakingRule(
-    lambda prof, alt: -prof.approval_score(alt)
-)
+app_score_tie_breaking = TieBreakingRule(lambda prof, alt: -prof.approval_score(alt))
 """
 Implements tie breaking based on the approval score where the projects with the highest approval score in the profile
  is selected.
 """
 
+
 def refuse_tie_breaking(profile, alternative):
     raise TieBreakingException("A tie occurred, but no tie-breaking rule was provided.")
+
 
 refuse_tie_breaking = TieBreakingRule(refuse_tie_breaking)
 """

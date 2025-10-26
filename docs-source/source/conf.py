@@ -27,9 +27,7 @@ extensions = [
 ]
 
 nitpicky = True
-nitpick_ignore_regex = [
-    (r"^py:.*$", r"^(?!trivoting\.).*")
-]
+nitpick_ignore_regex = [(r"^py:.*$", r"^(?!trivoting\.).*")]
 
 add_module_names = False
 autodoc_member_order = "groupwise"

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+
 class Alternative:
     """
     Represents an alternative, i.e., one of the potential outcomes of the election.

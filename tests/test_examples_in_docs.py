@@ -31,10 +31,7 @@ class TestExamplesInDocs(unittest.TestCase):
         a3 = Alternative("Option C")
 
         # Create a trichotomous ballot
-        ballot = TrichotomousBallot(
-            approved=[a1],
-            disapproved=[a2]
-        )
+        ballot = TrichotomousBallot(approved=[a1], disapproved=[a2])
 
         print(ballot)  # {Option A} // {Option B}
 
@@ -71,7 +68,9 @@ class TestExamplesInDocs(unittest.TestCase):
         ballot2 = TrichotomousBallot(approved=[b], disapproved=[a])
 
         # Initialize profile
-        profile = TrichotomousProfile([ballot1, ballot2, ballot1, ballot2], alternatives=[a, b, c])
+        profile = TrichotomousProfile(
+            [ballot1, ballot2, ballot1, ballot2], alternatives=[a, b, c]
+        )
 
         # Access ballots (behaves like a list)
         b_at_pos_1 = profile[1]
@@ -94,8 +93,9 @@ class TestExamplesInDocs(unittest.TestCase):
         frozen_ballot2 = ballot2.freeze()
 
         # Initialize multiprofile with multiple copies of ballots
-        multi_profile = TrichotomousMultiProfile([frozen_ballot1, frozen_ballot1, frozen_ballot2],
-                                                 alternatives=[a, b, c])
+        multi_profile = TrichotomousMultiProfile(
+            [frozen_ballot1, frozen_ballot1, frozen_ballot2], alternatives=[a, b, c]
+        )
 
         # Multiplicity of a specific ballot
         multiplicity = multi_profile.multiplicity(frozen_ballot1)
@@ -137,11 +137,16 @@ class TestExamplesInDocs(unittest.TestCase):
             common_disapproved = profile.commonly_disapproved_alternatives()
 
     def test_preference_libraries(self):
-        from trivoting.election import parse_pabulib, parse_preflib, parse_abcvoting_yaml
+        from trivoting.election import (
+            parse_pabulib,
+            parse_preflib,
+            parse_abcvoting_yaml,
+        )
 
     def test_generate(self):
 
         from trivoting.election.generate import generate_random_profile
+
         # Use the set samplers from prefsampling
         from prefsampling.approval import urn, resampling, noise
 
@@ -149,7 +154,9 @@ class TestExamplesInDocs(unittest.TestCase):
             return urn(num_voters, num_candidates, p=0.33, alpha=0.7)
 
         def my_resampling_sampler(num_voters, num_candidates):
-            return resampling(num_voters, num_candidates, phi=0.5, rel_size_central_vote=0.5)
+            return resampling(
+                num_voters, num_candidates, phi=0.5, rel_size_central_vote=0.5
+            )
 
         def my_noise_sampler(num_voters, num_candidates):
             return noise(num_voters, num_candidates, phi=0.5, rel_size_central_vote=0.5)
@@ -182,13 +189,15 @@ class TestExamplesInDocs(unittest.TestCase):
         selection.total_len()
 
         # Explicit rejection
-        selection_explicit = Selection(selected=[a1], rejected=[a2, a3], implicit_reject=False)
+        selection_explicit = Selection(
+            selected=[a1], rejected=[a2, a3], implicit_reject=False
+        )
 
-        selection.is_selected(a1)      # True
-        selection.is_rejected(a2)      # True, because a2 is not selected
+        selection.is_selected(a1)  # True
+        selection.is_rejected(a2)  # True, because a2 is not selected
 
-        selection_explicit.is_selected(a1)   # True
-        selection_explicit.is_rejected(a2)   # True
+        selection_explicit.is_selected(a1)  # True
+        selection_explicit.is_rejected(a2)  # True
         selection_explicit.is_rejected(a3)
 
         a4 = Alternative("a4")

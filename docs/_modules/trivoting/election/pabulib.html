@@ -35,7 +35,7 @@
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="../../../_static/documentation_options.js?v=dfd84850"></script>
+    <script src="../../../_static/documentation_options.js?v=6424ca4d"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
@@ -285,14 +285,19 @@ document.write(`
 <span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.election.trichotomous_ballot</span><span class="w"> </span><span class="kn">import</span> <span class="n">TrichotomousBallot</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.election.trichotomous_profile</span><span class="w"> </span><span class="kn">import</span> <span class="n">TrichotomousProfile</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">pabutools.election</span><span class="w"> </span><span class="kn">import</span> <span class="n">AbstractApprovalProfile</span><span class="p">,</span> <span class="n">AbstractApprovalBallot</span><span class="p">,</span> <span class="n">Instance</span><span class="p">,</span> <span class="n">Project</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pabutools.election</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">AbstractApprovalProfile</span><span class="p">,</span>
+    <span class="n">AbstractApprovalBallot</span><span class="p">,</span>
+    <span class="n">Instance</span><span class="p">,</span>
+    <span class="n">Project</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pabutools.election</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_pabulib</span> <span class="k">as</span> <span class="n">pabutools_parse_pabulib</span>
+
 
 <div class="viewcode-block" id="pb_approval_ballot_to_trichotomous_ballot">
 <a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.pabulib.pb_approval_ballot_to_trichotomous_ballot">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">pb_approval_ballot_to_trichotomous_ballot</span><span class="p">(</span>
-        <span class="n">app_ballot</span><span class="p">:</span> <span class="n">AbstractApprovalBallot</span><span class="p">,</span>
-        <span class="n">alt_map</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Project</span><span class="p">,</span> <span class="n">Alternative</span><span class="p">]</span>
+    <span class="n">app_ballot</span><span class="p">:</span> <span class="n">AbstractApprovalBallot</span><span class="p">,</span> <span class="n">alt_map</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Project</span><span class="p">,</span> <span class="n">Alternative</span><span class="p">]</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TrichotomousBallot</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Converts an approval ballot from a PaBuLib profile into a trichotomous ballot.</span>
@@ -312,11 +317,11 @@ document.write(`
     <span class="k">return</span> <span class="n">TrichotomousBallot</span><span class="p">(</span><span class="n">approved</span><span class="o">=</span><span class="p">[</span><span class="n">alt_map</span><span class="p">[</span><span class="n">p</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">app_ballot</span><span class="p">])</span></div>
 
 
+
 <div class="viewcode-block" id="pb_approval_profile_to_trichotomous_profile">
 <a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.pabulib.pb_approval_profile_to_trichotomous_profile">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">pb_approval_profile_to_trichotomous_profile</span><span class="p">(</span>
-        <span class="n">instance</span><span class="p">:</span> <span class="n">Instance</span><span class="p">,</span>
-        <span class="n">app_profile</span><span class="p">:</span> <span class="n">AbstractApprovalProfile</span>
+    <span class="n">instance</span><span class="p">:</span> <span class="n">Instance</span><span class="p">,</span> <span class="n">app_profile</span><span class="p">:</span> <span class="n">AbstractApprovalProfile</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TrichotomousProfile</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Converts a PaBuLib approval profile into a trichotomous profile.</span>
@@ -341,6 +346,7 @@ document.write(`
     <span class="k">return</span> <span class="n">profile</span></div>
 
 
+
 <div class="viewcode-block" id="parse_pabulib">
 <a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.pabulib.parse_pabulib">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">parse_pabulib</span><span class="p">(</span><span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TrichotomousProfile</span><span class="p">:</span>
@@ -362,7 +368,9 @@ document.write(`
         <span class="n">profile</span> <span class="o">=</span> <span class="n">pb_approval_profile_to_trichotomous_profile</span><span class="p">(</span><span class="n">pb_instance</span><span class="p">,</span> <span class="n">pb_profile</span><span class="p">)</span>
         <span class="n">profile</span><span class="o">.</span><span class="n">max_size_selection</span> <span class="o">=</span> <span class="n">pb_instance</span><span class="o">.</span><span class="n">budget_limit</span>
         <span class="k">return</span> <span class="n">profile</span>
-    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;PaBuLib profiles of type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">pb_instance</span><span class="p">)</span><span class="si">}</span><span class="s2"> cannot be converted as a trichotomous profile.&quot;</span><span class="p">)</span></div>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;PaBuLib profiles of type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">pb_instance</span><span class="p">)</span><span class="si">}</span><span class="s2"> cannot be converted as a trichotomous profile.&quot;</span>
+    <span class="p">)</span></div>
 
 </pre></div>
 

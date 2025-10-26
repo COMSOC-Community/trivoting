@@ -35,7 +35,7 @@
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="../../../_static/documentation_options.js?v=dfd84850"></script>
+    <script src="../../../_static/documentation_options.js?v=6424ca4d"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
@@ -282,18 +282,16 @@ document.write(`
 <span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">preflibtools.instances</span><span class="w"> </span><span class="kn">import</span> <span class="n">CategoricalInstance</span><span class="p">,</span> <span class="n">get_parsed_instance</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.election</span><span class="w"> </span><span class="kn">import</span> <span class="n">TrichotomousMultiProfile</span><span class="p">,</span> <span class="n">FrozenTrichotomousBallot</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.election.alternative</span><span class="w"> </span><span class="kn">import</span> <span class="n">Alternative</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.election.trichotomous_ballot</span><span class="w"> </span><span class="kn">import</span> <span class="n">TrichotomousBallot</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.election.trichotomous_profile</span><span class="w"> </span><span class="kn">import</span> <span class="n">TrichotomousProfile</span>
 
 
-<div class="viewcode-block" id="cat_preferences_to_trichotomous_ballot">
-<a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.preflib.cat_preferences_to_trichotomous_ballot">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">cat_preferences_to_trichotomous_ballot</span><span class="p">(</span>
-    <span class="n">pref</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">]],</span>
-    <span class="n">alt_map</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Alternative</span><span class="p">]</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TrichotomousBallot</span><span class="p">:</span>
+<div class="viewcode-block" id="cat_preferences_to_frozen_trichotomous_ballot">
+<a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.preflib.cat_preferences_to_frozen_trichotomous_ballot">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">cat_preferences_to_frozen_trichotomous_ballot</span><span class="p">(</span>
+    <span class="n">pref</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">]],</span> <span class="n">alt_map</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Alternative</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FrozenTrichotomousBallot</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Converts a categorical preference from PrefLib into a trichotomous ballot.</span>
 
@@ -310,7 +308,7 @@ document.write(`
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    TrichotomousBallot</span>
+<span class="sd">    FrozenTrichotomousBallot</span>
 <span class="sd">        The corresponding trichotomous ballot.</span>
 
 <span class="sd">    Raises</span>
@@ -319,21 +317,24 @@ document.write(`
 <span class="sd">        If the number of categories is not between 1 and 3.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">pref</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">pref</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Only categorical preferences between 1 and 3 categories can be converted to&quot;</span>
-                         <span class="sa">f</span><span class="s2">&quot;a trichotomous ballot. Pref </span><span class="si">{</span><span class="n">pref</span><span class="si">}</span><span class="s2"> has </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">pref</span><span class="p">)</span><span class="si">}</span><span class="s2"> categories.&quot;</span><span class="p">)</span>
-    <span class="n">ballot</span> <span class="o">=</span> <span class="n">TrichotomousBallot</span><span class="p">(</span><span class="n">approved</span><span class="o">=</span><span class="p">[</span><span class="n">alt_map</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">pref</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;Only categorical preferences between 1 and 3 categories can be converted to&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;a trichotomous ballot. Pref </span><span class="si">{</span><span class="n">pref</span><span class="si">}</span><span class="s2"> has </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">pref</span><span class="p">)</span><span class="si">}</span><span class="s2"> categories.&quot;</span>
+        <span class="p">)</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">pref</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">ballot</span>
-    <span class="n">ballot</span><span class="o">.</span><span class="n">disapproved</span> <span class="o">=</span> <span class="p">[</span><span class="n">alt_map</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">pref</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
-    <span class="k">return</span> <span class="n">ballot</span></div>
+        <span class="k">return</span> <span class="n">FrozenTrichotomousBallot</span><span class="p">(</span><span class="n">approved</span><span class="o">=</span><span class="p">(</span><span class="n">alt_map</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">pref</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+    <span class="k">return</span> <span class="n">FrozenTrichotomousBallot</span><span class="p">(</span>
+        <span class="n">approved</span><span class="o">=</span><span class="p">(</span><span class="n">alt_map</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">pref</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+        <span class="n">disapproved</span><span class="o">=</span><span class="p">(</span><span class="n">alt_map</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">pref</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span>
+    <span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="cat_instance_to_trichotomous_profile">
 <a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.preflib.cat_instance_to_trichotomous_profile">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">cat_instance_to_trichotomous_profile</span><span class="p">(</span>
-    <span class="n">cat_instance</span><span class="p">:</span> <span class="n">CategoricalInstance</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TrichotomousProfile</span><span class="p">:</span>
+    <span class="n">cat_instance</span><span class="p">:</span> <span class="n">CategoricalInstance</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TrichotomousMultiProfile</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Converts a PrefLib CategoricalInstance into a trichotomous profile. The PrefLib instance should have 1, 2 or 3</span>
 <span class="sd">    categories. If there is a single categories, it is assumed to represent the approved alternatives. If there are</span>
@@ -350,26 +351,30 @@ document.write(`
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    TrichotomousProfile</span>
-<span class="sd">        A profile composed of trichotomous ballots.</span>
+<span class="sd">    TrichotomousMultiProfile</span>
+<span class="sd">        A multi-profile composed of trichotomous ballots.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">cat_instance</span><span class="o">.</span><span class="n">num_categories</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">cat_instance</span><span class="o">.</span><span class="n">num_categories</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Only categorical preferences between 1 and 3 categories can be converted to&quot;</span>
-                         <span class="sa">f</span><span class="s2">&quot;a trichotomous profile. Categorical instance </span><span class="si">{</span><span class="n">cat_instance</span><span class="si">}</span><span class="s2"> has &quot;</span>
-                         <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">cat_instance</span><span class="o">.</span><span class="n">num_categories</span><span class="si">}</span><span class="s2"> categories.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;Only categorical preferences between 1 and 3 categories can be converted to&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;a trichotomous profile. Categorical instance </span><span class="si">{</span><span class="n">cat_instance</span><span class="si">}</span><span class="s2"> has &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">cat_instance</span><span class="o">.</span><span class="n">num_categories</span><span class="si">}</span><span class="s2"> categories.&quot;</span>
+        <span class="p">)</span>
 
     <span class="n">alt_map</span> <span class="o">=</span> <span class="p">{</span><span class="n">j</span><span class="p">:</span> <span class="n">Alternative</span><span class="p">(</span><span class="n">j</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">cat_instance</span><span class="o">.</span><span class="n">alternatives_name</span><span class="p">}</span>
-    <span class="n">profile</span> <span class="o">=</span> <span class="n">TrichotomousProfile</span><span class="p">(</span><span class="n">alternatives</span><span class="o">=</span><span class="n">alt_map</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+    <span class="n">profile</span> <span class="o">=</span> <span class="n">TrichotomousMultiProfile</span><span class="p">(</span><span class="n">alternatives</span><span class="o">=</span><span class="n">alt_map</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
 
     <span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">cat_instance</span><span class="o">.</span><span class="n">multiplicity</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">m</span><span class="p">):</span>
-            <span class="n">profile</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cat_preferences_to_trichotomous_ballot</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">alt_map</span><span class="p">))</span>
+        <span class="n">ballot</span> <span class="o">=</span> <span class="n">cat_preferences_to_frozen_trichotomous_ballot</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">alt_map</span><span class="p">)</span>
+        <span class="n">profile</span><span class="p">[</span><span class="n">ballot</span><span class="p">]</span> <span class="o">=</span> <span class="n">m</span>
+
     <span class="k">return</span> <span class="n">profile</span></div>
+
 
 
 <div class="viewcode-block" id="parse_preflib">
 <a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.preflib.parse_preflib">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">parse_preflib</span><span class="p">(</span><span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TrichotomousProfile</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">parse_preflib</span><span class="p">(</span><span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TrichotomousMultiProfile</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Parses a PrefLib file and returns the corresponding trichotomous profile.</span>
 
@@ -383,14 +388,16 @@ document.write(`
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    TrichotomousProfile</span>
-<span class="sd">        A trichotomous profile built from the given file.</span>
+<span class="sd">    TrichotomousMultiProfile</span>
+<span class="sd">        A trichotomous multi-profile built from the given file.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">instance</span> <span class="o">=</span> <span class="n">get_parsed_instance</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">autocorrect</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">CategoricalInstance</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">cat_instance_to_trichotomous_profile</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>
-    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;PrefLib instances of type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span><span class="si">}</span><span class="s2"> cannot be converted to trichotomous profiles.&quot;</span><span class="p">)</span></div>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;PrefLib instances of type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span><span class="si">}</span><span class="s2"> cannot be converted to trichotomous profiles.&quot;</span>
+    <span class="p">)</span></div>
 
 </pre></div>
 

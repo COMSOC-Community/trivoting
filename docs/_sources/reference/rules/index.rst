@@ -18,6 +18,8 @@ Thiele Methods
 
 .. autoclass:: trivoting.rules.thiele.PAVILPHervouin2025
 
+.. autoclass:: trivoting.rules.thiele.MaxSatisfactionILPBuilder
+
 .. autofunction:: trivoting.rules.thiele.sequential_thiele
 
 .. autoclass:: trivoting.rules.thiele.ThieleScore
@@ -28,6 +30,9 @@ Thiele Methods
 
 .. autoclass:: trivoting.rules.thiele.PAVScoreHervouin2025
 
+.. autoclass:: trivoting.rules.thiele.ApprovalOnlyScore
+
+.. autoclass:: trivoting.rules.thiele.SatisfactionScore
 
 Sequential Phragmén's Rule
 --------------------------

@@ -36,7 +36,7 @@
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="../../_static/documentation_options.js?v=dfd84850"></script>
+    <script src="../../_static/documentation_options.js?v=6424ca4d"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
@@ -338,11 +338,14 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.rules.thiele.PAVILPKraiczy2025"><code class="docutils literal notranslate"><span class="pre">PAVILPKraiczy2025</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.rules.thiele.PAVILPTalmonPage2021"><code class="docutils literal notranslate"><span class="pre">PAVILPTalmonPage2021</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.rules.thiele.PAVILPHervouin2025"><code class="docutils literal notranslate"><span class="pre">PAVILPHervouin2025</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.rules.thiele.MaxSatisfactionILPBuilder"><code class="docutils literal notranslate"><span class="pre">MaxSatisfactionILPBuilder</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.rules.thiele.sequential_thiele"><code class="docutils literal notranslate"><span class="pre">sequential_thiele()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.rules.thiele.ThieleScore"><code class="docutils literal notranslate"><span class="pre">ThieleScore</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.rules.thiele.PAVScoreKraiczy2025"><code class="docutils literal notranslate"><span class="pre">PAVScoreKraiczy2025</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.rules.thiele.PAVScoreTalmonPaige2021"><code class="docutils literal notranslate"><span class="pre">PAVScoreTalmonPaige2021</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.rules.thiele.PAVScoreHervouin2025"><code class="docutils literal notranslate"><span class="pre">PAVScoreHervouin2025</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.rules.thiele.ApprovalOnlyScore"><code class="docutils literal notranslate"><span class="pre">ApprovalOnlyScore</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.rules.thiele.SatisfactionScore"><code class="docutils literal notranslate"><span class="pre">SatisfactionScore</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-trivoting.rules.phragmen">Sequential Phragmén’s Rule</a><ul class="nav section-nav flex-column">
@@ -504,6 +507,14 @@ are taken into account, and (2) the PAV score over the maximum size of the selec
 disapproved but selected alternatives.</p>
 </dd></dl>
 
+<dl class="py class">
+<dt class="sig sig-object py" id="trivoting.rules.thiele.MaxSatisfactionILPBuilder">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MaxSatisfactionILPBuilder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">profile</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../election/index.html#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile" title="trivoting.election.trichotomous_profile.AbstractTrichotomousProfile"><span class="pre">AbstractTrichotomousProfile</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_size_selection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/trivoting/rules/thiele.html#MaxSatisfactionILPBuilder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.rules.thiele.MaxSatisfactionILPBuilder" title="Link to this definition">#</a></dt>
+<dd><p>Defines the ILP objective for maximising the total satisfaction of the voters. For a given voter, the satisfaction
+is defined as the number of approved and selected alternatives minus the number of disapproved but
+selected alternatives.</p>
+</dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="trivoting.rules.thiele.sequential_thiele">
 <span class="sig-name descname"><span class="pre">sequential_thiele</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">profile</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../election/index.html#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile" title="trivoting.election.trichotomous_profile.AbstractTrichotomousProfile"><span class="pre">AbstractTrichotomousProfile</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_size_selection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thiele_score_class</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">type</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#trivoting.rules.thiele.ThieleScore" title="trivoting.rules.thiele.ThieleScore"><span class="pre">ThieleScore</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_selection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../election/index.html#trivoting.election.selection.Selection" title="trivoting.election.selection.Selection"><span class="pre">Selection</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tie_breaking</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../tiebreaking.html#trivoting.tiebreaking.TieBreakingRule" title="trivoting.tiebreaking.TieBreakingRule"><span class="pre">TieBreakingRule</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resoluteness</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../election/index.html#trivoting.election.selection.Selection" title="trivoting.election.selection.Selection"><span class="pre">Selection</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="../election/index.html#trivoting.election.selection.Selection" title="trivoting.election.selection.Selection"><span class="pre">Selection</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/trivoting/rules/thiele.html#sequential_thiele"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.rules.thiele.sequential_thiele" title="Link to this definition">#</a></dt>
@@ -512,7 +523,8 @@ disapproved but selected alternatives.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="trivoting.rules.thiele.ThieleScore">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ThieleScore</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_size_selection</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/trivoting/rules/thiele.html#ThieleScore"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.rules.thiele.ThieleScore" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Class used to define score function for Thiele methods. The class is used for the sequential Thiele rules.</p>
+</dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="trivoting.rules.thiele.PAVScoreKraiczy2025">
@@ -527,6 +539,16 @@ disapproved but selected alternatives.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="trivoting.rules.thiele.PAVScoreHervouin2025">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">PAVScoreHervouin2025</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_size_selection</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/trivoting/rules/thiele.html#PAVScoreHervouin2025"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.rules.thiele.PAVScoreHervouin2025" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="trivoting.rules.thiele.ApprovalOnlyScore">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ApprovalOnlyScore</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_size_selection</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/trivoting/rules/thiele.html#ApprovalOnlyScore"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.rules.thiele.ApprovalOnlyScore" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="trivoting.rules.thiele.SatisfactionScore">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SatisfactionScore</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_size_selection</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/trivoting/rules/thiele.html#SatisfactionScore"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.rules.thiele.SatisfactionScore" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 </section>
@@ -768,11 +790,14 @@ if irresolute (<code class="code docutils literal notranslate"><span class="pre"
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.rules.thiele.PAVILPKraiczy2025"><code class="docutils literal notranslate"><span class="pre">PAVILPKraiczy2025</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.rules.thiele.PAVILPTalmonPage2021"><code class="docutils literal notranslate"><span class="pre">PAVILPTalmonPage2021</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.rules.thiele.PAVILPHervouin2025"><code class="docutils literal notranslate"><span class="pre">PAVILPHervouin2025</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.rules.thiele.MaxSatisfactionILPBuilder"><code class="docutils literal notranslate"><span class="pre">MaxSatisfactionILPBuilder</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.rules.thiele.sequential_thiele"><code class="docutils literal notranslate"><span class="pre">sequential_thiele()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.rules.thiele.ThieleScore"><code class="docutils literal notranslate"><span class="pre">ThieleScore</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.rules.thiele.PAVScoreKraiczy2025"><code class="docutils literal notranslate"><span class="pre">PAVScoreKraiczy2025</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.rules.thiele.PAVScoreTalmonPaige2021"><code class="docutils literal notranslate"><span class="pre">PAVScoreTalmonPaige2021</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.rules.thiele.PAVScoreHervouin2025"><code class="docutils literal notranslate"><span class="pre">PAVScoreHervouin2025</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.rules.thiele.ApprovalOnlyScore"><code class="docutils literal notranslate"><span class="pre">ApprovalOnlyScore</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.rules.thiele.SatisfactionScore"><code class="docutils literal notranslate"><span class="pre">SatisfactionScore</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-trivoting.rules.phragmen">Sequential Phragmén’s Rule</a><ul class="nav section-nav flex-column">

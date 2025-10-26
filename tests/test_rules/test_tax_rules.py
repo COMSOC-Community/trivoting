@@ -13,13 +13,18 @@ from trivoting.rules.tax_rules import tax_method_of_equal_shares, DisapprovalLin
 
 from trivoting.rules.tax_rules import tax_sequential_phragmen
 
+
 def tax_rules(max_size_selection):
     rules = [tax_method_of_equal_shares, tax_sequential_phragmen]
-    linear_taxes = [DisapprovalLinearTax.initialize(frac(1, x)) for x in range(1, max_size_selection + 1)]
+    linear_taxes = [
+        DisapprovalLinearTax.initialize(frac(1, x))
+        for x in range(1, max_size_selection + 1)
+    ]
     for tax in linear_taxes:
         rules.append(partial(tax_method_of_equal_shares, tax_function=tax))
         rules.append(partial(tax_sequential_phragmen, tax_function=tax))
     return rules
+
 
 class TestMES(TestCase):
 
@@ -37,14 +42,21 @@ class TestMES(TestCase):
             for resolute in (True, False):
                 # Empty profile
                 profile = TrichotomousProfile()
-                self.assertEqual(rule(profile, 0, resoluteness=resolute), Selection() if resolute else [Selection()])
+                self.assertEqual(
+                    rule(profile, 0, resoluteness=resolute),
+                    Selection() if resolute else [Selection()],
+                )
 
         for rule in tax_rules(10):
             for resolute in (True, False):
                 # Only disapproved
                 alternatives = [Alternative(i) for i in range(10)]
-                negative_ballots = [TrichotomousBallot(disapproved=alternatives[:6]) for _ in range(10)]
-                profile = TrichotomousProfile(negative_ballots, alternatives=alternatives)
+                negative_ballots = [
+                    TrichotomousBallot(disapproved=alternatives[:6]) for _ in range(10)
+                ]
+                profile = TrichotomousProfile(
+                    negative_ballots, alternatives=alternatives
+                )
                 res = rule(profile, len(alternatives), resoluteness=resolute)
                 if resolute:
                     res = [res]
@@ -52,7 +64,9 @@ class TestMES(TestCase):
                     self.assertEqual(len(r), 0)
 
                 # Separated ballots
-                positive_ballots = [TrichotomousBallot(approved=alternatives[6:]) for _ in range(100)]
+                positive_ballots = [
+                    TrichotomousBallot(approved=alternatives[6:]) for _ in range(100)
+                ]
                 profile.extend(positive_ballots)
                 res = rule(profile, len(alternatives), resoluteness=resolute)
                 if resolute:

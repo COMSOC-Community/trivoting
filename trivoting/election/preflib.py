@@ -4,13 +4,10 @@ from preflibtools.instances import CategoricalInstance, get_parsed_instance
 from trivoting.election import TrichotomousMultiProfile, FrozenTrichotomousBallot
 
 from trivoting.election.alternative import Alternative
-from trivoting.election.trichotomous_ballot import TrichotomousBallot
-from trivoting.election.trichotomous_profile import TrichotomousProfile
 
 
 def cat_preferences_to_frozen_trichotomous_ballot(
-    pref: tuple[tuple[int]],
-    alt_map: dict[int, Alternative]
+    pref: tuple[tuple[int]], alt_map: dict[int, Alternative]
 ) -> FrozenTrichotomousBallot:
     """
     Converts a categorical preference from PrefLib into a trichotomous ballot.
@@ -37,15 +34,20 @@ def cat_preferences_to_frozen_trichotomous_ballot(
         If the number of categories is not between 1 and 3.
     """
     if len(pref) == 0 or len(pref) > 3:
-        raise ValueError("Only categorical preferences between 1 and 3 categories can be converted to"
-                         f"a trichotomous ballot. Pref {pref} has {len(pref)} categories.")
+        raise ValueError(
+            "Only categorical preferences between 1 and 3 categories can be converted to"
+            f"a trichotomous ballot. Pref {pref} has {len(pref)} categories."
+        )
     if len(pref) < 2:
         return FrozenTrichotomousBallot(approved=(alt_map[j] for j in pref[0]))
-    return FrozenTrichotomousBallot(approved=(alt_map[j] for j in pref[0]), disapproved = (alt_map[j] for j in pref[-1]))
+    return FrozenTrichotomousBallot(
+        approved=(alt_map[j] for j in pref[0]),
+        disapproved=(alt_map[j] for j in pref[-1]),
+    )
 
 
 def cat_instance_to_trichotomous_profile(
-    cat_instance: CategoricalInstance
+    cat_instance: CategoricalInstance,
 ) -> TrichotomousMultiProfile:
     """
     Converts a PrefLib CategoricalInstance into a trichotomous profile. The PrefLib instance should have 1, 2 or 3
@@ -67,9 +69,11 @@ def cat_instance_to_trichotomous_profile(
         A multi-profile composed of trichotomous ballots.
     """
     if cat_instance.num_categories == 0 or cat_instance.num_categories > 3:
-        raise ValueError("Only categorical preferences between 1 and 3 categories can be converted to"
-                         f"a trichotomous profile. Categorical instance {cat_instance} has "
-                         f"{cat_instance.num_categories} categories.")
+        raise ValueError(
+            "Only categorical preferences between 1 and 3 categories can be converted to"
+            f"a trichotomous profile. Categorical instance {cat_instance} has "
+            f"{cat_instance.num_categories} categories."
+        )
 
     alt_map = {j: Alternative(j) for j in cat_instance.alternatives_name}
     profile = TrichotomousMultiProfile(alternatives=alt_map.values())
@@ -79,6 +83,7 @@ def cat_instance_to_trichotomous_profile(
         profile[ballot] = m
 
     return profile
+
 
 def parse_preflib(file_path: str) -> TrichotomousMultiProfile:
     """
@@ -101,4 +106,6 @@ def parse_preflib(file_path: str) -> TrichotomousMultiProfile:
     instance = get_parsed_instance(file_path, autocorrect=True)
     if isinstance(instance, CategoricalInstance):
         return cat_instance_to_trichotomous_profile(instance)
-    raise ValueError(f"PrefLib instances of type {type(instance)} cannot be converted to trichotomous profiles.")
+    raise ValueError(
+        f"PrefLib instances of type {type(instance)} cannot be converted to trichotomous profiles."
+    )

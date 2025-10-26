@@ -1,13 +1,61 @@
-from pulp import LpMaximize, LpProblem, lpSum, LpStatusOptimal, value, LpBinary, LpVariable, LpInteger, \
-    HiGHS
+from __future__ import annotations
+
+from pulp import (
+    LpMaximize,
+    LpProblem,
+    lpSum,
+    LpStatusOptimal,
+    value,
+    LpBinary,
+    LpVariable,
+    LpInteger,
+    HiGHS,
+)
 
 from trivoting.election import AbstractTrichotomousProfile, Selection
 
 
-def chamberlin_courant_ilp(profile: AbstractTrichotomousProfile, max_size_selection: int, initial_selection: Selection = None, resoluteness: bool=True, max_seconds: int = 600, verbose: bool = False) -> Selection | list[Selection]:
+def chamberlin_courant(
+    profile: AbstractTrichotomousProfile,
+    max_size_selection: int,
+    initial_selection: Selection = None,
+    resoluteness: bool = True,
+    max_seconds: int = 600,
+    verbose: bool = False,
+) -> Selection | list[Selection]:
+    """
+    Compute the selections of the Chamberlin-Courant rule.
+
+    The Chamberlin-Courant returns selections that maximise the number of covered voter. A voter is covered if
+    strictly more approved alternatives are selected than disapproved ones.
+
+    The outcome of the rule is computed via an Integer Linear Program (ILP).
+
+    Parameters
+    ----------
+    profile : AbstractTrichotomousProfile
+        The trichotomous profile.
+    max_size_selection : int
+        Maximum number of alternatives to select.
+    initial_selection : Selection, optional
+        An initial selection that fixes some alternatives as selected or rejected.
+        If `implicit_reject` is True, no alternatives are fixed to be rejected.
+    resoluteness : bool, optional
+        If True, returns a single selection (resolute).
+        If False, returns all tied optimal selections (irresolute).
+        Defaults to True.
+
+    Returns
+    -------
+    Selection | list[Selection]
+        The selection if resolute (:code:`resoluteness == True`), or a list of selections
+        if irresolute (:code:`resoluteness == False`).
+    """
     model = LpProblem("ChamberlinCourant", LpMaximize)
 
-    selection_vars = {alt: LpVariable(f"y_{alt.name}", cat=LpBinary) for alt in profile.alternatives}
+    selection_vars = {
+        alt: LpVariable(f"y_{alt.name}", cat=LpBinary) for alt in profile.alternatives
+    }
 
     # Select no more than allowed
     model += lpSum(selection_vars.values()) <= max_size_selection
@@ -26,20 +74,34 @@ def chamberlin_courant_ilp(profile: AbstractTrichotomousProfile, max_size_select
         voter = {
             "ballot": ballot,
             "multiplicity": profile.multiplicity(ballot),
-            "sat_var": LpVariable(f"sat_{i}", lowBound=0, upBound=max_size_selection, cat=LpInteger),
-            "dissat_var": LpVariable(f"disat_{i}", lowBound=0, upBound=max_size_selection, cat=LpInteger),
-            "cc_var": LpVariable(f"cc_{i}", cat=LpBinary)
+            "sat_var": LpVariable(
+                f"sat_{i}", lowBound=0, upBound=max_size_selection, cat=LpInteger
+            ),
+            "dissat_var": LpVariable(
+                f"disat_{i}", lowBound=0, upBound=max_size_selection, cat=LpInteger
+            ),
+            "cc_var": LpVariable(f"cc_{i}", cat=LpBinary),
         }
         voter_details.append(voter)
 
     # Constraint voter_details to ensure proper counting
     for voter in voter_details:
-        model += voter["sat_var"] == lpSum(selection_vars[alt] for alt in voter["ballot"].approved)
-        model += voter["dissat_var"] == lpSum(selection_vars[alt] for alt in voter["ballot"].disapproved)
+        model += voter["sat_var"] == lpSum(
+            selection_vars[alt] for alt in voter["ballot"].approved
+        )
+        model += voter["dissat_var"] == lpSum(
+            selection_vars[alt] for alt in voter["ballot"].disapproved
+        )
 
         # Linearisation of z = 1 if x > y and z = 0 otherwise
-        model += voter["sat_var"] - voter["dissat_var"] >= 1 - (1 - voter["cc_var"]) * max_size_selection
-        model += voter["sat_var"] - voter["dissat_var"] <= voter["cc_var"] * max_size_selection
+        model += (
+            voter["sat_var"] - voter["dissat_var"]
+            >= 1 - (1 - voter["cc_var"]) * max_size_selection
+        )
+        model += (
+            voter["sat_var"] - voter["dissat_var"]
+            <= voter["cc_var"] * max_size_selection
+        )
 
     # Objective: max PAV score
     model += lpSum(voter["cc_var"] for voter in voter_details)
@@ -55,7 +117,9 @@ def chamberlin_courant_ilp(profile: AbstractTrichotomousProfile, max_size_select
                 selection.add_selected(alt)
         all_selections.append(selection)
     else:
-        raise ValueError(f"Solver did not find an optimal solution, status is {status}.")
+        raise ValueError(
+            f"Solver did not find an optimal solution, status is {status}."
+        )
 
     if resoluteness:
         return all_selections[0]
@@ -67,14 +131,18 @@ def chamberlin_courant_ilp(profile: AbstractTrichotomousProfile, max_size_select
     while True:
         # See http://yetanothermathprogrammingconsultant.blogspot.com/2011/10/integer-cuts.html
         model += (
-                         lpSum((1 - selection_vars[a]) for a in previous_selection.selected) +
-                         lpSum(selection_vars[a] for a in selection_vars if a not in previous_selection)
-                 ) >= 1
+            lpSum((1 - selection_vars[a]) for a in previous_selection.selected)
+            + lpSum(
+                selection_vars[a] for a in selection_vars if a not in previous_selection
+            )
+        ) >= 1
 
         model += (
-                         lpSum(selection_vars[a] for a in previous_selection.selected) -
-                         lpSum(selection_vars[a] for a in selection_vars if a not in previous_selection)
-                 ) <= len(previous_selection) - 1
+            lpSum(selection_vars[a] for a in previous_selection.selected)
+            - lpSum(
+                selection_vars[a] for a in selection_vars if a not in previous_selection
+            )
+        ) <= len(previous_selection) - 1
 
         status = model.solve(HiGHS(msg=verbose, timeLimit=max_seconds))
 
@@ -82,8 +150,14 @@ def chamberlin_courant_ilp(profile: AbstractTrichotomousProfile, max_size_select
             break
 
         previous_selection = Selection(
-            [a for a in selection_vars if value(selection_vars[a]) is not None and value(selection_vars[a]) >= 0.9],
-            implicit_reject=True)
+            [
+                a
+                for a in selection_vars
+                if value(selection_vars[a]) is not None
+                and value(selection_vars[a]) >= 0.9
+            ],
+            implicit_reject=True,
+        )
         if previous_selection not in all_selections:
             all_selections.append(previous_selection)
 

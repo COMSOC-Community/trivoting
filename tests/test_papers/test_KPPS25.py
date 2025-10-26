@@ -6,7 +6,10 @@ from trivoting.election.alternative import Alternative
 from trivoting.election.trichotomous_ballot import TrichotomousBallot
 from trivoting.election.trichotomous_profile import TrichotomousProfile
 from trivoting.election.selection import Selection
-from trivoting.rules.tax_rules import tax_method_of_equal_shares, tax_sequential_phragmen
+from trivoting.rules.tax_rules import (
+    tax_method_of_equal_shares,
+    tax_sequential_phragmen,
+)
 
 
 def example_1_KPPS25():
@@ -19,7 +22,10 @@ def example_1_KPPS25():
     # V1
     for i in range(4):
         profile.add_ballot(
-            TrichotomousBallot(approved=alts[20:], disapproved=alts[:10] + alts[10 + 2 * i: 10 + 2 * i + 4])
+            TrichotomousBallot(
+                approved=alts[20:],
+                disapproved=alts[:10] + alts[10 + 2 * i : 10 + 2 * i + 4],
+            )
         )
     profile.add_ballot(
         TrichotomousBallot(approved=alts[20:], disapproved=alts[:12] + alts[18:20])
@@ -30,15 +36,12 @@ def example_1_KPPS25():
         profile.add_ballot(TrichotomousBallot(approved=alts[:20]))
 
     # V3
-    profile.add_ballot(
-        TrichotomousBallot(
-            approved=alts[:10], disapproved=alts[20:]
-        )
-    )
+    profile.add_ballot(TrichotomousBallot(approved=alts[:10], disapproved=alts[20:]))
 
     profile.max_size_selection = 10
 
     return profile
+
 
 class TestExamplesKPPS25(TestCase):
 
@@ -102,7 +105,7 @@ class TestExamplesKPPS25(TestCase):
             return res
 
         for _ in range(50):
-            selection =  generate_positive_selection()
+            selection = generate_positive_selection()
             self.assertTrue(is_positive_ejr(profile, max_size, selection))
 
         def generate_negative_selection():

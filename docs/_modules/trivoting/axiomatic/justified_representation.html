@@ -35,7 +35,7 @@
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="../../../_static/documentation_options.js?v=dfd84850"></script>
+    <script src="../../../_static/documentation_options.js?v=6424ca4d"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
@@ -294,7 +294,7 @@ document.write(`
     <span class="n">profile</span><span class="p">:</span> <span class="n">AbstractTrichotomousProfile</span><span class="p">,</span>
     <span class="n">max_size_selection</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">l</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-    <span class="n">group</span><span class="p">:</span> <span class="n">AbstractTrichotomousProfile</span>
+    <span class="n">group</span><span class="p">:</span> <span class="n">AbstractTrichotomousProfile</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Tests whether the given set of voters is cohesive for level `l` as defined in Definition 1 of</span>
@@ -325,7 +325,9 @@ document.write(`
 
     <span class="n">commonly_approved_alts</span> <span class="o">=</span> <span class="n">group</span><span class="o">.</span><span class="n">commonly_approved_alternatives</span><span class="p">()</span>
     <span class="c1"># Does not matter if we can find subsets with more than l</span>
-    <span class="n">commonly_approved_alts_subsets</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">generate_subsets</span><span class="p">(</span><span class="n">commonly_approved_alts</span><span class="p">,</span> <span class="n">min_size</span><span class="o">=</span><span class="n">l</span><span class="p">,</span> <span class="n">max_size</span><span class="o">=</span><span class="n">l</span><span class="p">))</span>
+    <span class="n">commonly_approved_alts_subsets</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+        <span class="n">generate_subsets</span><span class="p">(</span><span class="n">commonly_approved_alts</span><span class="p">,</span> <span class="n">min_size</span><span class="o">=</span><span class="n">l</span><span class="p">,</span> <span class="n">max_size</span><span class="o">=</span><span class="n">l</span><span class="p">)</span>
+    <span class="p">)</span>
 
     <span class="c1"># Shortcut if there are no commonly approved alternatives of the suitable size</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">commonly_approved_alts_subsets</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -347,14 +349,15 @@ document.write(`
     <span class="k">return</span> <span class="kc">True</span></div>
 
 
+
 <div class="viewcode-block" id="all_cohesive_groups">
 <a class="viewcode-back" href="../../../reference/axiomatic/index.html#trivoting.axiomatic.justified_representation.all_cohesive_groups">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">all_cohesive_groups</span><span class="p">(</span>
-        <span class="n">profile</span><span class="p">:</span> <span class="n">AbstractTrichotomousProfile</span><span class="p">,</span>
-        <span class="n">max_size_selection</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-        <span class="n">min_l</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
-        <span class="n">max_l</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">test_cohesive_func</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">profile</span><span class="p">:</span> <span class="n">AbstractTrichotomousProfile</span><span class="p">,</span>
+    <span class="n">max_size_selection</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">min_l</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">max_l</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">test_cohesive_func</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">AbstractTrichotomousProfile</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Yields all voter groups that are cohesive for some level `l`. Yields both the group and the level `l`.</span>
@@ -389,12 +392,11 @@ document.write(`
                 <span class="k">break</span></div>
 
 
+
 <div class="viewcode-block" id="is_base_ejr_brute_force">
 <a class="viewcode-back" href="../../../reference/axiomatic/index.html#trivoting.axiomatic.justified_representation.is_base_ejr_brute_force">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">is_base_ejr_brute_force</span><span class="p">(</span>
-    <span class="n">profile</span><span class="p">:</span> <span class="n">AbstractTrichotomousProfile</span><span class="p">,</span>
-    <span class="n">max_size_selection</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-    <span class="n">selection</span><span class="p">:</span> <span class="n">Selection</span>
+    <span class="n">profile</span><span class="p">:</span> <span class="n">AbstractTrichotomousProfile</span><span class="p">,</span> <span class="n">max_size_selection</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">selection</span><span class="p">:</span> <span class="n">Selection</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Determines whether a selection satisfies Base Extended Justified Representation (Base EJR) as defined in Definition 1 of</span>
@@ -419,7 +421,9 @@ document.write(`
         <span class="n">group_satisfied</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">for</span> <span class="n">ballot</span> <span class="ow">in</span> <span class="n">group</span><span class="p">:</span>
             <span class="n">satisfaction</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">ballot</span><span class="o">.</span><span class="n">approved</span> <span class="k">if</span> <span class="n">selection</span><span class="o">.</span><span class="n">is_selected</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
-            <span class="n">satisfaction</span> <span class="o">+=</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">ballot</span><span class="o">.</span><span class="n">disapproved</span> <span class="k">if</span> <span class="n">selection</span><span class="o">.</span><span class="n">is_rejected</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+            <span class="n">satisfaction</span> <span class="o">+=</span> <span class="nb">sum</span><span class="p">(</span>
+                <span class="mi">1</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">ballot</span><span class="o">.</span><span class="n">disapproved</span> <span class="k">if</span> <span class="n">selection</span><span class="o">.</span><span class="n">is_rejected</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+            <span class="p">)</span>
             <span class="k">if</span> <span class="n">satisfaction</span> <span class="o">&gt;=</span> <span class="n">l</span><span class="p">:</span>
                 <span class="n">group_satisfied</span> <span class="o">=</span> <span class="kc">True</span>
                 <span class="k">break</span>
@@ -428,12 +432,11 @@ document.write(`
     <span class="k">return</span> <span class="kc">True</span></div>
 
 
+
 <div class="viewcode-block" id="is_base_ejr">
 <a class="viewcode-back" href="../../../reference/axiomatic/index.html#trivoting.axiomatic.justified_representation.is_base_ejr">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">is_base_ejr</span><span class="p">(</span>
-    <span class="n">profile</span><span class="p">:</span> <span class="n">AbstractTrichotomousProfile</span><span class="p">,</span>
-    <span class="n">max_size_selection</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-    <span class="n">selection</span><span class="p">:</span> <span class="n">Selection</span>
+    <span class="n">profile</span><span class="p">:</span> <span class="n">AbstractTrichotomousProfile</span><span class="p">,</span> <span class="n">max_size_selection</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">selection</span><span class="p">:</span> <span class="n">Selection</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Determines whether a selection satisfies Base Extended Justified Representation (Base EJR) as defined in Definition 1 of</span>
@@ -456,34 +459,76 @@ document.write(`
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">n</span> <span class="o">=</span> <span class="n">profile</span><span class="o">.</span><span class="n">num_ballots</span><span class="p">()</span>
     <span class="n">m</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">profile</span><span class="o">.</span><span class="n">alternatives</span><span class="p">)</span>
+
     <span class="k">def</span><span class="w"> </span><span class="nf">group_claim</span><span class="p">(</span><span class="n">sub_profile</span><span class="p">):</span>
         <span class="n">group_size</span> <span class="o">=</span> <span class="n">sub_profile</span><span class="o">.</span><span class="n">num_ballots</span><span class="p">()</span>
         <span class="n">relative_size</span> <span class="o">=</span> <span class="n">frac</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">n</span> <span class="o">-</span> <span class="n">group_size</span><span class="p">)</span>
         <span class="n">inverse_relative_size</span> <span class="o">=</span> <span class="n">frac</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="n">group_size</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
         <span class="n">num_commonly_approved_alts</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sub_profile</span><span class="o">.</span><span class="n">commonly_approved_alternatives</span><span class="p">())</span>
-        <span class="n">num_commonly_disapproved_alts</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sub_profile</span><span class="o">.</span><span class="n">commonly_disapproved_alternatives</span><span class="p">())</span>
+        <span class="n">num_commonly_disapproved_alts</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span>
+            <span class="n">sub_profile</span><span class="o">.</span><span class="n">commonly_disapproved_alternatives</span><span class="p">()</span>
+        <span class="p">)</span>
 
         <span class="k">if</span> <span class="n">relative_size</span> <span class="o">*</span> <span class="n">max_size_selection</span> <span class="o">&lt;=</span> <span class="n">num_commonly_disapproved_alts</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">num_commonly_disapproved_alts</span> <span class="o">-</span> <span class="n">max_size_selection</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">inverse_relative_size</span> <span class="o">*</span> <span class="n">max_size_selection</span> <span class="o">&lt;=</span> <span class="n">num_commonly_disapproved_alts</span> <span class="o">&lt;=</span> <span class="n">relative_size</span> <span class="o">*</span> <span class="n">max_size_selection</span><span class="p">)</span> <span class="ow">and</span> \
-            <span class="p">(</span><span class="n">frac</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">n</span> <span class="o">-</span> <span class="n">group_size</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="o">*</span> <span class="n">num_commonly_approved_alts</span> <span class="o">+</span> <span class="n">inverse_relative_size</span> <span class="o">*</span> <span class="n">num_commonly_disapproved_alts</span> <span class="o">&gt;=</span> <span class="n">max_size_selection</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">frac</span><span class="p">(</span><span class="n">group_size</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">n</span> <span class="o">-</span> <span class="n">group_size</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">num_commonly_disapproved_alts</span> <span class="o">+</span> <span class="n">max_size_selection</span><span class="p">)</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">num_commonly_disapproved_alts</span> <span class="o">+</span> <span class="n">num_commonly_approved_alts</span> <span class="o">&gt;=</span> <span class="n">max_size_selection</span><span class="p">)</span> <span class="ow">and</span> \
-                <span class="p">(</span><span class="n">num_commonly_disapproved_alts</span> <span class="o">&lt;=</span> <span class="n">inverse_relative_size</span> <span class="o">*</span> <span class="n">max_size_selection</span><span class="p">)</span> <span class="ow">and</span> \
-                    <span class="p">(</span><span class="n">num_commonly_approved_alts</span> <span class="o">&lt;=</span> <span class="n">m</span> <span class="o">-</span> <span class="n">inverse_relative_size</span> <span class="o">*</span> <span class="n">max_size_selection</span><span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="n">inverse_relative_size</span> <span class="o">*</span> <span class="n">max_size_selection</span>
+            <span class="o">&lt;=</span> <span class="n">num_commonly_disapproved_alts</span>
+            <span class="o">&lt;=</span> <span class="n">relative_size</span> <span class="o">*</span> <span class="n">max_size_selection</span>
+        <span class="p">)</span> <span class="ow">and</span> <span class="p">(</span>
+            <span class="n">frac</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">n</span> <span class="o">-</span> <span class="n">group_size</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="o">*</span> <span class="n">num_commonly_approved_alts</span>
+            <span class="o">+</span> <span class="n">inverse_relative_size</span> <span class="o">*</span> <span class="n">num_commonly_disapproved_alts</span>
+            <span class="o">&gt;=</span> <span class="n">max_size_selection</span>
+        <span class="p">):</span>
+            <span class="k">return</span> <span class="n">frac</span><span class="p">(</span><span class="n">group_size</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">n</span> <span class="o">-</span> <span class="n">group_size</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span>
+                <span class="n">num_commonly_disapproved_alts</span> <span class="o">+</span> <span class="n">max_size_selection</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="p">(</span>
+                <span class="n">num_commonly_disapproved_alts</span> <span class="o">+</span> <span class="n">num_commonly_approved_alts</span>
+                <span class="o">&gt;=</span> <span class="n">max_size_selection</span>
+            <span class="p">)</span>
+            <span class="ow">and</span> <span class="p">(</span>
+                <span class="n">num_commonly_disapproved_alts</span>
+                <span class="o">&lt;=</span> <span class="n">inverse_relative_size</span> <span class="o">*</span> <span class="n">max_size_selection</span>
+            <span class="p">)</span>
+            <span class="ow">and</span> <span class="p">(</span>
+                <span class="n">num_commonly_approved_alts</span>
+                <span class="o">&lt;=</span> <span class="n">m</span> <span class="o">-</span> <span class="n">inverse_relative_size</span> <span class="o">*</span> <span class="n">max_size_selection</span>
+            <span class="p">)</span>
+        <span class="p">):</span>
             <span class="k">return</span> <span class="n">frac</span><span class="p">(</span><span class="n">group_size</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="o">*</span> <span class="n">max_size_selection</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">num_commonly_disapproved_alts</span> <span class="o">+</span> <span class="n">num_commonly_approved_alts</span> <span class="o">&gt;=</span> <span class="n">max_size_selection</span><span class="p">)</span> <span class="ow">and</span> \
-                <span class="p">(</span><span class="n">num_commonly_disapproved_alts</span> <span class="o">&lt;=</span> <span class="n">inverse_relative_size</span> <span class="o">*</span> <span class="n">max_size_selection</span><span class="p">)</span> <span class="ow">and</span> \
-                    <span class="p">(</span><span class="n">num_commonly_approved_alts</span> <span class="o">&gt;=</span> <span class="n">m</span> <span class="o">-</span> <span class="n">inverse_relative_size</span> <span class="o">*</span> <span class="n">max_size_selection</span><span class="p">)</span> <span class="ow">and</span> \
-                        <span class="p">(</span><span class="n">num_commonly_approved_alts</span> <span class="o">+</span> <span class="n">max_size_selection</span> <span class="o">-</span> <span class="n">m</span> <span class="o">&lt;=</span> <span class="n">frac</span><span class="p">(</span><span class="n">group_size</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">num_commonly_approved_alts</span> <span class="o">+</span> <span class="n">num_commonly_disapproved_alts</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="p">(</span>
+                <span class="n">num_commonly_disapproved_alts</span> <span class="o">+</span> <span class="n">num_commonly_approved_alts</span>
+                <span class="o">&gt;=</span> <span class="n">max_size_selection</span>
+            <span class="p">)</span>
+            <span class="ow">and</span> <span class="p">(</span>
+                <span class="n">num_commonly_disapproved_alts</span>
+                <span class="o">&lt;=</span> <span class="n">inverse_relative_size</span> <span class="o">*</span> <span class="n">max_size_selection</span>
+            <span class="p">)</span>
+            <span class="ow">and</span> <span class="p">(</span>
+                <span class="n">num_commonly_approved_alts</span>
+                <span class="o">&gt;=</span> <span class="n">m</span> <span class="o">-</span> <span class="n">inverse_relative_size</span> <span class="o">*</span> <span class="n">max_size_selection</span>
+            <span class="p">)</span>
+            <span class="ow">and</span> <span class="p">(</span>
+                <span class="n">num_commonly_approved_alts</span> <span class="o">+</span> <span class="n">max_size_selection</span> <span class="o">-</span> <span class="n">m</span>
+                <span class="o">&lt;=</span> <span class="n">frac</span><span class="p">(</span><span class="n">group_size</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+                <span class="o">*</span> <span class="p">(</span><span class="n">num_commonly_approved_alts</span> <span class="o">+</span> <span class="n">num_commonly_disapproved_alts</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="p">):</span>
             <span class="k">return</span> <span class="n">num_commonly_approved_alts</span> <span class="o">+</span> <span class="n">max_size_selection</span> <span class="o">-</span> <span class="n">m</span>
-        <span class="k">return</span> <span class="n">frac</span><span class="p">(</span><span class="n">group_size</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">num_commonly_approved_alts</span> <span class="o">+</span> <span class="n">num_commonly_disapproved_alts</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">frac</span><span class="p">(</span><span class="n">group_size</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span>
+            <span class="n">num_commonly_approved_alts</span> <span class="o">+</span> <span class="n">num_commonly_disapproved_alts</span>
+        <span class="p">)</span>
 
     <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">profile</span><span class="o">.</span><span class="n">all_sub_profiles</span><span class="p">():</span>
         <span class="n">exists_i</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">for</span> <span class="n">ballot</span> <span class="ow">in</span> <span class="n">group</span><span class="p">:</span>
             <span class="n">satisfaction</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">ballot</span><span class="o">.</span><span class="n">approved</span> <span class="k">if</span> <span class="n">selection</span><span class="o">.</span><span class="n">is_selected</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
-            <span class="n">satisfaction</span> <span class="o">+=</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">ballot</span><span class="o">.</span><span class="n">disapproved</span> <span class="k">if</span> <span class="n">selection</span><span class="o">.</span><span class="n">is_rejected</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+            <span class="n">satisfaction</span> <span class="o">+=</span> <span class="nb">sum</span><span class="p">(</span>
+                <span class="mi">1</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">ballot</span><span class="o">.</span><span class="n">disapproved</span> <span class="k">if</span> <span class="n">selection</span><span class="o">.</span><span class="n">is_rejected</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+            <span class="p">)</span>
             <span class="k">if</span> <span class="n">satisfaction</span> <span class="o">&gt;=</span> <span class="n">group_claim</span><span class="p">(</span><span class="n">group</span><span class="p">):</span>
                 <span class="n">exists_i</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">exists_i</span><span class="p">:</span>
@@ -495,9 +540,7 @@ document.write(`
 <div class="viewcode-block" id="is_base_pjr">
 <a class="viewcode-back" href="../../../reference/axiomatic/index.html#trivoting.axiomatic.justified_representation.is_base_pjr">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">is_base_pjr</span><span class="p">(</span>
-    <span class="n">profile</span><span class="p">:</span> <span class="n">AbstractTrichotomousProfile</span><span class="p">,</span>
-    <span class="n">max_size_selection</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-    <span class="n">selection</span><span class="p">:</span> <span class="n">Selection</span>
+    <span class="n">profile</span><span class="p">:</span> <span class="n">AbstractTrichotomousProfile</span><span class="p">,</span> <span class="n">max_size_selection</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">selection</span><span class="p">:</span> <span class="n">Selection</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Determines whether a selection satisfies Base Proportional Justified Representation (Base PJR) as defined in</span>
@@ -522,11 +565,16 @@ document.write(`
     <span class="k">for</span> <span class="n">group</span><span class="p">,</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">all_cohesive_groups</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">max_size_selection</span><span class="p">):</span>
         <span class="n">coincident_alternatives</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">ballot</span> <span class="ow">in</span> <span class="n">group</span><span class="p">:</span>
-            <span class="n">coincident_alternatives</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">a</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">ballot</span><span class="o">.</span><span class="n">approved</span> <span class="k">if</span> <span class="n">selection</span><span class="o">.</span><span class="n">is_selected</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
-            <span class="n">coincident_alternatives</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">a</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">ballot</span><span class="o">.</span><span class="n">disapproved</span> <span class="k">if</span> <span class="n">selection</span><span class="o">.</span><span class="n">is_rejected</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+            <span class="n">coincident_alternatives</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+                <span class="n">a</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">ballot</span><span class="o">.</span><span class="n">approved</span> <span class="k">if</span> <span class="n">selection</span><span class="o">.</span><span class="n">is_selected</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="n">coincident_alternatives</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+                <span class="n">a</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">ballot</span><span class="o">.</span><span class="n">disapproved</span> <span class="k">if</span> <span class="n">selection</span><span class="o">.</span><span class="n">is_rejected</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+            <span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">coincident_alternatives</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">l</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span>
     <span class="k">return</span> <span class="kc">True</span></div>
+
 
 
 <div class="viewcode-block" id="is_positively_cohesive_for_l">
@@ -535,7 +583,7 @@ document.write(`
     <span class="n">profile</span><span class="p">:</span> <span class="n">AbstractTrichotomousProfile</span><span class="p">,</span>
     <span class="n">max_size_selection</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">l</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-    <span class="n">group</span><span class="p">:</span> <span class="n">AbstractTrichotomousProfile</span>
+    <span class="n">group</span><span class="p">:</span> <span class="n">AbstractTrichotomousProfile</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Tests whether a group of voters is positively cohesive for level `l`.</span>
@@ -565,7 +613,9 @@ document.write(`
 
     <span class="n">commonly_approved_alts</span> <span class="o">=</span> <span class="n">group</span><span class="o">.</span><span class="n">commonly_approved_alternatives</span><span class="p">()</span>
     <span class="c1"># Does not matter if we can find subsets with more than l</span>
-    <span class="n">commonly_approved_alts_subsets</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">generate_subsets</span><span class="p">(</span><span class="n">commonly_approved_alts</span><span class="p">,</span> <span class="n">min_size</span><span class="o">=</span><span class="n">l</span><span class="p">,</span> <span class="n">max_size</span><span class="o">=</span><span class="n">l</span><span class="p">))</span>
+    <span class="n">commonly_approved_alts_subsets</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+        <span class="n">generate_subsets</span><span class="p">(</span><span class="n">commonly_approved_alts</span><span class="p">,</span> <span class="n">min_size</span><span class="o">=</span><span class="n">l</span><span class="p">,</span> <span class="n">max_size</span><span class="o">=</span><span class="n">l</span><span class="p">)</span>
+    <span class="p">)</span>
 
     <span class="c1"># Shortcut if there are no commonly approved alternatives of the suitable size</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">commonly_approved_alts_subsets</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -575,7 +625,9 @@ document.write(`
         <span class="n">suitable_subset</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">for</span> <span class="n">alt</span> <span class="ow">in</span> <span class="n">alt_subset</span><span class="p">:</span>
             <span class="n">num_disapprovers</span> <span class="o">=</span> <span class="n">profile</span><span class="o">.</span><span class="n">disapproval_score</span><span class="p">(</span><span class="n">alt</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">group</span><span class="o">.</span><span class="n">num_ballots</span><span class="p">()</span> <span class="o">-</span> <span class="n">num_disapprovers</span> <span class="o">&lt;</span> <span class="n">l</span> <span class="o">*</span> <span class="n">frac</span><span class="p">(</span><span class="n">profile</span><span class="o">.</span><span class="n">num_ballots</span><span class="p">(),</span> <span class="n">max_size_selection</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">group</span><span class="o">.</span><span class="n">num_ballots</span><span class="p">()</span> <span class="o">-</span> <span class="n">num_disapprovers</span> <span class="o">&lt;</span> <span class="n">l</span> <span class="o">*</span> <span class="n">frac</span><span class="p">(</span>
+                <span class="n">profile</span><span class="o">.</span><span class="n">num_ballots</span><span class="p">(),</span> <span class="n">max_size_selection</span>
+            <span class="p">):</span>
                 <span class="n">suitable_subset</span> <span class="o">=</span> <span class="kc">False</span>
                 <span class="k">break</span>
         <span class="k">if</span> <span class="n">suitable_subset</span><span class="p">:</span>
@@ -583,12 +635,11 @@ document.write(`
     <span class="k">return</span> <span class="kc">False</span></div>
 
 
+
 <div class="viewcode-block" id="is_positive_ejr">
 <a class="viewcode-back" href="../../../reference/axiomatic/index.html#trivoting.axiomatic.justified_representation.is_positive_ejr">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">is_positive_ejr</span><span class="p">(</span>
-    <span class="n">profile</span><span class="p">:</span> <span class="n">AbstractTrichotomousProfile</span><span class="p">,</span>
-    <span class="n">max_size_selection</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-    <span class="n">selection</span><span class="p">:</span> <span class="n">Selection</span>
+    <span class="n">profile</span><span class="p">:</span> <span class="n">AbstractTrichotomousProfile</span><span class="p">,</span> <span class="n">max_size_selection</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">selection</span><span class="p">:</span> <span class="n">Selection</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Determines whether a selection satisfies Extended Justified Positive Representation (EJPR).</span>
@@ -607,7 +658,9 @@ document.write(`
 <span class="sd">    bool</span>
 <span class="sd">        True if EJPR is satisfied, False otherwise.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">for</span> <span class="n">group</span><span class="p">,</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">all_cohesive_groups</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">max_size_selection</span><span class="p">,</span> <span class="n">test_cohesive_func</span><span class="o">=</span><span class="n">is_positively_cohesive_for_l</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">group</span><span class="p">,</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">all_cohesive_groups</span><span class="p">(</span>
+        <span class="n">profile</span><span class="p">,</span> <span class="n">max_size_selection</span><span class="p">,</span> <span class="n">test_cohesive_func</span><span class="o">=</span><span class="n">is_positively_cohesive_for_l</span>
+    <span class="p">):</span>
         <span class="n">group_satisfied</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">for</span> <span class="n">ballot</span> <span class="ow">in</span> <span class="n">group</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">ballot</span><span class="o">.</span><span class="n">approved</span> <span class="k">if</span> <span class="n">selection</span><span class="o">.</span><span class="n">is_selected</span><span class="p">(</span><span class="n">a</span><span class="p">))</span> <span class="o">&gt;=</span> <span class="n">l</span><span class="p">:</span>
@@ -618,6 +671,7 @@ document.write(`
     <span class="k">return</span> <span class="kc">True</span></div>
 
 
+
 <div class="viewcode-block" id="is_negatively_cohesive_for_l_t">
 <a class="viewcode-back" href="../../../reference/axiomatic/index.html#trivoting.axiomatic.justified_representation.is_negatively_cohesive_for_l_t">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">is_negatively_cohesive_for_l_t</span><span class="p">(</span>
@@ -625,7 +679,7 @@ document.write(`
     <span class="n">max_size_selection</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">l</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">alt_set</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Alternative</span><span class="p">],</span>
-    <span class="n">group</span><span class="p">:</span> <span class="n">AbstractTrichotomousProfile</span>
+    <span class="n">group</span><span class="p">:</span> <span class="n">AbstractTrichotomousProfile</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Tests whether a group of voters is l-T negatively cohesive for a given set of alternatives.</span>
@@ -656,15 +710,16 @@ document.write(`
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">ballot</span><span class="o">.</span><span class="n">disapproved</span><span class="p">)</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">alt_set</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">num_disapprovers</span> <span class="o">+=</span> <span class="n">profile</span><span class="o">.</span><span class="n">multiplicity</span><span class="p">(</span><span class="n">ballot</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">group</span><span class="o">.</span><span class="n">num_ballots</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="n">num_disapprovers</span> <span class="o">-</span> <span class="n">l</span> <span class="o">*</span> <span class="n">frac</span><span class="p">(</span><span class="n">profile</span><span class="o">.</span><span class="n">num_ballots</span><span class="p">(),</span> <span class="n">max_size_selection</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">group</span><span class="o">.</span><span class="n">num_ballots</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="n">num_disapprovers</span> <span class="o">-</span> <span class="n">l</span> <span class="o">*</span> <span class="n">frac</span><span class="p">(</span>
+        <span class="n">profile</span><span class="o">.</span><span class="n">num_ballots</span><span class="p">(),</span> <span class="n">max_size_selection</span>
+    <span class="p">)</span></div>
+
 
 
 <div class="viewcode-block" id="is_group_veto">
 <a class="viewcode-back" href="../../../reference/axiomatic/index.html#trivoting.axiomatic.justified_representation.is_group_veto">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">is_group_veto</span><span class="p">(</span>
-    <span class="n">profile</span><span class="p">:</span> <span class="n">AbstractTrichotomousProfile</span><span class="p">,</span>
-    <span class="n">max_size_selection</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-    <span class="n">selection</span><span class="p">:</span> <span class="n">Selection</span>
+    <span class="n">profile</span><span class="p">:</span> <span class="n">AbstractTrichotomousProfile</span><span class="p">,</span> <span class="n">max_size_selection</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">selection</span><span class="p">:</span> <span class="n">Selection</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Determines whether a selection satisfies the group veto property.</span>
@@ -687,7 +742,9 @@ document.write(`
         <span class="n">commonly_disapproved_alts</span> <span class="o">=</span> <span class="n">group</span><span class="o">.</span><span class="n">commonly_disapproved_alternatives</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">alt_set</span> <span class="ow">in</span> <span class="n">generate_subsets</span><span class="p">(</span><span class="n">commonly_disapproved_alts</span><span class="p">,</span> <span class="n">min_size</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
             <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">profile</span><span class="o">.</span><span class="n">alternatives</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
-                <span class="k">if</span> <span class="n">is_negatively_cohesive_for_l_t</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">max_size_selection</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">alt_set</span><span class="p">,</span> <span class="n">group</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">is_negatively_cohesive_for_l_t</span><span class="p">(</span>
+                    <span class="n">profile</span><span class="p">,</span> <span class="n">max_size_selection</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">alt_set</span><span class="p">,</span> <span class="n">group</span>
+                <span class="p">):</span>
                     <span class="k">if</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">alt_set</span> <span class="k">if</span> <span class="n">selection</span><span class="o">.</span><span class="n">is_selected</span><span class="p">(</span><span class="n">a</span><span class="p">))</span> <span class="o">&gt;</span> <span class="n">l</span><span class="p">:</span>
                         <span class="k">return</span> <span class="kc">False</span>
     <span class="k">return</span> <span class="kc">True</span></div>

@@ -4,7 +4,9 @@ from itertools import combinations
 from trivoting.fractions import frac
 
 
-def generate_subsets(it: Iterable, *, min_size: int = None, max_size: int = None) -> Iterator[Iterable]:
+def generate_subsets(
+    it: Iterable, *, min_size: int = None, max_size: int = None
+) -> Iterator[Iterable]:
     """
     Generate all subsets of the given iterable with sizes between min_size and max_size.
 
@@ -32,7 +34,9 @@ def generate_subsets(it: Iterable, *, min_size: int = None, max_size: int = None
             yield c
 
 
-def generate_two_list_partitions(iterable: Iterable, first_list_max_size=None) -> Iterator[tuple[list, list]]:
+def generate_two_list_partitions(
+    iterable: Iterable, first_list_max_size=None
+) -> Iterator[tuple[list, list]]:
     """
     Generate all two-list partitions of subsets of the input iterable.
 
@@ -56,7 +60,11 @@ def generate_two_list_partitions(iterable: Iterable, first_list_max_size=None) -
 
     for subset_size in range(n + 1):
         for subset in combinations(elements, subset_size):
-            max_part1_size = subset_size if first_list_max_size is None else min(first_list_max_size, subset_size)
+            max_part1_size = (
+                subset_size
+                if first_list_max_size is None
+                else min(first_list_max_size, subset_size)
+            )
             for part1_size in range(max_part1_size + 1):
                 for part1 in combinations(subset, part1_size):
                     part1_set = set(part1)
