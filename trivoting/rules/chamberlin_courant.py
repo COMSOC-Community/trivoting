@@ -25,20 +25,20 @@ def chamberlin_courant_ilp(profile: AbstractTrichotomousProfile, max_size_select
         voter = {
             "ballot": ballot,
             "multiplicity": profile.multiplicity(ballot),
-            "sat_var": LpVariable(f"sat_{i}", cat=LpInteger),
-            "dissat_var": LpVariable(f"disat_{i}", cat=LpInteger),
+            "sat_var": LpVariable(f"sat_{i}", lowBound=0, upBound=max_size_selection, cat=LpInteger),
+            "dissat_var": LpVariable(f"disat_{i}", lowBound=0, upBound=max_size_selection, cat=LpInteger),
             "cc_var": LpVariable(f"cc_{i}", cat=LpBinary)
         }
         voter_details.append(voter)
 
     # Constraint voter_details to ensure proper counting
     for voter in voter_details:
-        model += lpSum(voter["sat_var"]) == lpSum(selection_vars[alt] for alt in voter["ballot"].approved)
-        model += lpSum(voter["dissat_var"]) == lpSum(selection_vars[alt] for alt in voter["ballot"].disapproved)
+        model += voter["sat_var"] == lpSum(selection_vars[alt] for alt in voter["ballot"].approved)
+        model += voter["dissat_var"] == lpSum(selection_vars[alt] for alt in voter["ballot"].disapproved)
 
         # Linearisation of z = 1 if x > y and z = 0 otherwise
-        model += voter["sat_var"] - voter["dissat_var"] >= 0.5 - (1 - voter["cc_var"]) * (max_size_selection + 1)
-        model += voter["sat_var"] - voter["dissat_var"] <= -0.5 + voter["cc_var"] * (max_size_selection + 1)
+        model += voter["sat_var"] - voter["dissat_var"] >= 1 - (1 - voter["cc_var"]) * max_size_selection
+        model += voter["sat_var"] - voter["dissat_var"] <= voter["cc_var"] * max_size_selection
 
     # Objective: max PAV score
     model += lpSum(voter["cc_var"] for voter in voter_details)
@@ -60,7 +60,7 @@ def chamberlin_courant_ilp(profile: AbstractTrichotomousProfile, max_size_select
         return all_selections[0]
 
     # If irresolute, we solve again, banning the previous selections
-    model += lpSum(voter["cc_var"] for voter in voter_details)
+    model += lpSum(voter["cc_var"] for voter in voter_details) == value(model.objective)
 
     previous_selection = selection
     while True:

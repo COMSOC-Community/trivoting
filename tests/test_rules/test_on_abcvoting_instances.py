@@ -9,7 +9,8 @@ from unittest import TestCase
 
 from trivoting.election import AbstractTrichotomousProfile
 from trivoting.election.abcvoting import parse_abcvoting_yaml
-from trivoting.rules import tax_method_of_equal_shares, TaxKraiczy2025, DisapprovalLinearTax
+from trivoting.rules import tax_method_of_equal_shares, TaxKraiczy2025, DisapprovalLinearTax, \
+    MaxNetSatisfactionILPBuilder
 from trivoting.rules.chamberlin_courant import chamberlin_courant_ilp
 from trivoting.rules.thiele import thiele_method, PAVILPKraiczy2025, PAVILPTalmonPage2021, PAVILPHervouin2025, \
     sequential_thiele, ApprovalOnlyScore, SatisfactionScore
@@ -91,6 +92,7 @@ RULE_MAPPING = {
     "av": [
         partial(sequential_thiele, thiele_score_class=ApprovalOnlyScore),
         partial(sequential_thiele, thiele_score_class=SatisfactionScore),
+        partial(thiele_method, ilp_builder_class=MaxNetSatisfactionILPBuilder),
     ],
     "cc": exhaustivee_cc,
     # ABCvoting only has MES with completion...
@@ -108,28 +110,16 @@ def process_yaml_file(yaml_file_path: str):
 
         expected_result = read_abcvoting_expected_result(yaml_file_path, profile)
 
-    for rule_id, rules in RULE_MAPPING.items():
-        if not isinstance(rules, Iterable):
-            rules = [rules]
-        for rule in rules:
-            # print(rule)
-            potential_results_repr = expected_result[rule_id]
-            try:
-                selection = rule(profile, profile.max_size_selection, resoluteness=True)
-                selection_repr = resolute_res_representation(selection.selected, profile)
-                # print("R", selection_repr, potential_results_repr)
-                assert selection_repr in potential_results_repr
-            except NotImplementedError:
-                pass
         for rule_id, rules in RULE_MAPPING.items():
             if not isinstance(rules, Iterable):
                 rules = [rules]
             for rule in rules:
+                print("\t", rule)
                 potential_results_repr = expected_result[rule_id]
                 try:
                     selection = rule(profile, profile.max_size_selection, resoluteness=True)
                     selection_repr = resolute_res_representation(selection.selected, profile)
-                    # print("R", selection_repr, potential_results_repr)
+                    print("\t", "R", selection_repr, potential_results_repr)
                     assert selection_repr in potential_results_repr
                 except NotImplementedError:
                     pass
@@ -137,7 +127,8 @@ def process_yaml_file(yaml_file_path: str):
                 try:
                     selections = rule(profile, profile.max_size_selection, resoluteness=False)
                     selections_repr = irresolute_res_representation([s.selected for s in selections], profile)
-                    # print("IR", selections_repr, potential_results_repr)
+                    print("\t",
+                          "IR", selections_repr, potential_results_repr)
                     assert selections_repr == potential_results_repr
                 except NotImplementedError:
                     pass
@@ -151,6 +142,6 @@ class TestOnABCVoting(TestCase):
         all_yaml_files = os.listdir(yaml_dir_path)
         yaml_paths = [os.path.join(yaml_dir_path, f) for f in all_yaml_files]
 
-        with Pool(processes=1) as pool:
+        with Pool(processes=None) as pool:
             for res in pool.imap_unordered(process_yaml_file, yaml_paths):
                 self.assertTrue(res)
