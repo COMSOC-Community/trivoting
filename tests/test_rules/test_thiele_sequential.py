@@ -25,12 +25,9 @@ class TestSequentialPAV(TestCase):
                 PAVScoreHervouin2025,
             ]:
                 profile = get_random_profile(20, 50)
-                print(
-                    f"Computing Sequential PAV with {score.__name__} on randomly generated instance: {profile}"
-                )
                 max_size = random.randint(1, len(profile.alternatives))
                 res = sequential_thiele(profile, max_size, score, resoluteness=True)
-                self.assertLessEqual(len(res), max_size)
+                self.assertLessEqual(len(res), max_size, f"Failure with Sequential PAV[{score.__name__}] on: {profile}, k={max_size}")
 
     def test_seq_pav_on_trivial_instances(self):
         for score in [

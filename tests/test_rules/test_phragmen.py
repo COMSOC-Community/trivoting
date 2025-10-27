@@ -15,10 +15,9 @@ class TestPhragmen(TestCase):
     def test_phragmen_on_random_instance(self):
         for _ in range(50):
             profile = get_random_profile(50, 100)
-            print(f"Computing Phragmén on randomly generated instance: {profile}")
             max_size = random.randint(1, len(profile.alternatives))
             res = sequential_phragmen(profile, max_size, resoluteness=True)
-            self.assertLessEqual(len(res), max_size)
+            self.assertLessEqual(len(res), max_size, f"Failure with Phragmén on: {profile}, k={max_size}")
 
     def test_phragmen_on_trivial_instances(self):
         # Empty profile

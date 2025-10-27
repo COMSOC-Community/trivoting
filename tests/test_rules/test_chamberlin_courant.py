@@ -11,10 +11,9 @@ class TestChamberlinCourant(TestCase):
     def test_cc_on_random_instance(self):
         for _ in range(50):
             profile = get_random_profile(50, 100)
-            print(f"Computing CC on randomly generated instance: {profile}")
             max_size = random.randint(1, len(profile.alternatives))
             res = chamberlin_courant(profile, max_size, resoluteness=True)
-            self.assertLessEqual(len(res), max_size)
+            self.assertLessEqual(len(res), max_size, f"Failure with CC on: {profile}, k={max_size}")
 
     def test_cc_on_trivial_instances(self):
         # Empty profile
