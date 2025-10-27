@@ -4,7 +4,7 @@ build-backend = "flit_core.buildapi"
 
 [project]
 name = "trivoting"
-version = "0.0.5"
+version = "0.0.6"
 description = "Library to handle elections with trichotomous preferences"
 authors = [
   { name = "Simon Rey", email = "simon.j.rey@proton.me" },
