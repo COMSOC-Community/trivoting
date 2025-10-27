@@ -15,7 +15,7 @@ from pulp import (
 from trivoting.election import AbstractTrichotomousProfile, Selection
 
 
-def chamberlin_courant(
+def max_satisfaction_ilp(
     profile: AbstractTrichotomousProfile,
     max_size_selection: int,
     initial_selection: Selection = None,
@@ -51,7 +51,7 @@ def chamberlin_courant(
         The selection if resolute (:code:`resoluteness == True`), or a list of selections
         if irresolute (:code:`resoluteness == False`).
     """
-    model = LpProblem("ChamberlinCourant", LpMaximize)
+    model = LpProblem("MaximumSatisfaction", LpMaximize)
 
     selection_vars = {
         alt: LpVariable(f"y_{alt.name}", cat=LpBinary) for alt in profile.alternatives
@@ -77,10 +77,6 @@ def chamberlin_courant(
             "sat_var": LpVariable(
                 f"sat_{i}", lowBound=-max_size_selection, upBound=max_size_selection, cat=LpInteger
             ),
-            "dissat_var": LpVariable(
-                f"disat_{i}", lowBound=-max_size_selection, upBound=max_size_selection, cat=LpInteger
-            ),
-            "cc_var": LpVariable(f"cc_{i}", cat=LpBinary),
         }
         voter_details.append(voter)
 
@@ -88,23 +84,12 @@ def chamberlin_courant(
     for voter in voter_details:
         model += voter["sat_var"] == lpSum(
             selection_vars[alt] for alt in voter["ballot"].approved
-        )
-        model += voter["dissat_var"] == lpSum(
+        ) - lpSum(
             selection_vars[alt] for alt in voter["ballot"].disapproved
         )
 
-        # Linearisation of z = 1 if x > y and z = 0 otherwise
-        model += (
-            voter["sat_var"] - voter["dissat_var"]
-            >= 1 - (1 - voter["cc_var"]) * max_size_selection
-        )
-        model += (
-            voter["sat_var"] - voter["dissat_var"]
-            <= voter["cc_var"] * max_size_selection
-        )
-
     # Objective: max PAV score
-    model += lpSum(voter["cc_var"] for voter in voter_details)
+    model += lpSum(voter["sat_var"] for voter in voter_details)
 
     status = model.solve(HiGHS(msg=verbose, timeLimit=max_seconds))
 
@@ -125,7 +110,7 @@ def chamberlin_courant(
         return all_selections[0]
 
     # If irresolute, we solve again, banning the previous selections
-    model += lpSum(voter["cc_var"] for voter in voter_details) == value(model.objective)
+    model += lpSum(voter["sat_var"] for voter in voter_details) == value(model.objective)
 
     previous_selection = selection
     while True:
@@ -162,3 +147,24 @@ def chamberlin_courant(
             all_selections.append(previous_selection)
 
     return all_selections
+
+
+def max_satisfaction(
+    profile: AbstractTrichotomousProfile,
+    max_size_selection: int,
+    initial_selection: Selection = None,
+    resoluteness: bool = True,
+    max_seconds: int = 600,
+    verbose: bool = False,
+) -> Selection | list[Selection]:
+    alt_scores = profile.support_dict()
+    if initial_selection is None:
+        selection = Selection(implicit_reject=True)
+    else:
+        selection = initial_selection
+    for alt, score in sorted(alt_scores.items(), key=lambda x: -x[1]):
+        if len(selection) >= max_size_selection:
+            break
+        if score > 0:
+            selection.add_selected(alt)
+    return selection

@@ -236,6 +236,10 @@ class AbstractTrichotomousProfile(ABC, Iterable[AbstractTrichotomousBallot]):
                 returns 0.
         """
 
+    @abstractmethod
+    def selection_support(self, selection:Selection) -> int:
+        """"""
+
     def all_feasible_selections(self, max_size_selection: int) -> Iterator[Selection]:
         """
         Returns an iterator that yields all feasible (partial) selections.
@@ -406,6 +410,13 @@ class TrichotomousProfile(
             for alt in ballot.disapproved:
                 disapp_scores[alt] += 1
         return app_scores, disapp_scores
+
+    def selection_support(self, selection: Selection) -> int:
+        res = 0
+        for ballot in self:
+            res += sum(1 for a in ballot.approved if selection.is_selected(a))
+            res -= sum(1 for a in ballot.disapproved if selection.is_selected(a))
+        return res
 
     def num_ballots(self) -> int:
         return len(self)
@@ -688,6 +699,14 @@ class TrichotomousMultiProfile(
             for alt in ballot.disapproved:
                 disapp_scores[alt] += count
         return app_scores, disapp_scores
+
+    def selection_support(self, selection: Selection) -> int:
+        res = 0
+        for ballot, count in self.items():
+            ballot_support = sum(1 for a in ballot.approved if selection.is_selected(a))
+            ballot_support -= sum(1 for a in ballot.disapproved if selection.is_selected(a))
+            res += ballot_support * count
+        return res
 
     def total(self):
         """

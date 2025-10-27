@@ -17,7 +17,7 @@ from pulp import (
     LpStatusOptimal,
     value,
     LpAffineExpression,
-    HiGHS,
+    HiGHS, LpInteger,
 )
 
 from trivoting.election.selection import Selection
@@ -334,7 +334,7 @@ class MaxSatisfactionILPBuilder(ThieleILPBuilder):
             )
             voter.sat_vars = dict()
             for k in range(1, len(self.profile.alternatives) + 1):
-                voter.sat_vars[k] = LpVariable(f"s_{i}_{k}", cat=LpBinary)
+                voter.sat_vars[k] = LpVariable(f"s_{i}_{k}", lowBound=-1, upBound=1, cat=LpInteger)
             self.voters.append(voter)
 
         # Constraint them to ensure proper counting

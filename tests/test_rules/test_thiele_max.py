@@ -6,6 +6,8 @@ from tests.random_instances import get_random_profile
 from trivoting.election.alternative import Alternative
 from trivoting.election.trichotomous_ballot import TrichotomousBallot
 from trivoting.election.trichotomous_profile import TrichotomousProfile
+from trivoting.rules import MaxSatisfactionILPBuilder
+from trivoting.rules.max_satisfaction import max_satisfaction_ilp, max_satisfaction
 from trivoting.rules.thiele import (
     thiele_method,
     PAVILPHervouin2025,
@@ -25,14 +27,11 @@ class TestPAV(TestCase):
                 PAVILPHervouin2025,
             ]:
                 profile = get_random_profile(50, 100)
-                print(
-                    f"Computing PAV with {builder.__name__} on randomly generated instance: {profile}"
-                )
                 max_size = random.randint(1, len(profile.alternatives))
                 res = thiele_method(
                     profile, max_size, ilp_builder_class=builder, resoluteness=True
                 )
-                self.assertLessEqual(len(res), max_size)
+                self.assertLessEqual(len(res), max_size, f"Failure with PAV[{builder.__name__}] on: {profile}")
 
     def test_pav_on_trivial_instances(self):
         for builder in [PAVILPKraiczy2025, PAVILPTalmonPage2021, PAVILPHervouin2025]:
@@ -60,3 +59,25 @@ class TestPAV(TestCase):
             self.assertEqual(len(res), 4)
             for alt in alternatives[6:]:
                 self.assertIn(alt, res)
+
+    def test_max_sat(self):
+        for _ in range(50):
+            profile = get_random_profile(30, 100)
+            max_size = random.randint(1, len(profile.alternatives))
+            res1 = thiele_method(
+                profile, max_size, ilp_builder_class=MaxSatisfactionILPBuilder, resoluteness=True
+            )
+            self.assertLessEqual(len(res1), max_size, f"Failure with Max satisfaction[Thiele] on: {profile}, k={max_size}")
+
+            res2 = max_satisfaction_ilp(
+                profile, max_size, resoluteness=True
+            )
+            self.assertLessEqual(len(res2), max_size, f"Failure with Max satisfaction[ILP] on: {profile}, k={max_size}")
+
+            res3 = max_satisfaction(
+                profile, max_size, resoluteness=True
+            )
+            self.assertLessEqual(len(res3), max_size, f"Failure with Max satisfaction[Direct] on: {profile}, k={max_size}")
+
+            self.assertEqual(profile.selection_support(res1), profile.selection_support(res2), f"Failure with Max satisfaction[Thiele] and Max satisfaction[ILP] on: {profile}, k={max_size}: r1={res1}, r2={res2}")
+            self.assertEqual(profile.selection_support(res1), profile.selection_support(res3), f"Failure with Max satisfaction[Thiele] and Max satisfaction[Direct] on: {profile}, k={max_size}: r1={res1}, r3={res3}")
