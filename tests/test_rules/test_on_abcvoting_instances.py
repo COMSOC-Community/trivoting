@@ -16,6 +16,7 @@ from trivoting.rules import (
     MaxSatisfactionILPBuilder,
 )
 from trivoting.rules.chamberlin_courant import chamberlin_courant
+from trivoting.rules.max_satisfaction import max_satisfaction_ilp, max_satisfaction
 from trivoting.rules.thiele import (
     thiele_method,
     PAVILPKraiczy2025,
@@ -114,6 +115,8 @@ RULE_MAPPING = {
         partial(sequential_thiele, thiele_score_class=ApprovalOnlyScore),
         partial(sequential_thiele, thiele_score_class=SatisfactionScore),
         partial(thiele_method, ilp_builder_class=MaxSatisfactionILPBuilder),
+        max_satisfaction_ilp,
+        max_satisfaction,
     ],
     "cc": exhaustivee_cc,
     # ABCvoting only has MES with completion...

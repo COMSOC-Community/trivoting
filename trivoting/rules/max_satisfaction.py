@@ -157,6 +157,8 @@ def max_satisfaction(
     max_seconds: int = 600,
     verbose: bool = False,
 ) -> Selection | list[Selection]:
+    if not resoluteness:
+        raise NotImplementedError("Max Satisfaction does not yet support resoluteness=False.")
     alt_scores = profile.support_dict()
     if initial_selection is None:
         selection = Selection(implicit_reject=True)
