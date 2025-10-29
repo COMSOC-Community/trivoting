@@ -24,12 +24,7 @@ def max_satisfaction_ilp(
     verbose: bool = False,
 ) -> Selection | list[Selection]:
     """
-    Compute the selections of the Chamberlin-Courant rule.
-
-    The Chamberlin-Courant returns selections that maximise the number of covered voter. A voter is covered if
-    strictly more approved alternatives are selected than disapproved ones.
-
-    The outcome of the rule is computed via an Integer Linear Program (ILP).
+    Compute the selections maximising the total satisfaction of the voters.
 
     Parameters
     ----------
