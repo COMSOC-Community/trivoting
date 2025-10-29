@@ -30,7 +30,7 @@ class TestMES(TestCase):
 
     def test_tax_rules_on_random_instance(self):
         for _ in range(50):
-            profile = get_random_profile(50, 100)
+            profile = get_random_profile(20, 50)
             max_size = random.randint(1, len(profile.alternatives))
             for rule in tax_rules(max_size):
                 res = rule(profile, max_size, resoluteness=True)

@@ -129,6 +129,7 @@ RULE_MAPPING = {
 
 def process_yaml_file(yaml_file_path: str):
     profile_raw = parse_abcvoting_yaml(yaml_file_path)
+    print("ABC Voting test: ", yaml_file_path)
 
     for profile in [profile_raw, profile_raw.as_multiprofile()]:
         expected_result = read_abcvoting_expected_result(yaml_file_path, profile)

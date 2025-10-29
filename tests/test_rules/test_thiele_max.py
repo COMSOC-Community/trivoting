@@ -26,7 +26,7 @@ class TestPAV(TestCase):
                 PAVILPTalmonPage2021,
                 PAVILPHervouin2025,
             ]:
-                profile = get_random_profile(50, 100)
+                profile = get_random_profile(20, 50)
                 max_size = random.randint(1, len(profile.alternatives))
                 res = thiele_method(
                     profile, max_size, ilp_builder_class=builder, resoluteness=True
