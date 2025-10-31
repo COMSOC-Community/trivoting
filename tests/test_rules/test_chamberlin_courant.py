@@ -3,7 +3,7 @@ from unittest import TestCase
 
 from tests.random_instances import get_random_profile
 from trivoting.election import TrichotomousProfile, Selection, Alternative, TrichotomousBallot
-from trivoting.rules.chamberlin_courant import chamberlin_courant
+from trivoting.rules.chamberlin_courant import chamberlin_courant, chamberlin_courant_brute_force
 
 
 class TestChamberlinCourant(TestCase):
@@ -48,3 +48,14 @@ class TestChamberlinCourant(TestCase):
         res = chamberlin_courant(profile, 2)
         self.assertIn(a, res)
         self.assertNotIn(c, res)
+
+    def test_with_brute_force(self):
+        for _ in range(50):
+            for m in range(2, 7):
+                profile = get_random_profile(m, 50)
+                max_size = random.randint(1, len(profile.alternatives))
+                res1 = chamberlin_courant(profile, max_size, resoluteness=True)
+                res1_coverage = profile.num_covered_ballots(res1)
+                res2 = chamberlin_courant_brute_force(profile, max_size, resoluteness=True)
+                res2_coverage = profile.num_covered_ballots(res1)
+                self.assertEqual(res1_coverage, res2_coverage, f"Failure CC comparing to brute-force: {profile}, k={max_size}, bf={res2} (c={res1_coverage}), ilp={res1} (c={res2_coverage})")

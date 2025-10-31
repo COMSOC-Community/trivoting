@@ -300,6 +300,28 @@ class AbstractTrichotomousProfile(ABC, Iterable[AbstractTrichotomousBallot]):
             *(set(ballot.disapproved) for ballot in self._ballot_container)
         )
 
+    def num_covered_ballots(self, selection: Selection) -> int:
+        """
+        Returns the number of ballots that have positive satisfaction for the selection.
+
+        Parameters
+        ----------
+        selection: Selection
+            The selection.
+
+        Returns
+        -------
+            int
+                The number of ballots with strictly positive satisfaction for the selection.
+        """
+        covered_voters = 0
+        for ballot in self:
+            satisfaction = sum(1 for alt in ballot.approved if selection.is_selected(alt)) - sum(
+                1 for alt in ballot.disapproved if selection.is_selected(alt))
+            if satisfaction > 0:
+                covered_voters += self.multiplicity(ballot)
+        return covered_voters
+
 
 class TrichotomousProfile(
     AbstractTrichotomousProfile, MutableSequence[TrichotomousBallot]

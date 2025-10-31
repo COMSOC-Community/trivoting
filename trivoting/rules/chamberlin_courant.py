@@ -13,6 +13,30 @@ from pulp import (
 )
 
 from trivoting.election import AbstractTrichotomousProfile, Selection
+from trivoting.utils import generate_subsets
+
+
+def chamberlin_courant_brute_force(
+    profile: AbstractTrichotomousProfile,
+    max_size_selection: int,
+    initial_selection: Selection = None,
+    resoluteness: bool = True
+) -> Selection | list[Selection]:
+    max_coverage = None
+    arg_max_coverage = None
+    for selection_selected in generate_subsets(profile.alternatives, max_size=max_size_selection):
+        selection = Selection(selected=selection_selected)
+        covered_voters = profile.num_covered_ballots(selection)
+        if max_coverage is None or covered_voters > max_coverage:
+            max_coverage = covered_voters
+            arg_max_coverage = [selection]
+        elif max_coverage == covered_voters:
+            arg_max_coverage.append(selection)
+    if arg_max_coverage is None:
+        raise ValueError("In CC brute force no solution has been found, weird...")
+    if resoluteness:
+        return arg_max_coverage[0]
+    return arg_max_coverage
 
 
 def chamberlin_courant(
@@ -105,6 +129,8 @@ def chamberlin_courant(
 
     # Objective: max PAV score
     model += lpSum(voter["cc_var"] for voter in voter_details)
+
+    model.writeLP("cc.lp")
 
     status = model.solve(HiGHS(msg=verbose, timeLimit=max_seconds))
 
