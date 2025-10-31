@@ -75,7 +75,7 @@ def cat_instance_to_trichotomous_profile(
             f"{cat_instance.num_categories} categories."
         )
 
-    alt_map = {j: Alternative(j) for j in cat_instance.alternatives_name}
+    alt_map = {j: Alternative(str(j)) for j in cat_instance.alternatives_name}
     profile = TrichotomousMultiProfile(alternatives=alt_map.values())
 
     for p, m in cat_instance.multiplicity.items():
