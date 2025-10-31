@@ -130,8 +130,6 @@ def chamberlin_courant(
     # Objective: max PAV score
     model += lpSum(voter["cc_var"] for voter in voter_details)
 
-    model.writeLP("cc.lp")
-
     status = model.solve(HiGHS(msg=verbose, timeLimit=max_seconds))
 
     all_selections = []
