@@ -30,24 +30,25 @@ class TestChamberlinCourant(TestCase):
         self.assertEqual(len(res), 0)
 
     def test_cc_on_specific_instances(self):
-        a = Alternative("a")
-        b = Alternative("b")
-        c = Alternative("c")
-        d = Alternative("d")
-        e = Alternative("e")
-        alternatives = [a, b, c, d, e]
-        ballots = [
-            TrichotomousBallot(approved=[a, b], disapproved=[c]),
-            TrichotomousBallot(approved=[c]),
-        ]
-        profile = TrichotomousProfile(ballots, alternatives=alternatives)
-        res = chamberlin_courant(profile, 3)
-        self.assertEqual(len(res), 3)
+        for cc_func in [chamberlin_courant, chamberlin_courant_brute_force]:
+            a = Alternative("a")
+            b = Alternative("b")
+            c = Alternative("c")
+            d = Alternative("d")
+            e = Alternative("e")
+            alternatives = [a, b, c, d, e]
+            ballots = [
+                TrichotomousBallot(approved=[a, b], disapproved=[c]),
+                TrichotomousBallot(approved=[c]),
+            ]
+            profile = TrichotomousProfile(ballots, alternatives=alternatives)
+            res = cc_func(profile, 3)
+            self.assertEqual(len(res), 3)
 
-        profile.add_ballot(TrichotomousBallot(approved=[a], disapproved=[c]))
-        res = chamberlin_courant(profile, 2)
-        self.assertIn(a, res)
-        self.assertNotIn(c, res)
+            profile.add_ballot(TrichotomousBallot(approved=[a], disapproved=[c]))
+            res = cc_func(profile, 2)
+            self.assertIn(a, res)
+            self.assertNotIn(c, res)
 
     def test_with_brute_force(self):
         for _ in range(50):
