@@ -9,22 +9,12 @@ from unittest import TestCase
 
 from trivoting.election import AbstractTrichotomousProfile
 from trivoting.election.abcvoting import parse_abcvoting_yaml
-from trivoting.rules import (
-    tax_method_of_equal_shares,
-    TaxKraiczy2025,
-    DisapprovalLinearTax,
-    MaxSatisfactionILPBuilder,
-)
+from trivoting.rules import PAVScoreKraiczy2025, PAVScoreTalmonPaige2021, PAVScoreHervouin2025
 from trivoting.rules.chamberlin_courant import chamberlin_courant
 from trivoting.rules.max_net_support import max_net_support, max_net_support_ilp
 from trivoting.rules.thiele import (
     thiele_method,
-    PAVILPKraiczy2025,
-    PAVILPTalmonPage2021,
-    PAVILPHervouin2025,
-    sequential_thiele,
-    ApprovalOnlyScore,
-    SatisfactionScore,
+    sequential_thiele, ApprovalThieleScore, NetSupportThieleScore,
 )
 from trivoting.rules.phragmen import sequential_phragmen
 
@@ -107,14 +97,15 @@ def exhaustivee_cc(
 RULE_MAPPING = {
     "seqphragmen": sequential_phragmen,
     "pav": [
-        partial(thiele_method, ilp_builder_class=PAVILPKraiczy2025),
-        partial(thiele_method, ilp_builder_class=PAVILPTalmonPage2021),
-        partial(thiele_method, ilp_builder_class=PAVILPHervouin2025),
+        partial(thiele_method, thiele_score_class=PAVScoreKraiczy2025),
+        partial(thiele_method, thiele_score_class=PAVScoreTalmonPaige2021),
+        partial(thiele_method, thiele_score_class=PAVScoreHervouin2025),
     ],
     "av": [
-        partial(sequential_thiele, thiele_score_class=ApprovalOnlyScore),
-        partial(sequential_thiele, thiele_score_class=SatisfactionScore),
-        partial(thiele_method, ilp_builder_class=MaxSatisfactionILPBuilder),
+        partial(sequential_thiele, thiele_score_class=ApprovalThieleScore),
+        partial(sequential_thiele, thiele_score_class=NetSupportThieleScore),
+        partial(thiele_method, thiele_score_class=ApprovalThieleScore),
+        partial(thiele_method, thiele_score_class=NetSupportThieleScore),
         max_net_support_ilp,
         max_net_support,
     ],
@@ -174,6 +165,6 @@ class TestOnABCVoting(TestCase):
         all_yaml_files = os.listdir(yaml_dir_path)
         yaml_paths = [os.path.join(yaml_dir_path, f) for f in all_yaml_files]
 
-        with Pool(processes=None) as pool:
+        with Pool(processes=1) as pool:
             for res in pool.imap_unordered(process_yaml_file, yaml_paths):
                 self.assertTrue(res)

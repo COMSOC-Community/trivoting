@@ -657,7 +657,7 @@ class TrichotomousMultiProfile(
                 score -= count
         return score
 
-    def support_dict(self) -> defaultdict[Alternative, int]:
+    def support_dict(self) -> dict[Alternative, int]:
         res = dict()
         for ballot, count in self.items():
             for alt in ballot.approved:

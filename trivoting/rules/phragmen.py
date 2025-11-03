@@ -173,18 +173,18 @@ def sequential_phragmen(
     supporters = {}
     opponents = {}
     initial_alternatives = set()
-    for alt in profile.alternatives:
-        if alt not in initial_selection.rejected:
+    for alternative in profile.alternatives:
+        if alternative not in initial_selection.rejected:
             supps = [
-                i for i, v in enumerate(initial_voters) if alt in v.ballot.approved
+                i for i, v in enumerate(initial_voters) if alternative in v.ballot.approved
             ]
             opps = [
-                i for i, v in enumerate(initial_voters) if alt in v.ballot.disapproved
+                i for i, v in enumerate(initial_voters) if alternative in v.ballot.disapproved
             ]
             if supps or opps:
-                supporters[alt] = supps
-                opponents[alt] = opps
-                initial_alternatives.add(alt)
+                supporters[alternative] = supps
+                opponents[alternative] = opps
+                initial_alternatives.add(alternative)
 
     all_selections = []
 

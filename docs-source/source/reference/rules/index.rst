@@ -3,12 +3,34 @@ Rules module
 
 .. automodule:: trivoting.rules
 
+Meta Rule
+---------
+
+.. automodule:: trivoting.rules.ilp_schemes
+
+.. autoclass:: trivoting.rules.ilp_schemes.ILPNotOptimalError
+    :members:
+    :show-inheritance:
+
+.. autoclass:: trivoting.rules.ilp_schemes.ILPBuilder
+    :members:
+    :show-inheritance:
+
+.. autoclass:: trivoting.rules.ilp_schemes.PuLPSolvers
+    :members:
+    :show-inheritance:
+
+.. autofunction:: trivoting.rules.ilp_schemes.ilp_optimiser_rule
+
+
 Thiele Methods
 --------------
 
 .. automodule:: trivoting.rules.thiele
 
 .. autoclass:: trivoting.rules.thiele.ThieleScore
+    :members:
+    :show-inheritance:
 
 .. autoclass:: trivoting.rules.thiele.PAVScoreKraiczy2025
 
@@ -38,6 +60,8 @@ Tax-Based Rules
 .. automodule:: trivoting.rules.tax_rules
 
 .. autoclass:: trivoting.rules.tax_rules.TaxFunction
+    :members:
+    :show-inheritance:
 
 .. autoclass:: trivoting.rules.tax_rules.TaxKraiczy2025
 

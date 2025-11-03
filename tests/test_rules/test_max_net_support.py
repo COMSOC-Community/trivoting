@@ -4,7 +4,6 @@ from unittest import TestCase
 from tests.random_instances import get_random_profile
 from trivoting.election import TrichotomousProfile, Selection, Alternative, TrichotomousBallot
 from trivoting.rules import max_net_support, thiele_method
-from trivoting.rules.chamberlin_courant import chamberlin_courant, chamberlin_courant_brute_force
 from trivoting.rules.max_net_support import max_net_support_ilp
 from trivoting.rules.thiele import NetSupportThieleScore
 

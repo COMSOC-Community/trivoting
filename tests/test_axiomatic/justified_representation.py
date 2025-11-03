@@ -18,7 +18,7 @@ from trivoting.election.selection import Selection
 
 class TestJustifiedRepresentation(TestCase):
     def test_cohesive_group_for_l(self):
-        alternatives = [Alternative(k) for k in range(4)]
+        alternatives = [Alternative(str(k)) for k in range(4)]
         profile = TrichotomousProfile(
             [
                 TrichotomousBallot(approved=alternatives[0:]),
@@ -35,7 +35,7 @@ class TestJustifiedRepresentation(TestCase):
 
     def test_base_ejr(self):
 
-        alternatives = [Alternative(k) for k in range(4)]
+        alternatives = [Alternative(str(k)) for k in range(4)]
         profile = TrichotomousProfile(
             [
                 TrichotomousBallot(approved=alternatives[0:]),
@@ -60,7 +60,7 @@ class TestJustifiedRepresentation(TestCase):
             )
 
     def test_base_pjr(self):
-        alternatives = [Alternative(k) for k in range(4)]
+        alternatives = [Alternative(str(k)) for k in range(4)]
         profile = TrichotomousProfile(
             [
                 TrichotomousBallot(approved=alternatives[0:]),

@@ -43,7 +43,7 @@ class TestSequentialPAV(TestCase):
             self.assertEqual(sequential_thiele(profile, 0, score), Selection())
 
             # Only disapproved
-            alternatives = [Alternative(i) for i in range(10)]
+            alternatives = [Alternative(str(i)) for i in range(10)]
             negative_ballots = [
                 TrichotomousBallot(disapproved=alternatives[:6]) for _ in range(10)
             ]

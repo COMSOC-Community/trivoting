@@ -49,7 +49,7 @@ class TestMES(TestCase):
         for rule in tax_rules(10):
             for resolute in (True, False):
                 # Only disapproved
-                alternatives = [Alternative(i) for i in range(10)]
+                alternatives = [Alternative(str(i)) for i in range(10)]
                 negative_ballots = [
                     TrichotomousBallot(disapproved=alternatives[:6]) for _ in range(10)
                 ]

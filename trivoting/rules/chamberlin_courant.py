@@ -96,6 +96,12 @@ def chamberlin_courant(
         If True, returns a single selection (resolute).
         If False, returns all tied optimal selections (irresolute).
         Defaults to True.
+    max_seconds : int, optional
+        Maximum number of seconds to run the ILP solver for.
+        Defaults to 600 seconds (10 minutes).
+    verbose : bool, optional
+        If True the output of the ILP solver is not silenced.
+        Defaults to False.
 
     Returns
     -------

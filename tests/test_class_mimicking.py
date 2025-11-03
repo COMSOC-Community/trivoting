@@ -311,7 +311,7 @@ def check_list_members(
 
 
 class TestClassMimicking(TestCase):
-    ALTERNATIVES = [Alternative(i) for i in range(20)]
+    ALTERNATIVES = [Alternative(str(i)) for i in range(20)]
     BALLOTS = [
         TrichotomousBallot(
             approved=ALTERNATIVES[1:10], disapproved=ALTERNATIVES[11:14]

@@ -6,7 +6,7 @@ from trivoting.election.trichotomous_ballot import TrichotomousBallot
 
 class TestTriBallot(TestCase):
     def test_tri_ballot(self):
-        alts = [Alternative(i) for i in range(20)]
+        alts = [Alternative(str(i)) for i in range(20)]
 
         ballot = TrichotomousBallot(approved=alts[:5], disapproved=alts[5:10])
 

@@ -311,6 +311,8 @@ document.write(`
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_size_selection</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">max_size_selection</span> <span class="o">=</span> <span class="n">max_size_selection</span>
 
+<div class="viewcode-block" id="ThieleScore.score_function">
+<a class="viewcode-back" href="../../../reference/rules/index.html#trivoting.rules.thiele.ThieleScore.score_function">[docs]</a>
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">score_function</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">num_app_sel</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">num_disapp_sel</span> <span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">num_app_rej</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">num_disapp_rej</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
@@ -332,8 +334,11 @@ document.write(`
 <span class="sd">                The number of approved and rejected alternatives</span>
 <span class="sd">            num_disapp_rej: int, optional</span>
 <span class="sd">                The number of disapproved and rejected alternatives</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        &quot;&quot;&quot;</span></div>
 
+
+<div class="viewcode-block" id="ThieleScore.score_selection">
+<a class="viewcode-back" href="../../../reference/rules/index.html#trivoting.rules.thiele.ThieleScore.score_selection">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">score_selection</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">profile</span><span class="p">:</span> <span class="n">AbstractTrichotomousProfile</span><span class="p">,</span>
@@ -393,7 +398,8 @@ document.write(`
                 <span class="n">num_app_sel</span><span class="p">,</span> <span class="n">num_disapp_sel</span><span class="p">,</span> <span class="n">num_app_rej</span><span class="p">,</span> <span class="n">num_disapp_rej</span>
             <span class="p">)</span>
             <span class="n">score</span> <span class="o">+=</span> <span class="n">ballot_score</span> <span class="o">*</span> <span class="n">profile</span><span class="o">.</span><span class="n">multiplicity</span><span class="p">(</span><span class="n">ballot</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">score</span>
+        <span class="k">return</span> <span class="n">score</span></div>
+
 
     <span class="k">class</span><span class="w"> </span><span class="nc">_ThieleILPBuilder</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">):</span>
         <span class="k">pass</span>

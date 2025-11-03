@@ -101,7 +101,7 @@ def generate_random_profile(
     TrichotomousProfile
         A profile containing randomly generated trichotomous ballots.
     """
-    alternatives = [Alternative(i) for i in range(num_alternatives)]
+    alternatives = [Alternative(str(i)) for i in range(num_alternatives)]
     profile = TrichotomousProfile(alternatives=alternatives)
     for _ in range(num_voters):
         ballot = generate_random_ballot(

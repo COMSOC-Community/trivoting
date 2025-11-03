@@ -325,8 +325,20 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-trivoting.rules.ilp_schemes">Meta Rule</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.rules.ilp_schemes.ILPNotOptimalError"><code class="docutils literal notranslate"><span class="pre">ILPNotOptimalError</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.rules.ilp_schemes.ILPBuilder"><code class="docutils literal notranslate"><span class="pre">ILPBuilder</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.rules.ilp_schemes.PuLPSolvers"><code class="docutils literal notranslate"><span class="pre">PuLPSolvers</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.rules.ilp_schemes.ilp_optimiser_rule"><code class="docutils literal notranslate"><span class="pre">ilp_optimiser_rule()</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-trivoting.rules.thiele">Thiele Methods</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.rules.thiele.ThieleScore"><code class="docutils literal notranslate"><span class="pre">ThieleScore</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.rules.thiele.ThieleScore"><code class="docutils literal notranslate"><span class="pre">ThieleScore</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.rules.thiele.ThieleScore.score_function"><code class="docutils literal notranslate"><span class="pre">ThieleScore.score_function()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.rules.thiele.ThieleScore.score_selection"><code class="docutils literal notranslate"><span class="pre">ThieleScore.score_selection()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.rules.thiele.ThieleScore.ilp_builder"><code class="docutils literal notranslate"><span class="pre">ThieleScore.ilp_builder</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.rules.thiele.PAVScoreKraiczy2025"><code class="docutils literal notranslate"><span class="pre">PAVScoreKraiczy2025</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.rules.thiele.PAVScoreTalmonPaige2021"><code class="docutils literal notranslate"><span class="pre">PAVScoreTalmonPaige2021</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.rules.thiele.PAVScoreHervouin2025"><code class="docutils literal notranslate"><span class="pre">PAVScoreHervouin2025</span></code></a></li>
@@ -341,7 +353,11 @@ document.write(`
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-trivoting.rules.tax_rules">Tax-Based Rules</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.rules.tax_rules.TaxFunction"><code class="docutils literal notranslate"><span class="pre">TaxFunction</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.rules.tax_rules.TaxFunction"><code class="docutils literal notranslate"><span class="pre">TaxFunction</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.rules.tax_rules.TaxFunction.preprocess"><code class="docutils literal notranslate"><span class="pre">TaxFunction.preprocess()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.rules.tax_rules.TaxFunction.tax_alternative"><code class="docutils literal notranslate"><span class="pre">TaxFunction.tax_alternative()</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.rules.tax_rules.TaxKraiczy2025"><code class="docutils literal notranslate"><span class="pre">TaxKraiczy2025</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.rules.tax_rules.DisapprovalLinearTax"><code class="docutils literal notranslate"><span class="pre">DisapprovalLinearTax</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.rules.tax_rules.tax_pb_instance"><code class="docutils literal notranslate"><span class="pre">tax_pb_instance()</span></code></a></li>
@@ -363,12 +379,86 @@ document.write(`
                   
   <section id="module-trivoting.rules">
 <span id="rules-module"></span><h1>Rules module<a class="headerlink" href="#module-trivoting.rules" title="Link to this heading">#</a></h1>
+<section id="module-trivoting.rules.ilp_schemes">
+<span id="meta-rule"></span><h2>Meta Rule<a class="headerlink" href="#module-trivoting.rules.ilp_schemes" title="Link to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="trivoting.rules.ilp_schemes.ILPNotOptimalError">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ILPNotOptimalError</span></span><a class="reference internal" href="../../_modules/trivoting/rules/ilp_schemes.html#ILPNotOptimalError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.rules.ilp_schemes.ILPNotOptimalError" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ValueError</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="trivoting.rules.ilp_schemes.ILPBuilder">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ILPBuilder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">profile</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../election/index.html#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile" title="trivoting.election.trichotomous_profile.AbstractTrichotomousProfile"><span class="pre">AbstractTrichotomousProfile</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_size_selection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_selection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../election/index.html#trivoting.election.selection.Selection" title="trivoting.election.selection.Selection"><span class="pre">Selection</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_seconds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">600</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#trivoting.rules.ilp_schemes.PuLPSolvers" title="trivoting.rules.ilp_schemes.PuLPSolvers"><span class="pre">PuLPSolvers</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/trivoting/rules/ilp_schemes.html#ILPBuilder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.rules.ilp_schemes.ILPBuilder" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="trivoting.rules.ilp_schemes.PuLPSolvers">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">PuLPSolvers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/trivoting/rules/ilp_schemes.html#PuLPSolvers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.rules.ilp_schemes.PuLPSolvers" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="trivoting.rules.ilp_schemes.ilp_optimiser_rule">
+<span class="sig-name descname"><span class="pre">ilp_optimiser_rule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ilp_builder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#trivoting.rules.ilp_schemes.ILPBuilder" title="trivoting.rules.ilp_schemes.ILPBuilder"><span class="pre">ILPBuilder</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">resoluteness</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../election/index.html#trivoting.election.selection.Selection" title="trivoting.election.selection.Selection"><span class="pre">Selection</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="../election/index.html#trivoting.election.selection.Selection" title="trivoting.election.selection.Selection"><span class="pre">Selection</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/trivoting/rules/ilp_schemes.html#ilp_optimiser_rule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.rules.ilp_schemes.ilp_optimiser_rule" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</section>
 <section id="module-trivoting.rules.thiele">
 <span id="thiele-methods"></span><h2>Thiele Methods<a class="headerlink" href="#module-trivoting.rules.thiele" title="Link to this heading">#</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="trivoting.rules.thiele.ThieleScore">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ThieleScore</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_size_selection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/trivoting/rules/thiele.html#ThieleScore"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.rules.thiele.ThieleScore" title="Link to this definition">#</a></dt>
-<dd><p>Class used to define score function for Thiele methods. The class is used for the sequential Thiele rules.</p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
+<p>Class used to define score function for Thiele methods. The class is used for the sequential Thiele rules.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="trivoting.rules.thiele.ThieleScore.score_function">
+<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">score_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_app_sel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_disapp_sel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_app_rej</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_disapp_rej</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/trivoting/rules/thiele.html#ThieleScore.score_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.rules.thiele.ThieleScore.score_function" title="Link to this definition">#</a></dt>
+<dd><dl class="simple">
+<dt>Actual scoring function. Can only depend on:</dt><dd><ul class="simple">
+<li><p>the number of approved and selected alternatives;</p></li>
+<li><p>the number of disapproved and selected alternatives;</p></li>
+<li><p>the number of approved and rejected alternatives; and on</p></li>
+<li><p>the number of disapproved and rejected alternatives.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>num_app_sel</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of approved and selected alternatives</p></li>
+<li><p><strong>num_disapp_sel</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of disapproved and selected alternatives</p></li>
+<li><p><strong>num_app_rej</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of approved and rejected alternatives</p></li>
+<li><p><strong>num_disapp_rej</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of disapproved and rejected alternatives</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="trivoting.rules.thiele.ThieleScore.score_selection">
+<span class="sig-name descname"><span class="pre">score_selection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">profile</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../election/index.html#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile" title="trivoting.election.trichotomous_profile.AbstractTrichotomousProfile"><span class="pre">AbstractTrichotomousProfile</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">selection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../election/index.html#trivoting.election.selection.Selection" title="trivoting.election.selection.Selection"><span class="pre">Selection</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_accept</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="../election/index.html#trivoting.election.alternative.Alternative" title="trivoting.election.alternative.Alternative"><span class="pre">Alternative</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_reject</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="../election/index.html#trivoting.election.alternative.Alternative" title="trivoting.election.alternative.Alternative"><span class="pre">Alternative</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">mpq</span></span></span><a class="reference internal" href="../../_modules/trivoting/rules/thiele.html#ThieleScore.score_selection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.rules.thiele.ThieleScore.score_selection" title="Link to this definition">#</a></dt>
+<dd><p>Returns the total score of a selection for a given profile according to the scoring function.</p>
+<p>Use the <cite>extra_accept</cite> and <cite>extra_reject</cite> parameters to extend the selection without having to copy it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>profile</strong> (<a class="reference internal" href="../election/index.html#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile" title="trivoting.election.trichotomous_profile.AbstractTrichotomousProfile"><em>AbstractTrichotomousProfile</em></a>) – The profile.</p></li>
+<li><p><strong>selection</strong> (<a class="reference internal" href="../election/index.html#trivoting.election.selection.Selection" title="trivoting.election.selection.Selection"><em>Selection</em></a>) – The selection.</p></li>
+<li><p><strong>extra_accept</strong> (<em>Iterable</em><em>[</em><a class="reference internal" href="../election/index.html#trivoting.election.alternative.Alternative" title="trivoting.election.alternative.Alternative"><em>Alternative</em></a><em>]</em><em>, </em><em>optional</em>) – Additional alternative to consider as being part of the selection. Defaults to the empty list.</p></li>
+<li><p><strong>extra_reject</strong> (<em>Iterable</em><em>[</em><a class="reference internal" href="../election/index.html#trivoting.election.alternative.Alternative" title="trivoting.election.alternative.Alternative"><em>Alternative</em></a><em>]</em><em>, </em><em>optional</em>) – Additional alternative to consider as being rejected in the selection. Defaults to the empty list.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="trivoting.rules.thiele.ThieleScore.ilp_builder">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ilp_builder</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">type</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#trivoting.rules.ilp_schemes.ILPBuilder" title="trivoting.rules.ilp_schemes.ILPBuilder"><span class="pre">ILPBuilder</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#trivoting.rules.thiele.ThieleScore.ilp_builder" title="Link to this definition">#</a></dt>
+<dd><p>Return the ILPBuilder class used for the ILP optimising version of the Thiele rule.</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
@@ -490,8 +580,22 @@ if irresolute (<code class="code docutils literal notranslate"><span class="pre"
 <dl class="py class">
 <dt class="sig sig-object py" id="trivoting.rules.tax_rules.TaxFunction">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">TaxFunction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">profile</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../election/index.html#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile" title="trivoting.election.trichotomous_profile.AbstractTrichotomousProfile"><span class="pre">AbstractTrichotomousProfile</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_size_selection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/trivoting/rules/tax_rules.html#TaxFunction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.rules.tax_rules.TaxFunction" title="Link to this definition">#</a></dt>
-<dd><p>Abstract class representing tax functions. A tax function associates a tax (i.e., the cost of a project on the PB side)
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
+<p>Abstract class representing tax functions. A tax function associates a tax (i.e., the cost of a project on the PB side)
 to alternatives.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="trivoting.rules.tax_rules.TaxFunction.preprocess">
+<span class="sig-name descname"><span class="pre">preprocess</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../_modules/trivoting/rules/tax_rules.html#TaxFunction.preprocess"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.rules.tax_rules.TaxFunction.preprocess" title="Link to this definition">#</a></dt>
+<dd><p>Preprocessing of the profile used to save up time on expensive computations that would be otherwise repeated.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="trivoting.rules.tax_rules.TaxFunction.tax_alternative">
+<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tax_alternative</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alternative</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../election/index.html#trivoting.election.alternative.Alternative" title="trivoting.election.alternative.Alternative"><span class="pre">Alternative</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">mpq</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="../../_modules/trivoting/rules/tax_rules.html#TaxFunction.tax_alternative"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trivoting.rules.tax_rules.TaxFunction.tax_alternative" title="Link to this definition">#</a></dt>
+<dd><p>Returns the tax corresponding to the alternative. If <cite>None</cite> is returned, no project corresponding to the
+alternative is added to the PB instance.</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
@@ -676,8 +780,20 @@ if irresolute (<code class="code docutils literal notranslate"><span class="pre"
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-trivoting.rules.ilp_schemes">Meta Rule</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.rules.ilp_schemes.ILPNotOptimalError"><code class="docutils literal notranslate"><span class="pre">ILPNotOptimalError</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.rules.ilp_schemes.ILPBuilder"><code class="docutils literal notranslate"><span class="pre">ILPBuilder</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.rules.ilp_schemes.PuLPSolvers"><code class="docutils literal notranslate"><span class="pre">PuLPSolvers</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.rules.ilp_schemes.ilp_optimiser_rule"><code class="docutils literal notranslate"><span class="pre">ilp_optimiser_rule()</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-trivoting.rules.thiele">Thiele Methods</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.rules.thiele.ThieleScore"><code class="docutils literal notranslate"><span class="pre">ThieleScore</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.rules.thiele.ThieleScore"><code class="docutils literal notranslate"><span class="pre">ThieleScore</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.rules.thiele.ThieleScore.score_function"><code class="docutils literal notranslate"><span class="pre">ThieleScore.score_function()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.rules.thiele.ThieleScore.score_selection"><code class="docutils literal notranslate"><span class="pre">ThieleScore.score_selection()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.rules.thiele.ThieleScore.ilp_builder"><code class="docutils literal notranslate"><span class="pre">ThieleScore.ilp_builder</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.rules.thiele.PAVScoreKraiczy2025"><code class="docutils literal notranslate"><span class="pre">PAVScoreKraiczy2025</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.rules.thiele.PAVScoreTalmonPaige2021"><code class="docutils literal notranslate"><span class="pre">PAVScoreTalmonPaige2021</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.rules.thiele.PAVScoreHervouin2025"><code class="docutils literal notranslate"><span class="pre">PAVScoreHervouin2025</span></code></a></li>
@@ -692,7 +808,11 @@ if irresolute (<code class="code docutils literal notranslate"><span class="pre"
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-trivoting.rules.tax_rules">Tax-Based Rules</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.rules.tax_rules.TaxFunction"><code class="docutils literal notranslate"><span class="pre">TaxFunction</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.rules.tax_rules.TaxFunction"><code class="docutils literal notranslate"><span class="pre">TaxFunction</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.rules.tax_rules.TaxFunction.preprocess"><code class="docutils literal notranslate"><span class="pre">TaxFunction.preprocess()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.rules.tax_rules.TaxFunction.tax_alternative"><code class="docutils literal notranslate"><span class="pre">TaxFunction.tax_alternative()</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.rules.tax_rules.TaxKraiczy2025"><code class="docutils literal notranslate"><span class="pre">TaxKraiczy2025</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.rules.tax_rules.DisapprovalLinearTax"><code class="docutils literal notranslate"><span class="pre">DisapprovalLinearTax</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trivoting.rules.tax_rules.tax_pb_instance"><code class="docutils literal notranslate"><span class="pre">tax_pb_instance()</span></code></a></li>

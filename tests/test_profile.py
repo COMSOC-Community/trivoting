@@ -8,7 +8,7 @@ from trivoting.election.trichotomous_profile import TrichotomousProfile
 
 class TestProfile(TestCase):
     def test_profile(self):
-        alternatives = [Alternative(i) for i in range(20)]
+        alternatives = [Alternative(str(i)) for i in range(20)]
         ballots = [
             TrichotomousBallot(
                 approved=alternatives[1:10], disapproved=alternatives[11:14]

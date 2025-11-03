@@ -387,7 +387,7 @@ document.write(`
 <span class="sd">    TrichotomousProfile</span>
 <span class="sd">        A profile containing randomly generated trichotomous ballots.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">alternatives</span> <span class="o">=</span> <span class="p">[</span><span class="n">Alternative</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_alternatives</span><span class="p">)]</span>
+    <span class="n">alternatives</span> <span class="o">=</span> <span class="p">[</span><span class="n">Alternative</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_alternatives</span><span class="p">)]</span>
     <span class="n">profile</span> <span class="o">=</span> <span class="n">TrichotomousProfile</span><span class="p">(</span><span class="n">alternatives</span><span class="o">=</span><span class="n">alternatives</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_voters</span><span class="p">):</span>
         <span class="n">ballot</span> <span class="o">=</span> <span class="n">generate_random_ballot</span><span class="p">(</span>

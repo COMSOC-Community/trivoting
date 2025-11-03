@@ -15,7 +15,7 @@ from trivoting.rules.tax_rules import (
 def example_1_KPPS25():
     """Example 1 of Proportionality in Thumbs Up and Down Voting"""
 
-    alts = [Alternative(i) for i in range(1, 31)]
+    alts = [Alternative(str(i)) for i in range(1, 31)]
 
     profile = TrichotomousProfile(alternatives=alts)
 
