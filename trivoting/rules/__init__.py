@@ -17,6 +17,8 @@ from trivoting.rules.tax_rules import (
     DisapprovalLinearTax,
 )
 from trivoting.rules.phragmen import sequential_phragmen
+from trivoting.rules.chamberlin_courant import chamberlin_courant
+from trivoting.rules.max_net_support import max_net_support
 
 __all__ = [
     "thiele_method",
@@ -34,4 +36,6 @@ __all__ = [
     "TaxKraiczy2025",
     "DisapprovalLinearTax",
     "sequential_phragmen",
+    "chamberlin_courant",
+    "max_net_support",
 ]
