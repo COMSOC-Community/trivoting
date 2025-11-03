@@ -28,22 +28,59 @@ from trivoting.utils import harmonic_sum
 
 class ThieleScore(abc.ABC):
     """Class used to define score function for Thiele methods. The class is used for the sequential Thiele rules."""
-    def __init__(self, max_size_selection):
+    def __init__(self, max_size_selection: int):
         self.max_size_selection = max_size_selection
 
     @abstractmethod
     def score_function(
-        self, num_app_sel=0, num_disapp_sel=0, num_app_rej=0, num_disapp_rej=0
+        self, num_app_sel: int = 0, num_disapp_sel : int = 0, num_app_rej: int = 0, num_disapp_rej: int = 0
     ):
-        pass
+        """
+        Actual scoring function. Can only depend on:
+            - the number of approved and selected alternatives;
+            - the number of disapproved and selected alternatives;
+            - the number of approved and rejected alternatives; and on
+            - the number of disapproved and rejected alternatives.
+
+        Parameters
+        ----------
+            num_app_sel: int, optional
+                The number of approved and selected alternatives
+            num_disapp_sel: int, optional
+                The number of disapproved and selected alternatives
+            num_app_rej: int, optional
+                The number of approved and rejected alternatives
+            num_disapp_rej: int, optional
+                The number of disapproved and rejected alternatives
+        """
 
     def score_selection(
         self,
         profile: AbstractTrichotomousProfile,
         selection: Selection,
-        extra_reject: Iterable[Alternative] = None,
         extra_accept: Iterable[Alternative] = None,
+        extra_reject: Iterable[Alternative] = None,
     ) -> Numeric:
+        """
+        Returns the total score of a selection for a given profile according to the scoring function.
+
+        Use the `extra_accept` and `extra_reject` parameters to extend the selection without having to copy it.
+
+        Parameters
+        ----------
+            profile : AbstractTrichotomousProfile
+                The profile.
+            selection : Selection
+                The selection.
+            extra_accept : Iterable[Alternative], optional
+                Additional alternative to consider as being part of the selection. Defaults to the empty list.
+            extra_reject : Iterable[Alternative], optional
+                Additional alternative to consider as being rejected in the selection. Defaults to the empty list.
+
+        Returns
+        -------
+
+        """
         if extra_reject is None:
             extra_reject = []
         if extra_accept is None:
@@ -80,6 +117,13 @@ class ThieleScore(abc.ABC):
 
 
 class PAVScoreKraiczy2025(ThieleScore):
+    """
+    Defines the ILP objective for the PAV ILP solver as defined in Section 3.3 of
+    ``Proportionality in Thumbs Up and Down Voting`` (Kraiczy, Papasotiropoulos, Pierczyński and Skowron, 2025).
+    The objective is to maximise the PAV score where both approved and selected, and disapproved and not selected
+    alternatives contribute positively.
+    """
+
     def score_function(
         self, num_app_sel=0, num_disapp_sel=0, num_app_rej=0, num_disapp_rej=0
     ):
@@ -87,6 +131,13 @@ class PAVScoreKraiczy2025(ThieleScore):
 
 
 class PAVScoreTalmonPaige2021(ThieleScore):
+    """
+    Defines the ILP objective for the PAV ILP solver as defined in Section 3.3 of
+    ``Proportionality in Committee Selection with Negative Feelings`` (Talmon and Page, 2021).
+    The objective is to maximise the difference between (1) the PAV score in which approved and selected alternatives
+    are taken into account, and (2) the PAV score in which disapproved but selected alternatives are taken into account.
+    """
+
     def score_function(
         self, num_app_sel=0, num_disapp_sel=0, num_app_rej=0, num_disapp_rej=0
     ):
@@ -94,6 +145,12 @@ class PAVScoreTalmonPaige2021(ThieleScore):
 
 
 class PAVScoreHervouin2025(ThieleScore):
+    """
+    Defines the ILP objective for the PAV ILP solver as defined by Matthieu Hervouin.
+    The objective is to maximise the sum of (1) the PAV score in which approved and selected alternatives
+    are taken into account, and (2) the PAV score over the maximum size of the selection minus the number of
+    disapproved but selected alternatives.
+    """
     def score_function(
         self, num_app_sel=0, num_disapp_sel=0, num_app_rej=0, num_disapp_rej=0
     ):
@@ -102,14 +159,19 @@ class PAVScoreHervouin2025(ThieleScore):
         )
 
 
-class ApprovalOnlyScore(ThieleScore):
+class ApprovalScore(ThieleScore):
     def score_function(
         self, num_app_sel=0, num_disapp_sel=0, num_app_rej=0, num_disapp_rej=0
     ):
         return num_app_sel
 
 
-class SatisfactionScore(ThieleScore):
+class NetSupportScore(ThieleScore):
+    """
+    Defines the ILP objective for maximising the total satisfaction of the voters. For a given voter, the satisfaction
+    is defined as the number of approved and selected alternatives minus the number of disapproved but
+    selected alternatives.
+    """
     def score_function(
         self, num_app_sel=0, num_disapp_sel=0, num_app_rej=0, num_disapp_rej=0
     ):
@@ -200,12 +262,6 @@ class ThieleILPBuilder(abc.ABC):
 
 
 class PAVILPKraiczy2025(ThieleILPBuilder):
-    """
-    Defines the ILP objective for the PAV ILP solver as defined in Section 3.3 of
-    ``Proportionality in Thumbs Up and Down Voting`` (Kraiczy, Papasotiropoulos, Pierczyński and Skowron, 2025).
-    The objective is to maximise the PAV score where both approved and selected, and disapproved and not selected
-    alternatives contribute positively.
-    """
 
     def init_voters_vars(self) -> None:
         # Init the variables
@@ -232,13 +288,6 @@ class PAVILPKraiczy2025(ThieleILPBuilder):
 
 
 class PAVILPTalmonPage2021(ThieleILPBuilder):
-    """
-    Defines the ILP objective for the PAV ILP solver as defined in Section 3.3 of
-    ``Proportionality in Committee Selection with Negative Feelings`` (Talmon and Page, 2021).
-    The objective is to maximise the difference between (1) the PAV score in which approved and selected alternatives
-    are taken into account, and (2) the PAV score in which disapproved but selected alternatives are taken into account.
-    """
-
     def init_voters_vars(self) -> None:
         # Init the variables
         for i, ballot in enumerate(self.profile):
@@ -275,12 +324,6 @@ class PAVILPTalmonPage2021(ThieleILPBuilder):
 
 
 class PAVILPHervouin2025(ThieleILPBuilder):
-    """
-    Defines the ILP objective for the PAV ILP solver as defined by Matthieu Hervouin.
-    The objective is to maximise the sum of (1) the PAV score in which approved and selected alternatives
-    are taken into account, and (2) the PAV score over the maximum size of the selection minus the number of
-    disapproved but selected alternatives.
-    """
 
     def init_voters_vars(self) -> None:
         # Init the variables
@@ -320,11 +363,6 @@ class PAVILPHervouin2025(ThieleILPBuilder):
 
 
 class MaxSatisfactionILPBuilder(ThieleILPBuilder):
-    """
-    Defines the ILP objective for maximising the total satisfaction of the voters. For a given voter, the satisfaction
-    is defined as the number of approved and selected alternatives minus the number of disapproved but
-    selected alternatives.
-    """
 
     def init_voters_vars(self) -> None:
         # Init the variables
@@ -391,6 +429,7 @@ def thiele_method(
         The selection if resolute (:code:`resoluteness == True`), or a list of selections
         if irresolute (:code:`resoluteness == False`).
     """
+
 
     if ilp_builder_class is None:
         ilp_builder_class = PAVILPKraiczy2025
