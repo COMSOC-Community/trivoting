@@ -3,10 +3,10 @@ from __future__ import annotations
 from pulp import lpSum, LpVariable, LpInteger, LpAffineExpression
 
 from trivoting.election import AbstractTrichotomousProfile, Selection
-from trivoting.rules.ilp_schemes import ILPBUilder, ilp_optimiser_rule
+from trivoting.rules.ilp_schemes import ILPBuilder, ilp_optimiser_rule
 
 
-class MaxNetSupportILPBuilder(ILPBUilder):
+class MaxNetSupportILPBuilder(ILPBuilder):
     model_name = "MaxNetSupport"
 
     def init_vars(self) -> None:
@@ -20,7 +20,7 @@ class MaxNetSupportILPBuilder(ILPBUilder):
             self.vars["sat_var"][i] = sat_var
 
     def objective(self) -> LpAffineExpression:
-        return lpSum(self.vars["sat_var"].values())
+        return lpSum(self.vars["sat_var"][i] * self.profile.multiplicity(b) for i, b in enumerate(self.profile))
 
 
 def max_net_support_ilp(

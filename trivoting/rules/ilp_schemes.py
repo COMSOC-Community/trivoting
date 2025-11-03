@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import abc
 from enum import Enum
 
@@ -15,7 +17,7 @@ class PuLPSolvers(Enum):
     HIGHS = "HIGHS"
     CBC = "CBC"
 
-class ILPBUilder(abc.ABC):
+class ILPBuilder(abc.ABC):
     model_name = "NoName"
 
     def __init__(self,
@@ -91,9 +93,8 @@ class ILPBUilder(abc.ABC):
         ) <= len(selection) - 1
 
 
-
 def ilp_optimiser_rule(
-    ilp_builder: ILPBUilder,
+    ilp_builder: ILPBuilder,
     resoluteness: bool = True,
 ) -> Selection | list[Selection]:
 

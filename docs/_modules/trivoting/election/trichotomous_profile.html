@@ -35,7 +35,7 @@
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="../../../_static/documentation_options.js?v=6424ca4d"></script>
+    <script src="../../../_static/documentation_options.js?v=73504a2b"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
@@ -519,6 +519,10 @@ document.write(`
 <span class="sd">                returns 0.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">selection_support</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selection</span><span class="p">:</span><span class="n">Selection</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;&quot;&quot;&quot;</span>
+
     <span class="k">def</span><span class="w"> </span><span class="nf">all_feasible_selections</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_size_selection</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Selection</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns an iterator that yields all feasible (partial) selections.</span>
@@ -577,7 +581,29 @@ document.write(`
             <span class="k">return</span> <span class="nb">set</span><span class="p">()</span>
         <span class="k">return</span> <span class="nb">set</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span>
             <span class="o">*</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">ballot</span><span class="o">.</span><span class="n">disapproved</span><span class="p">)</span> <span class="k">for</span> <span class="n">ballot</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ballot_container</span><span class="p">)</span>
-        <span class="p">)</span></div>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">num_covered_ballots</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selection</span><span class="p">:</span> <span class="n">Selection</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the number of ballots that have positive satisfaction for the selection.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        selection: Selection</span>
+<span class="sd">            The selection.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            int</span>
+<span class="sd">                The number of ballots with strictly positive satisfaction for the selection.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">covered_voters</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">ballot</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="n">satisfaction</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">alt</span> <span class="ow">in</span> <span class="n">ballot</span><span class="o">.</span><span class="n">approved</span> <span class="k">if</span> <span class="n">selection</span><span class="o">.</span><span class="n">is_selected</span><span class="p">(</span><span class="n">alt</span><span class="p">))</span> <span class="o">-</span> <span class="nb">sum</span><span class="p">(</span>
+                <span class="mi">1</span> <span class="k">for</span> <span class="n">alt</span> <span class="ow">in</span> <span class="n">ballot</span><span class="o">.</span><span class="n">disapproved</span> <span class="k">if</span> <span class="n">selection</span><span class="o">.</span><span class="n">is_selected</span><span class="p">(</span><span class="n">alt</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">satisfaction</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">covered_voters</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">multiplicity</span><span class="p">(</span><span class="n">ballot</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">covered_voters</span></div>
 
 
 
@@ -716,6 +742,13 @@ document.write(`
                 <span class="n">disapp_scores</span><span class="p">[</span><span class="n">alt</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">return</span> <span class="n">app_scores</span><span class="p">,</span> <span class="n">disapp_scores</span></div>
 
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">selection_support</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selection</span><span class="p">:</span> <span class="n">Selection</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">ballot</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="n">res</span> <span class="o">+=</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">ballot</span><span class="o">.</span><span class="n">approved</span> <span class="k">if</span> <span class="n">selection</span><span class="o">.</span><span class="n">is_selected</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+            <span class="n">res</span> <span class="o">-=</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">ballot</span><span class="o">.</span><span class="n">disapproved</span> <span class="k">if</span> <span class="n">selection</span><span class="o">.</span><span class="n">is_selected</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">res</span>
 
 <div class="viewcode-block" id="TrichotomousProfile.num_ballots">
 <a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousProfile.num_ballots">[docs]</a>
@@ -1067,6 +1100,14 @@ document.write(`
                 <span class="n">disapp_scores</span><span class="p">[</span><span class="n">alt</span><span class="p">]</span> <span class="o">+=</span> <span class="n">count</span>
         <span class="k">return</span> <span class="n">app_scores</span><span class="p">,</span> <span class="n">disapp_scores</span></div>
 
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">selection_support</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selection</span><span class="p">:</span> <span class="n">Selection</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">ballot</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">ballot_support</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">ballot</span><span class="o">.</span><span class="n">approved</span> <span class="k">if</span> <span class="n">selection</span><span class="o">.</span><span class="n">is_selected</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+            <span class="n">ballot_support</span> <span class="o">-=</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">ballot</span><span class="o">.</span><span class="n">disapproved</span> <span class="k">if</span> <span class="n">selection</span><span class="o">.</span><span class="n">is_selected</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+            <span class="n">res</span> <span class="o">+=</span> <span class="n">ballot_support</span> <span class="o">*</span> <span class="n">count</span>
+        <span class="k">return</span> <span class="n">res</span>
 
 <div class="viewcode-block" id="TrichotomousMultiProfile.total">
 <a class="viewcode-back" href="../../../reference/election/index.html#trivoting.election.trichotomous_profile.TrichotomousMultiProfile.total">[docs]</a>

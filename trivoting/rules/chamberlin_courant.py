@@ -1,19 +1,15 @@
 from __future__ import annotations
 
 from pulp import (
-    LpMaximize,
-    LpProblem,
     lpSum,
-    LpStatusOptimal,
-    value,
     LpBinary,
     LpVariable,
     LpInteger,
-    HiGHS, LpAffineExpression,
+    LpAffineExpression,
 )
 
 from trivoting.election import AbstractTrichotomousProfile, Selection
-from trivoting.rules.ilp_schemes import ILPBUilder, ilp_optimiser_rule
+from trivoting.rules.ilp_schemes import ILPBuilder, ilp_optimiser_rule
 from trivoting.utils import generate_subsets
 
 
@@ -23,10 +19,12 @@ def chamberlin_courant_brute_force(
     initial_selection: Selection = None,
     resoluteness: bool = True
 ) -> Selection | list[Selection]:
+    if initial_selection is None:
+        initial_selection = Selection(implicit_reject=True)
     max_coverage = None
     arg_max_coverage = None
-    for selection_selected in generate_subsets(profile.alternatives, max_size=max_size_selection):
-        selection = Selection(selected=selection_selected)
+    for selection_selected in generate_subsets(profile.alternatives, max_size=max_size_selection - len(initial_selection)):
+        selection = Selection(selected=list(selection_selected) + initial_selection.selected, implicit_reject=True)
         covered_voters = profile.num_covered_ballots(selection)
         if max_coverage is None or covered_voters > max_coverage:
             max_coverage = covered_voters
@@ -39,7 +37,7 @@ def chamberlin_courant_brute_force(
         return arg_max_coverage[0]
     return arg_max_coverage
 
-class ChamberlinCourantILPBuilder(ILPBUilder):
+class ChamberlinCourantILPBuilder(ILPBuilder):
     model_name = "ChamberlinCourant"
 
     def init_vars(self) -> None:

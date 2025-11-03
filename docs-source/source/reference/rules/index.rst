@@ -8,20 +8,6 @@ Thiele Methods
 
 .. automodule:: trivoting.rules.thiele
 
-.. autofunction:: trivoting.rules.thiele.thiele_method
-
-.. autoclass:: trivoting.rules.thiele.ThieleILPBuilder
-
-.. autoclass:: trivoting.rules.thiele.PAVILPKraiczy2025
-
-.. autoclass:: trivoting.rules.thiele.PAVILPTalmonPage2021
-
-.. autoclass:: trivoting.rules.thiele.PAVILPHervouin2025
-
-.. autoclass:: trivoting.rules.thiele.MaxSatisfactionILPBuilder
-
-.. autofunction:: trivoting.rules.thiele.sequential_thiele
-
 .. autoclass:: trivoting.rules.thiele.ThieleScore
 
 .. autoclass:: trivoting.rules.thiele.PAVScoreKraiczy2025
@@ -30,9 +16,13 @@ Thiele Methods
 
 .. autoclass:: trivoting.rules.thiele.PAVScoreHervouin2025
 
-.. autoclass:: trivoting.rules.thiele.ApprovalOnlyScore
+.. autoclass:: trivoting.rules.thiele.ApprovalThieleScore
 
-.. autoclass:: trivoting.rules.thiele.SatisfactionScore
+.. autoclass:: trivoting.rules.thiele.NetSupportThieleScore
+
+.. autofunction:: trivoting.rules.thiele.thiele_method
+
+.. autofunction:: trivoting.rules.thiele.sequential_thiele
 
 Sequential Phragmén's Rule
 --------------------------

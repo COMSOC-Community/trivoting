@@ -2,12 +2,8 @@ from trivoting.rules.thiele import (
     thiele_method,
     sequential_thiele,
     PAVScoreKraiczy2025,
-    PAVILPKraiczy2025,
-    PAVILPTalmonPage2021,
     PAVScoreTalmonPaige2021,
-    PAVILPHervouin2025,
     PAVScoreHervouin2025,
-    MaxSatisfactionILPBuilder,
 )
 from trivoting.rules.tax_rules import (
     tax_pb_rule_scheme,
@@ -22,10 +18,9 @@ from trivoting.rules.max_net_support import max_net_support
 
 __all__ = [
     "thiele_method",
-    "PAVILPHervouin2025",
-    "PAVILPKraiczy2025",
-    "PAVILPTalmonPage2021",
-    "MaxSatisfactionILPBuilder",
+    "PAVScoreKraiczy2025",
+    "PAVScoreTalmonPaige2021",
+    "PAVScoreHervouin2025",
     "sequential_thiele",
     "PAVScoreKraiczy2025",
     "PAVScoreTalmonPaige2021",

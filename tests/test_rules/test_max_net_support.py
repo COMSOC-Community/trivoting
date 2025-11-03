@@ -3,9 +3,10 @@ from unittest import TestCase
 
 from tests.random_instances import get_random_profile
 from trivoting.election import TrichotomousProfile, Selection, Alternative, TrichotomousBallot
-from trivoting.rules import max_net_support
+from trivoting.rules import max_net_support, thiele_method
 from trivoting.rules.chamberlin_courant import chamberlin_courant, chamberlin_courant_brute_force
 from trivoting.rules.max_net_support import max_net_support_ilp
+from trivoting.rules.thiele import NetSupportThieleScore
 
 
 class TestMaxNetSupport(TestCase):
@@ -31,13 +32,25 @@ class TestMaxNetSupport(TestCase):
         res = max_net_support(profile, len(alternatives))
         self.assertEqual(len(res), 0)
 
-    def test_max_net_support_with_ilp(self):
+    def test_max_net_support_formulations(self):
         for _ in range(50):
             for m in range(2, 7):
                 profile = get_random_profile(m, 50)
                 max_size = random.randint(1, len(profile.alternatives))
-                res1 = max_net_support(profile, max_size, resoluteness=True)
-                support1 = profile.num_covered_ballots(res1)
-                res2 = max_net_support_ilp(profile, max_size, resoluteness=True)
-                support2 = profile.num_covered_ballots(res1)
-                self.assertEqual(support1, support2, f"Failure max_net_support comparing to brute-force: {profile}, k={max_size}, ilp={res1} (s={support1}), ordering={res2} (s={support2})")
+                res1 = thiele_method(
+                    profile, max_size, thiele_score_class=NetSupportThieleScore, resoluteness=True
+                )
+                self.assertLessEqual(len(res1), max_size, f"Failure with Max net support[Thiele] on: {profile}, k={max_size}")
+
+                res2 = max_net_support_ilp(
+                    profile, max_size, resoluteness=True
+                )
+                self.assertLessEqual(len(res2), max_size, f"Failure with Max net support[ILP] on: {profile}, k={max_size}")
+
+                res3 = max_net_support(
+                    profile, max_size, resoluteness=True
+                )
+                self.assertLessEqual(len(res3), max_size, f"Failure with Max net support[Direct] on: {profile}, k={max_size}")
+
+                self.assertEqual(profile.selection_support(res1), profile.selection_support(res2), f"Failure with Max net support[Thiele] and Max net support[ILP] on: {profile}, k={max_size}: r1={res1}, r2={res2}")
+                self.assertEqual(profile.selection_support(res1), profile.selection_support(res3), f"Failure with Max net support[Thiele] and Max net support[Direct] on: {profile}, k={max_size}: r1={res1}, r3={res3}")

@@ -74,3 +74,8 @@ def generate_two_list_partitions(
 
 def harmonic_sum(k: int):
     return sum(frac(1, i) for i in range(1, k + 1))
+
+
+class classproperty(property):
+    def __get__(self, obj, cls=None):
+        return self.fget(cls)
