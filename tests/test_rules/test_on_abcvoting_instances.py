@@ -160,12 +160,17 @@ def process_yaml_file(yaml_file_path: str):
 
 class TestOnABCVoting(TestCase):
     def test_rules_on_abcvoting(self):
-        return
         current_file_path = os.path.dirname(os.path.realpath(__file__))
         yaml_dir_path = os.path.join(current_file_path, "abcvoting_test_instances")
         all_yaml_files = os.listdir(yaml_dir_path)
         yaml_paths = [os.path.join(yaml_dir_path, f) for f in all_yaml_files]
 
-        with Pool(processes=None) as pool:
-            for res in pool.imap_unordered(process_yaml_file, yaml_paths):
+        if __name__ == "__main__":
+            with Pool(processes=None) as pool:
+                for res in pool.imap_unordered(process_yaml_file, yaml_paths):
+                    self.assertTrue(res)
+        else:
+            # fallback for CI environments
+            for path in yaml_paths:
+                res = process_yaml_file(path)
                 self.assertTrue(res)
