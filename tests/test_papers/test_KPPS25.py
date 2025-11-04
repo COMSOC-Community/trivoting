@@ -52,9 +52,9 @@ class TestExamplesKPPS25(TestCase):
         selection = tax_method_of_equal_shares(profile, max_size)
         categorised_selection = [[], [], []]
         for alt in selection.selected:
-            if alt.name < 11:
+            if int(alt.name) < 11:
                 categorised_selection[0].append(alt)
-            elif alt.name < 21:
+            elif int(alt.name) < 21:
                 categorised_selection[1].append(alt)
             else:
                 categorised_selection[2].append(alt)
@@ -69,9 +69,9 @@ class TestExamplesKPPS25(TestCase):
         selection = tax_sequential_phragmen(profile, max_size)
         categorised_selection = [[], [], []]
         for alt in selection.selected:
-            if alt.name < 11:
+            if int(alt.name) < 11:
                 categorised_selection[0].append(alt)
-            elif alt.name < 21:
+            elif int(alt.name) < 21:
                 categorised_selection[1].append(alt)
             else:
                 categorised_selection[2].append(alt)
@@ -86,16 +86,16 @@ class TestExamplesKPPS25(TestCase):
         def generate_positive_selection():
             res = Selection(implicit_reject=True)
             for a in random.sample(range(1, 21), 3):
-                res.selected.append(profile.get_alternative_by_name(a))
+                res.add_selected(profile.get_alternative_by_name(str(a)))
             for a in random.sample(range(21, 31), 3):
-                res.selected.append(profile.get_alternative_by_name(a))
+                res.add_selected(profile.get_alternative_by_name(str(a)))
 
             alts = [a for a in profile.alternatives if not res.is_selected(a)]
             random.shuffle(alts)
             num_selected = 6
             for alt in alts:
                 if random.random() < 4 / len(profile.alternatives):
-                    res.selected.append(alt)
+                    res.add_selected(alt)
                     num_selected += 1
                 if num_selected == max_size:
                     break
@@ -112,9 +112,9 @@ class TestExamplesKPPS25(TestCase):
             res = Selection(implicit_reject=True)
 
             for alt_name in random.sample(range(1, 21), random.randint(0, 2)):
-                res.selected.append(profile.get_alternative_by_name(alt_name))
+                res.selected.append(profile.get_alternative_by_name(str(alt_name)))
             for alt_name in random.sample(range(21, 31), random.randint(0, 2)):
-                res.selected.append(profile.get_alternative_by_name(alt_name))
+                res.selected.append(profile.get_alternative_by_name(str(alt_name)))
 
             res.selected.sort()
             res.rejected.sort()
@@ -132,7 +132,7 @@ class TestExamplesKPPS25(TestCase):
             res = Selection(implicit_reject=True)
 
             for alt_name in random.sample(range(1, 11), 3):
-                res.selected.append(profile.get_alternative_by_name(alt_name))
+                res.selected.append(profile.get_alternative_by_name(str(alt_name)))
 
             alts = [a for a in profile.alternatives if not res.is_selected(a)]
             random.shuffle(alts)
