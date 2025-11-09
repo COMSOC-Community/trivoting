@@ -1,3 +1,9 @@
+"""
+A Thiele rule returns selections that maximises a score defined as a function of (1) the number of approved and selected
+alternatives, (2) the number of disapproved and selected alternatives, (3) the number of approved and rejected
+alternatives, and (4) the number of disapproved and rejected alternatives.
+"""
+
 from __future__ import annotations
 
 import abc
@@ -5,8 +11,7 @@ from abc import abstractmethod
 from collections.abc import Iterable
 from copy import deepcopy
 
-from trivoting.election import AbstractTrichotomousBallot, Alternative
-from trivoting.election.trichotomous_profile import AbstractTrichotomousProfile
+from trivoting.election import AbstractTrichotomousProfile, Alternative
 
 from pulp import (
     LpBinary,
@@ -24,13 +29,19 @@ from trivoting.utils import harmonic_sum, classproperty
 
 
 class ThieleScore(abc.ABC):
-    """Class used to define score function for Thiele methods. The class is used for the sequential Thiele rules."""
+    """Class used to define score function for Thiele methods. Defines the elements that are needed for both the ILP
+    solver approach and the sequential approach."""
+
     def __init__(self, max_size_selection: int):
         self.max_size_selection = max_size_selection
 
     @abstractmethod
     def score_function(
-        self, num_app_sel: int = 0, num_disapp_sel : int = 0, num_app_rej: int = 0, num_disapp_rej: int = 0
+        self,
+        num_app_sel: int = 0,
+        num_disapp_sel: int = 0,
+        num_app_rej: int = 0,
+        num_disapp_rej: int = 0,
     ):
         """
         Actual scoring function. Can only depend on:
@@ -159,7 +170,11 @@ class PAVScoreKraiczy2025(ThieleScore):
                 ) + lpSum(1 - self.vars["selection"][alt] for alt in ballot.disapproved)
 
         def objective(self) -> LpAffineExpression:
-            return lpSum(lpSum(v / k for k, v in self.vars["sat_vars"][i].items()) * self.profile.multiplicity(b) for i, b in enumerate(self.profile))
+            return lpSum(
+                lpSum(v / k for k, v in self.vars["sat_vars"][i].items())
+                * self.profile.multiplicity(b)
+                for i, b in enumerate(self.profile)
+            )
 
 
 class PAVScoreTalmonPaige2021(ThieleScore):
@@ -182,10 +197,14 @@ class PAVScoreTalmonPaige2021(ThieleScore):
             self.vars["disapp_dissat_vars"] = {}
 
             for i, ballot in enumerate(self.profile):
-                app_vars = {k: LpVariable(f"as_{i}_{k}", cat=LpBinary)
-                            for k in range(1, len(self.profile.alternatives) + 1)}
-                disapp_vars = {k: LpVariable(f"dd_{i}_{k}", cat=LpBinary)
-                               for k in range(1, len(self.profile.alternatives) + 1)}
+                app_vars = {
+                    k: LpVariable(f"as_{i}_{k}", cat=LpBinary)
+                    for k in range(1, len(self.profile.alternatives) + 1)
+                }
+                disapp_vars = {
+                    k: LpVariable(f"dd_{i}_{k}", cat=LpBinary)
+                    for k in range(1, len(self.profile.alternatives) + 1)
+                }
                 self.vars["app_sat_vars"][i] = app_vars
                 self.vars["disapp_dissat_vars"][i] = disapp_vars
 
@@ -218,6 +237,7 @@ class PAVScoreHervouin2025(ThieleScore):
     are taken into account, and (2) the PAV score over the maximum size of the selection minus the number of
     disapproved but selected alternatives.
     """
+
     def score_function(
         self, num_app_sel=0, num_disapp_sel=0, num_app_rej=0, num_disapp_rej=0
     ):
@@ -232,10 +252,14 @@ class PAVScoreHervouin2025(ThieleScore):
             self.vars["disapp_dissat_vars"] = {}
 
             for i, ballot in enumerate(self.profile):
-                app_vars = {k: LpVariable(f"as_{i}_{k}", cat=LpBinary)
-                            for k in range(1, len(self.profile.alternatives) + 1)}
-                disapp_vars = {k: LpVariable(f"dd_{i}_{k}", cat=LpBinary)
-                               for k in range(1, len(self.profile.alternatives) + 1)}
+                app_vars = {
+                    k: LpVariable(f"as_{i}_{k}", cat=LpBinary)
+                    for k in range(1, len(self.profile.alternatives) + 1)
+                }
+                disapp_vars = {
+                    k: LpVariable(f"dd_{i}_{k}", cat=LpBinary)
+                    for k in range(1, len(self.profile.alternatives) + 1)
+                }
                 self.vars["app_sat_vars"][i] = app_vars
                 self.vars["disapp_dissat_vars"][i] = disapp_vars
 
@@ -243,7 +267,9 @@ class PAVScoreHervouin2025(ThieleScore):
                 self.model += lpSum(app_vars.values()) == lpSum(
                     self.vars["selection"][alt] for alt in ballot.approved
                 )
-                self.model += lpSum(disapp_vars.values()) == self.max_size_selection - lpSum(
+                self.model += lpSum(
+                    disapp_vars.values()
+                ) == self.max_size_selection - lpSum(
                     self.vars["selection"][alt] for alt in ballot.disapproved
                 )
 
@@ -262,8 +288,9 @@ class PAVScoreHervouin2025(ThieleScore):
 
 
 class ApprovalThieleScore(ThieleScore):
-    """ Thiele scoring function in which the score of a selection is equal to its approval score: the sum over all
+    """Thiele scoring function in which the score of a selection is equal to its approval score: the sum over all
     ballots of the number of approved and selected alternatives."""
+
     def score_function(
         self, num_app_sel=0, num_disapp_sel=0, num_app_rej=0, num_disapp_rej=0
     ):
@@ -283,7 +310,7 @@ class ApprovalThieleScore(ThieleScore):
 
                 # Constraints
                 self.model += lpSum(sat_vars.values()) == (
-                        lpSum(self.vars["selection"][alt] for alt in ballot.approved)
+                    lpSum(self.vars["selection"][alt] for alt in ballot.approved)
                 )
 
         def objective(self) -> LpAffineExpression:
@@ -293,9 +320,11 @@ class ApprovalThieleScore(ThieleScore):
                 for i, ballot in enumerate(self.profile)
             )
 
+
 class NetSupportThieleScore(ThieleScore):
-    """ Thiele scoring function in which the score of a selection is equal to its net support: the sum over all
-    ballots of the number of approved and selected alternatives minus the number of disapproved but selected ones."""
+    """Thiele scoring function in which the score of a selection is equal to its net support: the sum over all
+    ballots of the number of approved and selected alternatives minus the number of disapproved but selected ones.
+    """
 
     def score_function(
         self, num_app_sel=0, num_disapp_sel=0, num_app_rej=0, num_disapp_rej=0
@@ -316,8 +345,8 @@ class NetSupportThieleScore(ThieleScore):
 
                 # Constraints
                 self.model += lpSum(sat_vars.values()) == (
-                        lpSum(self.vars["selection"][alt] for alt in ballot.approved)
-                        - lpSum(self.vars["selection"][alt] for alt in ballot.disapproved)
+                    lpSum(self.vars["selection"][alt] for alt in ballot.approved)
+                    - lpSum(self.vars["selection"][alt] for alt in ballot.disapproved)
                 )
 
         def objective(self) -> LpAffineExpression:
@@ -338,8 +367,8 @@ def thiele_method(
     max_seconds: int = 600,
 ) -> Selection | list[Selection]:
     """
-    Compute the selections of a Thiele rule described in the `ild_builder_class` argument. The selections are computed
-    by solving integer linear programs (ILP) using the `pulp` package.
+    Compute the selections of a Thiele rule described described via a :py:class:`~trivoting.rules.thiele.ThieleScore`
+    class. The selections are computed by solving integer linear programs (ILP).
 
     Parameters
     ----------
@@ -371,17 +400,14 @@ def thiele_method(
         if irresolute (:code:`resoluteness == False`).
     """
 
-    ilp_builder = thiele_score_class.ilp_builder(profile, max_size_selection, initial_selection, max_seconds=max_seconds, verbose=verbose)
+    ilp_builder = thiele_score_class.ilp_builder(
+        profile,
+        max_size_selection,
+        initial_selection,
+        max_seconds=max_seconds,
+        verbose=verbose,
+    )
     return ilp_optimiser_rule(ilp_builder, resoluteness=resoluteness)
-
-
-
-class SequentialThieleVoter:
-
-    def __init__(self, ballot: AbstractTrichotomousBallot, multiplicity: int):
-        self.ballot = ballot
-        self.multiplicity = multiplicity
-        self.satisfaction = 0
 
 
 def sequential_thiele(
@@ -392,8 +418,41 @@ def sequential_thiele(
     tie_breaking: TieBreakingRule | None = None,
     resoluteness: bool = True,
 ) -> Selection | list[Selection]:
+    """
+    Compute the selections of a sequential Thiele rule described via a :py:class:`~trivoting.rules.thiele.ThieleScore`
+    class.
 
-    def _sequential_thiele_rec(
+    The alternatives are selected sequentially one after the other, each time selecting the alternative that would
+    lead to the best improve in score. Alternatives from the current selection that have a negative marginal contribution
+    to the score are removed.
+
+    Parameters
+    ----------
+    profile : AbstractTrichotomousProfile
+        The trichotomous profile.
+    max_size_selection : int
+        Maximum number of alternatives to select.
+    thiele_score_class : type[ThieleScore]
+        The Thiele score class used to define the Thiele rule.
+    initial_selection : Selection, optional
+        An initial selection that fixes some alternatives as selected or rejected.
+        If `implicit_reject` is True, no alternatives are fixed to be rejected.
+    tie_breaking : TieBreakingRule, optional
+        Tie-breaking rule used when multiple alternatives tie.
+        Defaults to lexicographic tie-breaking.
+    resoluteness : bool, optional
+        If True, returns a single selection (resolute).
+        If False, returns all tied optimal selections (irresolute).
+        Defaults to True.
+
+    Returns
+    -------
+    Selection | list[Selection]
+        The selection if resolute (:code:`resoluteness == True`), or a list of selections
+        if irresolute (:code:`resoluteness == False`).
+    """
+
+    def _select_next_alternative(
         alternatives: set[Alternative], selection: Selection, skip_remove_phase=False
     ):
         something_changed = False
@@ -433,7 +492,7 @@ def sequential_thiele(
                         new_selection.remove_selected(alt_to_remove)
                         new_alternatives = deepcopy(alternatives)
                         new_alternatives.add(alt_to_remove)
-                        _sequential_thiele_rec(
+                        _select_next_alternative(
                             new_alternatives, new_selection, skip_remove_phase=True
                         )
                         branched = True
@@ -473,7 +532,7 @@ def sequential_thiele(
                         new_selection.add_selected(alt_to_add)
                         new_alternatives = deepcopy(alternatives)
                         new_alternatives.remove(alt_to_add)
-                        _sequential_thiele_rec(new_alternatives, new_selection)
+                        _select_next_alternative(new_alternatives, new_selection)
                         branched = True
 
         # If nothing has changed, selection is stable and we stop (only if a recursive call has not been launched)
@@ -486,7 +545,7 @@ def sequential_thiele(
                 else:
                     all_selections.append(selection)
         else:
-            _sequential_thiele_rec(alternatives, selection)
+            _select_next_alternative(alternatives, selection)
 
     try:
         max_size_selection = int(max_size_selection)
@@ -507,7 +566,7 @@ def sequential_thiele(
     all_selections = []
     thiele_score = thiele_score_class(max_size_selection)
 
-    _sequential_thiele_rec(initial_alternatives, initial_selection)
+    _select_next_alternative(initial_alternatives, initial_selection)
 
     if resoluteness:
         return all_selections[0]

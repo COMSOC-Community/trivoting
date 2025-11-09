@@ -237,7 +237,7 @@ class AbstractTrichotomousProfile(ABC, Iterable[AbstractTrichotomousBallot]):
         """
 
     @abstractmethod
-    def selection_support(self, selection:Selection) -> int:
+    def selection_support(self, selection: Selection) -> int:
         """"""
 
     def all_feasible_selections(self, max_size_selection: int) -> Iterator[Selection]:
@@ -316,8 +316,9 @@ class AbstractTrichotomousProfile(ABC, Iterable[AbstractTrichotomousBallot]):
         """
         covered_voters = 0
         for ballot in self:
-            satisfaction = sum(1 for alt in ballot.approved if selection.is_selected(alt)) - sum(
-                1 for alt in ballot.disapproved if selection.is_selected(alt))
+            satisfaction = sum(
+                1 for alt in ballot.approved if selection.is_selected(alt)
+            ) - sum(1 for alt in ballot.disapproved if selection.is_selected(alt))
             if satisfaction > 0:
                 covered_voters += self.multiplicity(ballot)
         return covered_voters
@@ -726,7 +727,9 @@ class TrichotomousMultiProfile(
         res = 0
         for ballot, count in self.items():
             ballot_support = sum(1 for a in ballot.approved if selection.is_selected(a))
-            ballot_support -= sum(1 for a in ballot.disapproved if selection.is_selected(a))
+            ballot_support -= sum(
+                1 for a in ballot.disapproved if selection.is_selected(a)
+            )
             res += ballot_support * count
         return res
 

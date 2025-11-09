@@ -279,7 +279,12 @@ document.write(`
                 <article class="bd-article">
                   
   <h1>Source code for trivoting.rules.tax_rules</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Tax rules are rules that transform the trichotomous profile into a participatory budgeting (PB) instance and then use</span>
+<span class="sd">PB rules to compute selections for the trichotomous profile.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">abc</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span>
@@ -479,7 +484,7 @@ document.write(`
     <span class="n">profile</span><span class="p">:</span> <span class="n">AbstractTrichotomousProfile</span><span class="p">,</span>
     <span class="n">max_size_selection</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">pb_rule</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
-    <span class="n">tax_function</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">TaxFunction</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">tax_function</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">TaxFunction</span><span class="p">],</span>
     <span class="n">initial_selection</span><span class="p">:</span> <span class="n">Selection</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">tie_breaking</span><span class="p">:</span> <span class="n">TieBreakingRule</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">resoluteness</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
@@ -506,9 +511,8 @@ document.write(`
 <span class="sd">        The maximum number of alternatives allowed in the selection.</span>
 <span class="sd">    pb_rule : callable</span>
 <span class="sd">        The participatory budgeting rule function to apply.</span>
-<span class="sd">    tax_function: type[TaxFunction], optional</span>
-<span class="sd">        A tax function defined as a subclass of the :py:class:`TaxFunction` class. Defaults to</span>
-<span class="sd">        :py:class:`TaxKraiczy2025`.</span>
+<span class="sd">    tax_function: type[TaxFunction]</span>
+<span class="sd">        A tax function defined as a subclass of the :py:class:`TaxFunction` class.</span>
 <span class="sd">    initial_selection : Selection or None, optional</span>
 <span class="sd">        An initial selection fixing some alternatives as selected or rejected.</span>
 <span class="sd">    tie_breaking : TieBreakingRule or None, optional</span>
@@ -529,8 +533,6 @@ document.write(`
         <span class="n">pb_rule_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">tie_breaking</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">tie_breaking</span> <span class="o">=</span> <span class="n">lexico_tie_breaking</span>
-    <span class="k">if</span> <span class="n">tax_function</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">tax_function</span> <span class="o">=</span> <span class="n">TaxKraiczy2025</span>
 
     <span class="k">if</span> <span class="n">initial_selection</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">initial_selection</span> <span class="o">=</span> <span class="n">Selection</span><span class="p">(</span><span class="n">implicit_reject</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>

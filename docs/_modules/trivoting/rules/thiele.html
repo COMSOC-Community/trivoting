@@ -279,15 +279,20 @@ document.write(`
                 <article class="bd-article">
                   
   <h1>Source code for trivoting.rules.thiele</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">A Thiele rule returns selections that maximises a score defined as a function of (1) the number of approved and selected</span>
+<span class="sd">alternatives, (2) the number of disapproved and selected alternatives, (3) the number of approved and rejected</span>
+<span class="sd">alternatives, and (4) the number of disapproved and rejected alternatives.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">abc</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">abstractmethod</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterable</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">copy</span><span class="w"> </span><span class="kn">import</span> <span class="n">deepcopy</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.election</span><span class="w"> </span><span class="kn">import</span> <span class="n">AbstractTrichotomousBallot</span><span class="p">,</span> <span class="n">Alternative</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.election.trichotomous_profile</span><span class="w"> </span><span class="kn">import</span> <span class="n">AbstractTrichotomousProfile</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.election</span><span class="w"> </span><span class="kn">import</span> <span class="n">AbstractTrichotomousProfile</span><span class="p">,</span> <span class="n">Alternative</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">pulp</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">LpBinary</span><span class="p">,</span>
@@ -307,7 +312,9 @@ document.write(`
 <div class="viewcode-block" id="ThieleScore">
 <a class="viewcode-back" href="../../../reference/rules/index.html#trivoting.rules.thiele.ThieleScore">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ThieleScore</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class used to define score function for Thiele methods. The class is used for the sequential Thiele rules.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class used to define score function for Thiele methods. Defines the elements that are needed for both the ILP</span>
+<span class="sd">    solver approach and the sequential approach.&quot;&quot;&quot;</span>
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_size_selection</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">max_size_selection</span> <span class="o">=</span> <span class="n">max_size_selection</span>
 
@@ -315,7 +322,11 @@ document.write(`
 <a class="viewcode-back" href="../../../reference/rules/index.html#trivoting.rules.thiele.ThieleScore.score_function">[docs]</a>
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">score_function</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">num_app_sel</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">num_disapp_sel</span> <span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">num_app_rej</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">num_disapp_rej</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">num_app_sel</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">num_disapp_sel</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">num_app_rej</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">num_disapp_rej</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Actual scoring function. Can only depend on:</span>
@@ -451,7 +462,11 @@ document.write(`
                 <span class="p">)</span> <span class="o">+</span> <span class="n">lpSum</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">vars</span><span class="p">[</span><span class="s2">&quot;selection&quot;</span><span class="p">][</span><span class="n">alt</span><span class="p">]</span> <span class="k">for</span> <span class="n">alt</span> <span class="ow">in</span> <span class="n">ballot</span><span class="o">.</span><span class="n">disapproved</span><span class="p">)</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">objective</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LpAffineExpression</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">lpSum</span><span class="p">(</span><span class="n">lpSum</span><span class="p">(</span><span class="n">v</span> <span class="o">/</span> <span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vars</span><span class="p">[</span><span class="s2">&quot;sat_vars&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">())</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">multiplicity</span><span class="p">(</span><span class="n">b</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="p">))</span></div>
+            <span class="k">return</span> <span class="n">lpSum</span><span class="p">(</span>
+                <span class="n">lpSum</span><span class="p">(</span><span class="n">v</span> <span class="o">/</span> <span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vars</span><span class="p">[</span><span class="s2">&quot;sat_vars&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+                <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">multiplicity</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="p">)</span>
+            <span class="p">)</span></div>
 
 
 
@@ -477,10 +492,14 @@ document.write(`
             <span class="bp">self</span><span class="o">.</span><span class="n">vars</span><span class="p">[</span><span class="s2">&quot;disapp_dissat_vars&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
 
             <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">ballot</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="p">):</span>
-                <span class="n">app_vars</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">LpVariable</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;as_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="n">LpBinary</span><span class="p">)</span>
-                            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">alternatives</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)}</span>
-                <span class="n">disapp_vars</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">LpVariable</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;dd_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="n">LpBinary</span><span class="p">)</span>
-                               <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">alternatives</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)}</span>
+                <span class="n">app_vars</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="n">k</span><span class="p">:</span> <span class="n">LpVariable</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;as_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="n">LpBinary</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">alternatives</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="p">}</span>
+                <span class="n">disapp_vars</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="n">k</span><span class="p">:</span> <span class="n">LpVariable</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;dd_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="n">LpBinary</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">alternatives</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="p">}</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">vars</span><span class="p">[</span><span class="s2">&quot;app_sat_vars&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">app_vars</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">vars</span><span class="p">[</span><span class="s2">&quot;disapp_dissat_vars&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">disapp_vars</span>
 
@@ -516,6 +535,7 @@ document.write(`
 <span class="sd">    are taken into account, and (2) the PAV score over the maximum size of the selection minus the number of</span>
 <span class="sd">    disapproved but selected alternatives.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span><span class="w"> </span><span class="nf">score_function</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">num_app_sel</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_disapp_sel</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_app_rej</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_disapp_rej</span><span class="o">=</span><span class="mi">0</span>
     <span class="p">):</span>
@@ -530,10 +550,14 @@ document.write(`
             <span class="bp">self</span><span class="o">.</span><span class="n">vars</span><span class="p">[</span><span class="s2">&quot;disapp_dissat_vars&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
 
             <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">ballot</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="p">):</span>
-                <span class="n">app_vars</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">LpVariable</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;as_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="n">LpBinary</span><span class="p">)</span>
-                            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">alternatives</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)}</span>
-                <span class="n">disapp_vars</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">LpVariable</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;dd_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="n">LpBinary</span><span class="p">)</span>
-                               <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">alternatives</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)}</span>
+                <span class="n">app_vars</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="n">k</span><span class="p">:</span> <span class="n">LpVariable</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;as_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="n">LpBinary</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">alternatives</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="p">}</span>
+                <span class="n">disapp_vars</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="n">k</span><span class="p">:</span> <span class="n">LpVariable</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;dd_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="n">LpBinary</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">alternatives</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="p">}</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">vars</span><span class="p">[</span><span class="s2">&quot;app_sat_vars&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">app_vars</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">vars</span><span class="p">[</span><span class="s2">&quot;disapp_dissat_vars&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">disapp_vars</span>
 
@@ -541,7 +565,9 @@ document.write(`
                 <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">+=</span> <span class="n">lpSum</span><span class="p">(</span><span class="n">app_vars</span><span class="o">.</span><span class="n">values</span><span class="p">())</span> <span class="o">==</span> <span class="n">lpSum</span><span class="p">(</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">vars</span><span class="p">[</span><span class="s2">&quot;selection&quot;</span><span class="p">][</span><span class="n">alt</span><span class="p">]</span> <span class="k">for</span> <span class="n">alt</span> <span class="ow">in</span> <span class="n">ballot</span><span class="o">.</span><span class="n">approved</span>
                 <span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">+=</span> <span class="n">lpSum</span><span class="p">(</span><span class="n">disapp_vars</span><span class="o">.</span><span class="n">values</span><span class="p">())</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_size_selection</span> <span class="o">-</span> <span class="n">lpSum</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">+=</span> <span class="n">lpSum</span><span class="p">(</span>
+                    <span class="n">disapp_vars</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+                <span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_size_selection</span> <span class="o">-</span> <span class="n">lpSum</span><span class="p">(</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">vars</span><span class="p">[</span><span class="s2">&quot;selection&quot;</span><span class="p">][</span><span class="n">alt</span><span class="p">]</span> <span class="k">for</span> <span class="n">alt</span> <span class="ow">in</span> <span class="n">ballot</span><span class="o">.</span><span class="n">disapproved</span>
                 <span class="p">)</span>
 
@@ -563,8 +589,9 @@ document.write(`
 <div class="viewcode-block" id="ApprovalThieleScore">
 <a class="viewcode-back" href="../../../reference/rules/index.html#trivoting.rules.thiele.ApprovalThieleScore">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ApprovalThieleScore</span><span class="p">(</span><span class="n">ThieleScore</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Thiele scoring function in which the score of a selection is equal to its approval score: the sum over all</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Thiele scoring function in which the score of a selection is equal to its approval score: the sum over all</span>
 <span class="sd">    ballots of the number of approved and selected alternatives.&quot;&quot;&quot;</span>
+
     <span class="k">def</span><span class="w"> </span><span class="nf">score_function</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">num_app_sel</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_disapp_sel</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_app_rej</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_disapp_rej</span><span class="o">=</span><span class="mi">0</span>
     <span class="p">):</span>
@@ -584,7 +611,7 @@ document.write(`
 
                 <span class="c1"># Constraints</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">+=</span> <span class="n">lpSum</span><span class="p">(</span><span class="n">sat_vars</span><span class="o">.</span><span class="n">values</span><span class="p">())</span> <span class="o">==</span> <span class="p">(</span>
-                        <span class="n">lpSum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vars</span><span class="p">[</span><span class="s2">&quot;selection&quot;</span><span class="p">][</span><span class="n">alt</span><span class="p">]</span> <span class="k">for</span> <span class="n">alt</span> <span class="ow">in</span> <span class="n">ballot</span><span class="o">.</span><span class="n">approved</span><span class="p">)</span>
+                    <span class="n">lpSum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vars</span><span class="p">[</span><span class="s2">&quot;selection&quot;</span><span class="p">][</span><span class="n">alt</span><span class="p">]</span> <span class="k">for</span> <span class="n">alt</span> <span class="ow">in</span> <span class="n">ballot</span><span class="o">.</span><span class="n">approved</span><span class="p">)</span>
                 <span class="p">)</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">objective</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LpAffineExpression</span><span class="p">:</span>
@@ -595,11 +622,13 @@ document.write(`
             <span class="p">)</span></div>
 
 
+
 <div class="viewcode-block" id="NetSupportThieleScore">
 <a class="viewcode-back" href="../../../reference/rules/index.html#trivoting.rules.thiele.NetSupportThieleScore">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">NetSupportThieleScore</span><span class="p">(</span><span class="n">ThieleScore</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Thiele scoring function in which the score of a selection is equal to its net support: the sum over all</span>
-<span class="sd">    ballots of the number of approved and selected alternatives minus the number of disapproved but selected ones.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Thiele scoring function in which the score of a selection is equal to its net support: the sum over all</span>
+<span class="sd">    ballots of the number of approved and selected alternatives minus the number of disapproved but selected ones.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">score_function</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">num_app_sel</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_disapp_sel</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_app_rej</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_disapp_rej</span><span class="o">=</span><span class="mi">0</span>
@@ -620,8 +649,8 @@ document.write(`
 
                 <span class="c1"># Constraints</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">+=</span> <span class="n">lpSum</span><span class="p">(</span><span class="n">sat_vars</span><span class="o">.</span><span class="n">values</span><span class="p">())</span> <span class="o">==</span> <span class="p">(</span>
-                        <span class="n">lpSum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vars</span><span class="p">[</span><span class="s2">&quot;selection&quot;</span><span class="p">][</span><span class="n">alt</span><span class="p">]</span> <span class="k">for</span> <span class="n">alt</span> <span class="ow">in</span> <span class="n">ballot</span><span class="o">.</span><span class="n">approved</span><span class="p">)</span>
-                        <span class="o">-</span> <span class="n">lpSum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vars</span><span class="p">[</span><span class="s2">&quot;selection&quot;</span><span class="p">][</span><span class="n">alt</span><span class="p">]</span> <span class="k">for</span> <span class="n">alt</span> <span class="ow">in</span> <span class="n">ballot</span><span class="o">.</span><span class="n">disapproved</span><span class="p">)</span>
+                    <span class="n">lpSum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vars</span><span class="p">[</span><span class="s2">&quot;selection&quot;</span><span class="p">][</span><span class="n">alt</span><span class="p">]</span> <span class="k">for</span> <span class="n">alt</span> <span class="ow">in</span> <span class="n">ballot</span><span class="o">.</span><span class="n">approved</span><span class="p">)</span>
+                    <span class="o">-</span> <span class="n">lpSum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vars</span><span class="p">[</span><span class="s2">&quot;selection&quot;</span><span class="p">][</span><span class="n">alt</span><span class="p">]</span> <span class="k">for</span> <span class="n">alt</span> <span class="ow">in</span> <span class="n">ballot</span><span class="o">.</span><span class="n">disapproved</span><span class="p">)</span>
                 <span class="p">)</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">objective</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LpAffineExpression</span><span class="p">:</span>
@@ -645,8 +674,8 @@ document.write(`
     <span class="n">max_seconds</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">600</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Selection</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="n">Selection</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Compute the selections of a Thiele rule described in the `ild_builder_class` argument. The selections are computed</span>
-<span class="sd">    by solving integer linear programs (ILP) using the `pulp` package.</span>
+<span class="sd">    Compute the selections of a Thiele rule described described via a :py:class:`~trivoting.rules.thiele.ThieleScore`</span>
+<span class="sd">    class. The selections are computed by solving integer linear programs (ILP).</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -678,18 +707,15 @@ document.write(`
 <span class="sd">        if irresolute (:code:`resoluteness == False`).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">ilp_builder</span> <span class="o">=</span> <span class="n">thiele_score_class</span><span class="o">.</span><span class="n">ilp_builder</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">max_size_selection</span><span class="p">,</span> <span class="n">initial_selection</span><span class="p">,</span> <span class="n">max_seconds</span><span class="o">=</span><span class="n">max_seconds</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+    <span class="n">ilp_builder</span> <span class="o">=</span> <span class="n">thiele_score_class</span><span class="o">.</span><span class="n">ilp_builder</span><span class="p">(</span>
+        <span class="n">profile</span><span class="p">,</span>
+        <span class="n">max_size_selection</span><span class="p">,</span>
+        <span class="n">initial_selection</span><span class="p">,</span>
+        <span class="n">max_seconds</span><span class="o">=</span><span class="n">max_seconds</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
+    <span class="p">)</span>
     <span class="k">return</span> <span class="n">ilp_optimiser_rule</span><span class="p">(</span><span class="n">ilp_builder</span><span class="p">,</span> <span class="n">resoluteness</span><span class="o">=</span><span class="n">resoluteness</span><span class="p">)</span></div>
 
-
-
-
-<span class="k">class</span><span class="w"> </span><span class="nc">SequentialThieleVoter</span><span class="p">:</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ballot</span><span class="p">:</span> <span class="n">AbstractTrichotomousBallot</span><span class="p">,</span> <span class="n">multiplicity</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ballot</span> <span class="o">=</span> <span class="n">ballot</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">multiplicity</span> <span class="o">=</span> <span class="n">multiplicity</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">satisfaction</span> <span class="o">=</span> <span class="mi">0</span>
 
 
 <div class="viewcode-block" id="sequential_thiele">
@@ -702,8 +728,41 @@ document.write(`
     <span class="n">tie_breaking</span><span class="p">:</span> <span class="n">TieBreakingRule</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">resoluteness</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Selection</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="n">Selection</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute the selections of a sequential Thiele rule described via a :py:class:`~trivoting.rules.thiele.ThieleScore`</span>
+<span class="sd">    class.</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_sequential_thiele_rec</span><span class="p">(</span>
+<span class="sd">    The alternatives are selected sequentially one after the other, each time selecting the alternative that would</span>
+<span class="sd">    lead to the best improve in score. Alternatives from the current selection that have a negative marginal contribution</span>
+<span class="sd">    to the score are removed.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    profile : AbstractTrichotomousProfile</span>
+<span class="sd">        The trichotomous profile.</span>
+<span class="sd">    max_size_selection : int</span>
+<span class="sd">        Maximum number of alternatives to select.</span>
+<span class="sd">    thiele_score_class : type[ThieleScore]</span>
+<span class="sd">        The Thiele score class used to define the Thiele rule.</span>
+<span class="sd">    initial_selection : Selection, optional</span>
+<span class="sd">        An initial selection that fixes some alternatives as selected or rejected.</span>
+<span class="sd">        If `implicit_reject` is True, no alternatives are fixed to be rejected.</span>
+<span class="sd">    tie_breaking : TieBreakingRule, optional</span>
+<span class="sd">        Tie-breaking rule used when multiple alternatives tie.</span>
+<span class="sd">        Defaults to lexicographic tie-breaking.</span>
+<span class="sd">    resoluteness : bool, optional</span>
+<span class="sd">        If True, returns a single selection (resolute).</span>
+<span class="sd">        If False, returns all tied optimal selections (irresolute).</span>
+<span class="sd">        Defaults to True.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Selection | list[Selection]</span>
+<span class="sd">        The selection if resolute (:code:`resoluteness == True`), or a list of selections</span>
+<span class="sd">        if irresolute (:code:`resoluteness == False`).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_select_next_alternative</span><span class="p">(</span>
         <span class="n">alternatives</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="n">Alternative</span><span class="p">],</span> <span class="n">selection</span><span class="p">:</span> <span class="n">Selection</span><span class="p">,</span> <span class="n">skip_remove_phase</span><span class="o">=</span><span class="kc">False</span>
     <span class="p">):</span>
         <span class="n">something_changed</span> <span class="o">=</span> <span class="kc">False</span>
@@ -743,7 +802,7 @@ document.write(`
                         <span class="n">new_selection</span><span class="o">.</span><span class="n">remove_selected</span><span class="p">(</span><span class="n">alt_to_remove</span><span class="p">)</span>
                         <span class="n">new_alternatives</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">alternatives</span><span class="p">)</span>
                         <span class="n">new_alternatives</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">alt_to_remove</span><span class="p">)</span>
-                        <span class="n">_sequential_thiele_rec</span><span class="p">(</span>
+                        <span class="n">_select_next_alternative</span><span class="p">(</span>
                             <span class="n">new_alternatives</span><span class="p">,</span> <span class="n">new_selection</span><span class="p">,</span> <span class="n">skip_remove_phase</span><span class="o">=</span><span class="kc">True</span>
                         <span class="p">)</span>
                         <span class="n">branched</span> <span class="o">=</span> <span class="kc">True</span>
@@ -783,7 +842,7 @@ document.write(`
                         <span class="n">new_selection</span><span class="o">.</span><span class="n">add_selected</span><span class="p">(</span><span class="n">alt_to_add</span><span class="p">)</span>
                         <span class="n">new_alternatives</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">alternatives</span><span class="p">)</span>
                         <span class="n">new_alternatives</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">alt_to_add</span><span class="p">)</span>
-                        <span class="n">_sequential_thiele_rec</span><span class="p">(</span><span class="n">new_alternatives</span><span class="p">,</span> <span class="n">new_selection</span><span class="p">)</span>
+                        <span class="n">_select_next_alternative</span><span class="p">(</span><span class="n">new_alternatives</span><span class="p">,</span> <span class="n">new_selection</span><span class="p">)</span>
                         <span class="n">branched</span> <span class="o">=</span> <span class="kc">True</span>
 
         <span class="c1"># If nothing has changed, selection is stable and we stop (only if a recursive call has not been launched)</span>
@@ -796,7 +855,7 @@ document.write(`
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">all_selections</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">selection</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">_sequential_thiele_rec</span><span class="p">(</span><span class="n">alternatives</span><span class="p">,</span> <span class="n">selection</span><span class="p">)</span>
+            <span class="n">_select_next_alternative</span><span class="p">(</span><span class="n">alternatives</span><span class="p">,</span> <span class="n">selection</span><span class="p">)</span>
 
     <span class="k">try</span><span class="p">:</span>
         <span class="n">max_size_selection</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">max_size_selection</span><span class="p">)</span>
@@ -817,7 +876,7 @@ document.write(`
     <span class="n">all_selections</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">thiele_score</span> <span class="o">=</span> <span class="n">thiele_score_class</span><span class="p">(</span><span class="n">max_size_selection</span><span class="p">)</span>
 
-    <span class="n">_sequential_thiele_rec</span><span class="p">(</span><span class="n">initial_alternatives</span><span class="p">,</span> <span class="n">initial_selection</span><span class="p">)</span>
+    <span class="n">_select_next_alternative</span><span class="p">(</span><span class="n">initial_alternatives</span><span class="p">,</span> <span class="n">initial_selection</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">resoluteness</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">all_selections</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>

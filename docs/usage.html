@@ -342,9 +342,15 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#random-generation-of-profiles">Random Generation of Profiles</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#selection">Selection</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rules">Rules</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#thiele-methods">Thiele Methods</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#thiele-rules">Thiele Rules</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#optimal-thiele-rules">Optimal Thiele Rules</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#sequential-thiele-rules">Sequential Thiele Rules</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#max-net-support-rule">Max Net Support Rule</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sequential-phragmen">Sequential Phragmén</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tax-pb-rule-scheme">Tax PB Rule Scheme</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tax-based-rules">Tax-Based Rules</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#chamberlincourant-rule">Chamberlin–Courant Rule</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tie-breaking">Tie-Breaking</a></li>
@@ -681,159 +687,210 @@ implicitly inferred (i.e., anything not selected is considered rejected). This b
 </section>
 <section id="rules">
 <h2>Rules<a class="headerlink" href="#rules" title="Link to this heading">#</a></h2>
-<p>Rules are used to determine selections based on a profile. They all take a <cite>max_size_selection</cite> argument that indicates
-the maximum number of alternatives that can be selected. Since ballots can indicate disapproval, rules need not select
-exactly the desired number of alternatives.</p>
-<p>We try to always offer the possibility to ask for resolute or irresolute outcomes, via the <cite>resoluteness</cite> argument.
-The tie breaking rule to use can typically be specified via the <cite>tie_breaking</cite>
-argument (not all the rules support that). See the <a class="reference internal" href="reference/tiebreaking.html#module-trivoting.tiebreaking" title="trivoting.tiebreaking"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tiebreaking</span></code></a> module for more information.
-Initial selection can usually be passed to the rules via the <cite>initial</cite> argument. The rule then completes the initial
-selection.</p>
-<section id="thiele-methods">
-<h3>Thiele Methods<a class="headerlink" href="#thiele-methods" title="Link to this heading">#</a></h3>
-<p>The <a class="reference internal" href="reference/rules/index.html#trivoting.rules.thiele.thiele_method" title="trivoting.rules.thiele.thiele_method"><code class="xref py py-func docutils literal notranslate"><span class="pre">thiele_method()</span></code></a> function implements a general scheme to compute the outcome of a Thiele method
-using Integer Linear Programming (ILP).</p>
-<p>As usual, you need to pass a trichotomous profile (implementing the <a class="reference internal" href="reference/election/index.html#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile" title="trivoting.election.trichotomous_profile.AbstractTrichotomousProfile"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractTrichotomousProfile</span></code></a> interface)
-and specify the maximum number of alternatives to select. You also need an additional <cite>ild_builder_class</cite> argument
-that takes a subclass of the abstract class <code class="xref py py-class docutils literal notranslate"><span class="pre">ThieleILPBuilder</span></code>.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.rules</span><span class="w"> </span><span class="kn">import</span> <span class="n">thiele_method</span><span class="p">,</span> <span class="n">PAVILPKraiczy2025</span>
+<p>Rules determine which alternatives are selected based on the preferences of voters expressed in a trichotomous profile
+(approvals, neutral, disapprovals). All rules take a <code class="docutils literal notranslate"><span class="pre">max_size_selection</span></code> argument, indicating the maximum number of
+alternatives that can be selected. Since ballots can include disapproval, rules are not required to select exactly that
+number.</p>
+<p>Most rules support the following common options:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">resoluteness</span></code>: whether to return a single selection (<code class="docutils literal notranslate"><span class="pre">True</span></code>, default) or all tied optimal selections (<code class="docutils literal notranslate"><span class="pre">False</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tie_breaking</span></code>: tie-breaking rule, typically a function from the <a class="reference internal" href="reference/tiebreaking.html#module-trivoting.tiebreaking" title="trivoting.tiebreaking"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tiebreaking</span></code></a> module.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">initial_selection</span></code>: a partially fixed selection, allowing some alternatives to be pre-selected or rejected.</p></li>
+</ul>
+<section id="thiele-rules">
+<h3>Thiele Rules<a class="headerlink" href="#thiele-rules" title="Link to this heading">#</a></h3>
+<p>We provide two implementations for Thiele rules: exact via ILP sovlers and sequential approximations.</p>
+<p>A Thiele rule is described via subclasses of the <a class="reference internal" href="reference/rules/index.html#trivoting.rules.thiele.ThieleScore" title="trivoting.rules.thiele.ThieleScore"><code class="xref py py-class docutils literal notranslate"><span class="pre">ThieleScore</span></code></a> class.
+The following scoring functions are currently available:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="reference/rules/index.html#trivoting.rules.thiele.PAVScoreKraiczy2025" title="trivoting.rules.thiele.PAVScoreKraiczy2025"><code class="xref py py-class docutils literal notranslate"><span class="pre">PAVScoreKraiczy2025</span></code></a>: PAV rule combining approvals and implicit support from disapprovals of unselected options.</p></li>
+<li><p><a class="reference internal" href="reference/rules/index.html#trivoting.rules.thiele.PAVScoreTalmonPaige2021" title="trivoting.rules.thiele.PAVScoreTalmonPaige2021"><code class="xref py py-class docutils literal notranslate"><span class="pre">PAVScoreTalmonPaige2021</span></code></a>: PAV with negative contributions for disapproved but selected alternatives.</p></li>
+<li><p><a class="reference internal" href="reference/rules/index.html#trivoting.rules.thiele.PAVScoreHervouin2025" title="trivoting.rules.thiele.PAVScoreHervouin2025"><code class="xref py py-class docutils literal notranslate"><span class="pre">PAVScoreHervouin2025</span></code></a>: PAV variant combining approval satisfaction and mitigation of disapproval.</p></li>
+<li><p><a class="reference internal" href="reference/rules/index.html#trivoting.rules.thiele.ApprovalThieleScore" title="trivoting.rules.thiele.ApprovalThieleScore"><code class="xref py py-class docutils literal notranslate"><span class="pre">ApprovalThieleScore</span></code></a>: Simplified Thiele rule maximizing total approvals.</p></li>
+<li><p><a class="reference internal" href="reference/rules/index.html#trivoting.rules.thiele.NetSupportThieleScore" title="trivoting.rules.thiele.NetSupportThieleScore"><code class="xref py py-class docutils literal notranslate"><span class="pre">NetSupportThieleScore</span></code></a>: Thiele rule maximizing net support (approvals minus disapprovals).</p></li>
+</ul>
+<section id="optimal-thiele-rules">
+<h4>Optimal Thiele Rules<a class="headerlink" href="#optimal-thiele-rules" title="Link to this heading">#</a></h4>
+<p>The <a class="reference internal" href="reference/rules/index.html#trivoting.rules.thiele.thiele_method" title="trivoting.rules.thiele.thiele_method"><code class="xref py py-func docutils literal notranslate"><span class="pre">thiele_method()</span></code></a> function implements a general Thiele rule scheme using an Integer
+Linear Programming (ILP) solver.</p>
+<p>You must provide:</p>
+<ul class="simple">
+<li><p>a trichotomous profile (implementing <a class="reference internal" href="reference/election/index.html#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile" title="trivoting.election.trichotomous_profile.AbstractTrichotomousProfile"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractTrichotomousProfile</span></code></a>),</p></li>
+<li><p>a <code class="docutils literal notranslate"><span class="pre">max_size_selection</span></code>, and</p></li>
+<li><p>a subclass of <a class="reference internal" href="reference/rules/index.html#trivoting.rules.thiele.ThieleScore" title="trivoting.rules.thiele.ThieleScore"><code class="xref py py-class docutils literal notranslate"><span class="pre">ThieleScore</span></code></a> via the argument <code class="docutils literal notranslate"><span class="pre">thiele_score_class</span></code>.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.rules</span><span class="w"> </span><span class="kn">import</span> <span class="n">thiele_method</span><span class="p">,</span> <span class="n">PAVScoreKraiczy2025</span>
 
-<span class="n">selection</span> <span class="o">=</span> <span class="n">thiele_method</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">max_size_selection</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">ilp_builder_class</span><span class="o">=</span><span class="n">PAVILPKraiczy2025</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+<span class="n">selection</span> <span class="o">=</span> <span class="n">thiele_method</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">max_size_selection</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">thiele_score_class</span><span class="o">=</span><span class="n">PAVScoreKraiczy2025</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>By default, the function returns a single optimal selection (resolute). To retrieve all optimal selections (if multiple exist), set <cite>resoluteness=False</cite>.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">results</span> <span class="o">=</span> <span class="n">thiele_method</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">max_size_selection</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">ilp_builder_class</span><span class="o">=</span><span class="n">PAVILPKraiczy2025</span><span class="p">,</span> <span class="n">resoluteness</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-
-<span class="k">for</span> <span class="n">selection</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">selection</span><span class="p">)</span>
+<p>You can use <code class="docutils literal notranslate"><span class="pre">resoluteness=False</span></code> to obtain an irresolute outcome:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">results</span> <span class="o">=</span> <span class="n">thiele_method</span><span class="p">(</span>
+    <span class="n">profile</span><span class="p">,</span>
+    <span class="n">max_size_selection</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+    <span class="n">thiele_score_class</span><span class="o">=</span><span class="n">PAVScoreKraiczy2025</span><span class="p">,</span>
+    <span class="n">resoluteness</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">)</span>
 </pre></div>
 </div>
-<p>You can fix certain alternatives to be selected or rejected by providing an initial <a class="reference internal" href="reference/election/index.html#trivoting.election.selection.Selection" title="trivoting.election.selection.Selection"><code class="xref py py-class docutils literal notranslate"><span class="pre">Selection</span></code></a> object.</p>
+<p>To fix certain alternatives as already selected or rejected, provide an initial
+<a class="reference internal" href="reference/election/index.html#trivoting.election.selection.Selection" title="trivoting.election.selection.Selection"><code class="xref py py-class docutils literal notranslate"><span class="pre">Selection</span></code></a>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.election</span><span class="w"> </span><span class="kn">import</span> <span class="n">Selection</span>
 
 <span class="n">initial</span> <span class="o">=</span> <span class="n">Selection</span><span class="p">(</span><span class="n">selected</span><span class="o">=</span><span class="p">[</span><span class="n">a1</span><span class="p">],</span> <span class="n">implicit_reject</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-<span class="n">result</span> <span class="o">=</span> <span class="n">thiele_method</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">max_size_selection</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">ilp_builder_class</span><span class="o">=</span><span class="n">PAVILPKraiczy2025</span><span class="p">,</span> <span class="n">initial_selection</span><span class="o">=</span><span class="n">initial</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">thiele_method</span><span class="p">(</span>
+    <span class="n">profile</span><span class="p">,</span>
+    <span class="n">max_size_selection</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+    <span class="n">thiele_score_class</span><span class="o">=</span><span class="n">PAVScoreKraiczy2025</span><span class="p">,</span>
+    <span class="n">initial_selection</span><span class="o">=</span><span class="n">initial</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Additional options for the ILP solver:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">verbose=True</span></code> enables solver output.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">max_seconds</span></code> sets a time limit (default is 600 seconds).</p></li>
+</ul>
+</section>
+<section id="sequential-thiele-rules">
+<h4>Sequential Thiele Rules<a class="headerlink" href="#sequential-thiele-rules" title="Link to this heading">#</a></h4>
+<p>For heuristic computation, <a class="reference internal" href="reference/rules/index.html#trivoting.rules.thiele.sequential_thiele" title="trivoting.rules.thiele.sequential_thiele"><code class="xref py py-func docutils literal notranslate"><span class="pre">sequential_thiele()</span></code></a> implements a sequential version
+of Thiele rules. The same <a class="reference internal" href="reference/rules/index.html#trivoting.rules.thiele.ThieleScore" title="trivoting.rules.thiele.ThieleScore"><code class="xref py py-class docutils literal notranslate"><span class="pre">ThieleScore</span></code></a> subclasses can be
+used here.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.rules</span><span class="w"> </span><span class="kn">import</span> <span class="n">sequential_thiele</span><span class="p">,</span> <span class="n">PAVScoreTalmonPaige2021</span>
+
+<span class="n">selection</span> <span class="o">=</span> <span class="n">sequential_thiele</span><span class="p">(</span>
+    <span class="n">profile</span><span class="p">,</span>
+    <span class="n">max_size_selection</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+    <span class="n">thiele_score_class</span><span class="o">=</span><span class="n">PAVScoreTalmonPaige2021</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>These rules also support tie breaking mechanisms and resoluteness.</p>
+</section>
+</section>
+<section id="max-net-support-rule">
+<h3>Max Net Support Rule<a class="headerlink" href="#max-net-support-rule" title="Link to this heading">#</a></h3>
+<p>The <a class="reference internal" href="reference/rules/index.html#trivoting.rules.max_net_support.max_net_support" title="trivoting.rules.max_net_support.max_net_support"><code class="xref py py-func docutils literal notranslate"><span class="pre">max_net_support()</span></code></a> rule returns selectionsm aximising the total net support,
+that is, the sum over all voters of the number of approved and selected alternatives minus the number of disapproved and selected ones.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.rules</span><span class="w"> </span><span class="kn">import</span> <span class="n">max_net_support</span>
+
+<span class="n">selection</span> <span class="o">=</span> <span class="n">max_net_support</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">max_size_selection</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>There is also an ILP version used mostly for debugging and comparison purposes.
+Note that it can also be computed as the outcome of a Thiele rule.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.rules.max_net_support</span><span class="w"> </span><span class="kn">import</span> <span class="n">max_net_support_ilp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.rules.thiele</span><span class="w"> </span><span class="kn">import</span> <span class="n">NetSupportThieleScore</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.rules</span><span class="w"> </span><span class="kn">import</span> <span class="n">thiele</span>
+
+<span class="n">selection</span> <span class="o">=</span> <span class="n">max_net_support_ilp</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">max_size_selection</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">selection_same</span> <span class="o">=</span> <span class="n">thiele</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">max_size_selection</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">thiele_score_class</span><span class="o">=</span><span class="n">NetSupportThieleScore</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="sequential-phragmen">
+<h3>Sequential Phragmén<a class="headerlink" href="#sequential-phragmen" title="Link to this heading">#</a></h3>
+<p>The <a class="reference internal" href="reference/rules/index.html#trivoting.rules.phragmen.sequential_phragmen" title="trivoting.rules.phragmen.sequential_phragmen"><code class="xref py py-func docutils literal notranslate"><span class="pre">sequential_phragmen()</span></code></a> function implements the Sequential Phragmén rule adapted
+to trichotomous preferences. This rule distributes “load” among voters to achieve proportional representation.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.rules</span><span class="w"> </span><span class="kn">import</span> <span class="n">sequential_phragmen</span>
+
+<span class="n">selection</span> <span class="o">=</span> <span class="n">sequential_phragmen</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">max_size_selection</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Additional options:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">resoluteness</span></code>: return one or all tied selections.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tie_breaking</span></code>: custom tie-breaking rule (default: <a class="reference internal" href="reference/tiebreaking.html#trivoting.tiebreaking.lexico_tie_breaking" title="trivoting.tiebreaking.lexico_tie_breaking"><code class="xref py py-func docutils literal notranslate"><span class="pre">lexico_tie_breaking()</span></code></a>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">initial_selection</span></code>: partially fixed selection.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">initial_loads</span></code>: optional initial load vector (defaults to 0 for all voters).</p></li>
+</ul>
+</section>
+<section id="tax-based-rules">
+<h3>Tax-Based Rules<a class="headerlink" href="#tax-based-rules" title="Link to this heading">#</a></h3>
+<p>The <a class="reference internal" href="reference/rules/index.html#trivoting.rules.tax_rules.tax_pb_rule_scheme" title="trivoting.rules.tax_rules.tax_pb_rule_scheme"><code class="xref py py-func docutils literal notranslate"><span class="pre">tax_pb_rule_scheme()</span></code></a> function adapts participatory budgeting (PB) rules to
+trichotomous preferences by introducing a cost for each project in the from of a tax.</p>
+<p>This method converts the profile into a PB instance (using the <code class="docutils literal notranslate"><span class="pre">pabutools</span></code> package), applies a PB rule, and converts
+the result back to a trichotomous selection.</p>
+<p>The tax function, defining the cost of the projects on the PB side, is defined as a subclass of the
+<a class="reference internal" href="reference/rules/index.html#trivoting.rules.tax_rules.TaxFunction" title="trivoting.rules.tax_rules.TaxFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">TaxFunction</span></code></a>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.rules</span><span class="w"> </span><span class="kn">import</span> <span class="n">tax_pb_rule_scheme</span><span class="p">,</span> <span class="n">TaxKraiczy2025</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pabutools.rules</span><span class="w"> </span><span class="kn">import</span> <span class="n">method_of_equal_shares</span>
+
+<span class="n">selection</span> <span class="o">=</span> <span class="n">tax_pb_rule_scheme</span><span class="p">(</span>
+    <span class="n">profile</span><span class="p">,</span>
+    <span class="n">max_size_selection</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+    <span class="n">tax_function</span><span class="o">=</span><span class="n">TaxKraiczy2025</span><span class="p">,</span>
+    <span class="n">pb_rule</span><span class="o">=</span><span class="n">method_of_equal_shares</span><span class="p">,</span>
+    <span class="n">pb_rule_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;sat_class&quot;</span><span class="p">:</span> <span class="n">pb_election</span><span class="o">.</span><span class="n">Cardinality_Sat</span><span class="p">}</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Two specialized wrappers are available for convenience:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="reference/rules/index.html#trivoting.rules.tax_rules.tax_method_of_equal_shares" title="trivoting.rules.tax_rules.tax_method_of_equal_shares"><code class="xref py py-func docutils literal notranslate"><span class="pre">tax_method_of_equal_shares()</span></code></a></p></li>
+<li><p><a class="reference internal" href="reference/rules/index.html#trivoting.rules.tax_rules.tax_sequential_phragmen" title="trivoting.rules.tax_rules.tax_sequential_phragmen"><code class="xref py py-func docutils literal notranslate"><span class="pre">tax_sequential_phragmen()</span></code></a></p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.rules</span><span class="w"> </span><span class="kn">import</span> <span class="n">tax_method_of_equal_shares</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.tiebreaking</span><span class="w"> </span><span class="kn">import</span> <span class="n">lexico_tie_breaking</span>
+
+<span class="n">selection</span> <span class="o">=</span> <span class="n">tax_method_of_equal_shares</span><span class="p">(</span>
+    <span class="n">profile</span><span class="p">,</span>
+    <span class="n">max_size_selection</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+    <span class="n">resoluteness</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">tie_breaking</span><span class="o">=</span><span class="n">lexico_tie_breaking</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="chamberlincourant-rule">
+<h3>Chamberlin–Courant Rule<a class="headerlink" href="#chamberlincourant-rule" title="Link to this heading">#</a></h3>
+<p>The :py:func:~`trivoting.rules.chamberlin_courant.chamberlin_courant` function implements the Chamberlin–Courant rule for trichotomous preferences.
+It computes selections that maximizes the number of covered voters, that is, voters who have strictly more approved and selected alternatives than disapproved and selected ones.</p>
+<p>The outcome of the rule is computed through an ILP solver.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.rules</span><span class="w"> </span><span class="kn">import</span> <span class="n">chamberlin_courant</span>
+
+<span class="n">selection</span> <span class="o">=</span> <span class="n">chamberlin_courant</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">max_size_selection</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Irresolute outcomes can be obtained by using <cite>resoluteness=False</cite>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">results</span> <span class="o">=</span> <span class="n">chamberlin_courant</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">max_size_selection</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">resoluteness</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You can fix certain alternatives to be selected or rejected by providing an initial
+<a class="reference internal" href="reference/election/index.html#trivoting.election.selection.Selection" title="trivoting.election.selection.Selection"><code class="xref py py-class docutils literal notranslate"><span class="pre">Selection</span></code></a> object.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.election</span><span class="w"> </span><span class="kn">import</span> <span class="n">Selection</span>
+
+<span class="n">initial</span> <span class="o">=</span> <span class="n">Selection</span><span class="p">(</span><span class="n">selected</span><span class="o">=</span><span class="p">[</span><span class="n">a1</span><span class="p">],</span> <span class="n">implicit_reject</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">chamberlin_courant</span><span class="p">(</span>
+    <span class="n">profile</span><span class="p">,</span>
+    <span class="n">max_size_selection</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+    <span class="n">initial_selection</span><span class="o">=</span><span class="n">initial</span><span class="p">,</span>
+    <span class="n">resoluteness</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 <p>Additional options for the ILP solver can be passed:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">verbose=True</span></code> enables output from the ILP solver.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">max_seconds</span></code> can be used to limit the computation time (default: 600 seconds).</p></li>
+<li><p><cite>verbose=True</cite> enables solver output;</p></li>
+<li><p><cite>max_seconds</cite> limits the solver runtime (default is 600 seconds).</p></li>
 </ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">thiele_method</span><span class="p">(</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">chamberlin_courant</span><span class="p">(</span>
     <span class="n">profile</span><span class="p">,</span>
     <span class="n">max_size_selection</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
-    <span class="n">ilp_builder_class</span><span class="o">=</span><span class="n">PAVILPKraiczy2025</span>
+    <span class="n">initial_selection</span><span class="o">=</span><span class="n">initial</span><span class="p">,</span>
     <span class="n">resoluteness</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">max_seconds</span><span class="o">=</span><span class="mi">300</span>
 <span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="sequential-phragmen">
-<h3>Sequential Phragmén<a class="headerlink" href="#sequential-phragmen" title="Link to this heading">#</a></h3>
-<p>The <a class="reference internal" href="reference/rules/index.html#trivoting.rules.phragmen.sequential_phragmen" title="trivoting.rules.phragmen.sequential_phragmen"><code class="xref py py-func docutils literal notranslate"><span class="pre">sequential_phragmen()</span></code></a> function implements the sequential Phragmén rule
-adapted to trichotomous preferences. This method distributes load among voters to achieve proportional representation.</p>
-<p>You need to pass a trichotomous profile (implementing the <a class="reference internal" href="reference/election/index.html#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile" title="trivoting.election.trichotomous_profile.AbstractTrichotomousProfile"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractTrichotomousProfile</span></code></a> interface)
-and specify the maximum number of alternatives to select.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.rules</span><span class="w"> </span><span class="kn">import</span> <span class="n">sequential_phragmen</span>
+<p>A brute-force variant is also available for testing purposes:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.rules.chamberlin_courant</span><span class="w"> </span><span class="kn">import</span> <span class="n">chamberlin_courant_brute_force</span>
 
-<span class="n">selection</span> <span class="o">=</span> <span class="n">sequential_phragmen</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">max_size_selection</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>By default, the function returns a single optimal selection (resolute). To retrieve all optimal selections (if multiple exist), set <cite>resoluteness=False</cite>.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">results</span> <span class="o">=</span> <span class="n">sequential_phragmen</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">max_size_selection</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">resoluteness</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-
-<span class="k">for</span> <span class="n">selection</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">selection</span><span class="p">)</span>
-<span class="c1"># Example output:</span>
-<span class="c1"># {[a1, a2, a5]} // {implicit}</span>
-<span class="c1"># {[a1, a3, a5]} // {implicit}</span>
-</pre></div>
-</div>
-<p>You can fix certain alternatives to be selected or rejected by providing an initial <a class="reference internal" href="reference/election/index.html#trivoting.election.selection.Selection" title="trivoting.election.selection.Selection"><code class="xref py py-class docutils literal notranslate"><span class="pre">Selection</span></code></a> object.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.election</span><span class="w"> </span><span class="kn">import</span> <span class="n">Selection</span>
-
-<span class="n">initial</span> <span class="o">=</span> <span class="n">Selection</span><span class="p">(</span><span class="n">selected</span><span class="o">=</span><span class="p">[</span><span class="n">a1</span><span class="p">],</span> <span class="n">implicit_reject</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-<span class="n">result</span> <span class="o">=</span> <span class="n">sequential_phragmen</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">max_size_selection</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">initial_selection</span><span class="o">=</span><span class="n">initial</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Additional options include:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">initial_loads</span></code>: a list of numeric values to set initial loads for the voters (default is 0 for all).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">tie_breaking</span></code>: a custom tie-breaking rule. Defaults to lexicographic tie-breaking.</p></li>
-</ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.tiebreaking</span><span class="w"> </span><span class="kn">import</span> <span class="n">lexico_tie_breaking</span>
-
-<span class="n">result</span> <span class="o">=</span> <span class="n">sequential_phragmen</span><span class="p">(</span>
-    <span class="n">profile</span><span class="p">,</span>
-    <span class="n">max_size_selection</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
-    <span class="n">initial_loads</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
-    <span class="n">initial_selection</span><span class="o">=</span><span class="n">initial</span><span class="p">,</span>
-    <span class="n">tie_breaking</span><span class="o">=</span><span class="n">lexico_tie_breaking</span><span class="p">,</span>
-    <span class="n">resoluteness</span><span class="o">=</span><span class="kc">True</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="tax-pb-rule-scheme">
-<h3>Tax PB Rule Scheme<a class="headerlink" href="#tax-pb-rule-scheme" title="Link to this heading">#</a></h3>
-<p>The <a class="reference internal" href="reference/rules/index.html#trivoting.rules.tax_rules.tax_pb_rule_scheme" title="trivoting.rules.tax_rules.tax_pb_rule_scheme"><code class="xref py py-func docutils literal notranslate"><span class="pre">tax_pb_rule_scheme()</span></code></a> function implements a generic scheme for applying
-participatory budgeting (PB) rules to trichotomous profiles converted into PB instance via an opposition tax.</p>
-<p>This method first translates the trichotomous profile into a PB instance by assigning higher costs to alternatives with
-lower net support (approvals minus disapprovals). It then applies a PB rule from the <cite>pabutools</cite> package and converts
-the resulting budget allocations back into selections of alternatives.</p>
-<p>You need to pass a trichotomous profile (implementing the <a class="reference internal" href="reference/election/index.html#trivoting.election.trichotomous_profile.AbstractTrichotomousProfile" title="trivoting.election.trichotomous_profile.AbstractTrichotomousProfile"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractTrichotomousProfile</span></code></a> interface),
-specify the maximum number of alternatives to select and the PB rule to use (that may require kwargs).</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.rules</span><span class="w"> </span><span class="kn">import</span> <span class="n">tax_pb_rule_scheme</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pabutools.rules</span><span class="w"> </span><span class="kn">import</span> <span class="n">method_of_equal_shares</span>
-
-<span class="n">selection</span> <span class="o">=</span> <span class="n">tax_pb_rule_scheme</span><span class="p">(</span>
-    <span class="n">profile</span><span class="p">,</span>
-    <span class="n">max_size_selection</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
-    <span class="n">pb_rule</span><span class="o">=</span><span class="n">method_of_equal_shares</span><span class="p">,</span>
-    <span class="n">pb_rule_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;sat_class&quot;</span><span class="p">:</span> <span class="n">pb_election</span><span class="o">.</span><span class="n">Cardinality_Sat</span><span class="p">}</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-<p>Additionally, resoluteness, initial selection and tie-breaking can be specified:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.tiebreaking</span><span class="w"> </span><span class="kn">import</span> <span class="n">lexico_tie_breaking</span>
-
-<span class="n">selection</span> <span class="o">=</span> <span class="n">tax_pb_rule_scheme</span><span class="p">(</span>
-    <span class="n">profile</span><span class="p">,</span>
-    <span class="n">max_size_selection</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
-    <span class="n">pb_rule</span><span class="o">=</span><span class="n">method_of_equal_shares</span><span class="p">,</span>
-    <span class="n">pb_rule_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;sat_class&quot;</span><span class="p">:</span> <span class="n">pb_election</span><span class="o">.</span><span class="n">Cardinality_Sat</span><span class="p">},</span>
-    <span class="n">resoluteness</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="n">tie_breaking</span><span class="o">=</span><span class="n">lexico_tie_breaking</span><span class="p">,</span>
-    <span class="n">initial_selection</span><span class="o">=</span><span class="n">selection</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-<p>Two tax-based rules are defined by default: <a class="reference internal" href="reference/rules/index.html#trivoting.rules.tax_rules.tax_method_of_equal_shares" title="trivoting.rules.tax_rules.tax_method_of_equal_shares"><code class="xref py py-func docutils literal notranslate"><span class="pre">tax_method_of_equal_shares()</span></code></a> and
-<a class="reference internal" href="reference/rules/index.html#trivoting.rules.tax_rules.tax_sequential_phragmen" title="trivoting.rules.tax_rules.tax_sequential_phragmen"><code class="xref py py-func docutils literal notranslate"><span class="pre">tax_sequential_phragmen()</span></code></a>.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.rules</span><span class="w"> </span><span class="kn">import</span> <span class="n">tax_pb_rule_scheme</span>
-
-<span class="n">selection_mes</span> <span class="o">=</span> <span class="n">tax_method_of_equal_shares</span><span class="p">(</span>
-    <span class="n">profile</span><span class="p">,</span>
-    <span class="n">max_size_selection</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
-    <span class="n">resoluteness</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="n">tie_breaking</span><span class="o">=</span><span class="n">lexico_tie_breaking</span><span class="p">,</span>
-    <span class="n">initial_selection</span><span class="o">=</span><span class="n">selection</span>
-<span class="p">)</span>
-
-<span class="n">selection_phrag</span> <span class="o">=</span> <span class="n">tax_sequential_phragmen</span><span class="p">(</span>
-    <span class="n">profile</span><span class="p">,</span>
-    <span class="n">max_size_selection</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
-    <span class="n">resoluteness</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="n">tie_breaking</span><span class="o">=</span><span class="n">lexico_tie_breaking</span><span class="p">,</span>
-    <span class="n">initial_selection</span><span class="o">=</span><span class="n">selection</span>
-<span class="p">)</span>
+<span class="n">selection</span> <span class="o">=</span> <span class="n">chamberlin_courant_brute_force</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">max_size_selection</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
@@ -988,9 +1045,15 @@ handle fractions. To change this, simply change the value of the <cite>FRACTION<
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#random-generation-of-profiles">Random Generation of Profiles</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#selection">Selection</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rules">Rules</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#thiele-methods">Thiele Methods</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#thiele-rules">Thiele Rules</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#optimal-thiele-rules">Optimal Thiele Rules</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#sequential-thiele-rules">Sequential Thiele Rules</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#max-net-support-rule">Max Net Support Rule</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sequential-phragmen">Sequential Phragmén</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tax-pb-rule-scheme">Tax PB Rule Scheme</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tax-based-rules">Tax-Based Rules</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#chamberlincourant-rule">Chamberlin–Courant Rule</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tie-breaking">Tie-Breaking</a></li>

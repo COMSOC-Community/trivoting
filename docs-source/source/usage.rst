@@ -364,44 +364,62 @@ You can add or extend the selected and rejected sets dynamically:
 Rules
 -----
 
-Rules are used to determine selections based on a profile. They all take a `max_size_selection` argument that indicates
-the maximum number of alternatives that can be selected. Since ballots can indicate disapproval, rules need not select
-exactly the desired number of alternatives.
+Rules determine which alternatives are selected based on the preferences of voters expressed in a trichotomous profile
+(approvals, neutral, disapprovals). All rules take a ``max_size_selection`` argument, indicating the maximum number of
+alternatives that can be selected. Since ballots can include disapproval, rules are not required to select exactly that
+number.
 
-We try to always offer the possibility to ask for resolute or irresolute outcomes, via the `resoluteness` argument.
-The tie breaking rule to use can typically be specified via the `tie_breaking`
-argument (not all the rules support that). See the :py:mod:`~trivoting.tiebreaking` module for more information.
-Initial selection can usually be passed to the rules via the `initial` argument. The rule then completes the initial
-selection.
+Most rules support the following common options:
 
-Thiele Methods
-^^^^^^^^^^^^^^
+- ``resoluteness``: whether to return a single selection (``True``, default) or all tied optimal selections (``False``).
+- ``tie_breaking``: tie-breaking rule, typically a function from the :py:mod:`~trivoting.tiebreaking` module.
+- ``initial_selection``: a partially fixed selection, allowing some alternatives to be pre-selected or rejected.
 
-The :py:func:`~trivoting.rules.thiele.thiele_method` function implements a general scheme to compute the outcome of a Thiele method
-using Integer Linear Programming (ILP).
+Thiele Rules
+^^^^^^^^^^^^
 
-As usual, you need to pass a trichotomous profile (implementing the :py:class:`~trivoting.election.trichotomous_profile.AbstractTrichotomousProfile` interface)
-and specify the maximum number of alternatives to select. You also need an additional `ild_builder_class` argument
-that takes a subclass of the abstract class :py:class:`~trivoting.rules.thiele.ThieleILPBuilder`.
+We provide two implementations for Thiele rules: exact via ILP sovlers and sequential approximations.
+
+A Thiele rule is described via subclasses of the :py:class:`~trivoting.rules.thiele.ThieleScore` class.
+The following scoring functions are currently available:
+
+- :py:class:`~trivoting.rules.thiele.PAVScoreKraiczy2025`: PAV rule combining approvals and implicit support from disapprovals of unselected options.
+- :py:class:`~trivoting.rules.thiele.PAVScoreTalmonPaige2021`: PAV with negative contributions for disapproved but selected alternatives.
+- :py:class:`~trivoting.rules.thiele.PAVScoreHervouin2025`: PAV variant combining approval satisfaction and mitigation of disapproval.
+- :py:class:`~trivoting.rules.thiele.ApprovalThieleScore`: Simplified Thiele rule maximizing total approvals.
+- :py:class:`~trivoting.rules.thiele.NetSupportThieleScore`: Thiele rule maximizing net support (approvals minus disapprovals).
+
+Optimal Thiele Rules
+~~~~~~~~~~~~~~~~~~~~
+
+The :py:func:`~trivoting.rules.thiele.thiele_method` function implements a general Thiele rule scheme using an Integer
+Linear Programming (ILP) solver.
+
+You must provide:
+
+- a trichotomous profile (implementing :py:class:`~trivoting.election.trichotomous_profile.AbstractTrichotomousProfile`),
+- a ``max_size_selection``, and
+- a subclass of :py:class:`~trivoting.rules.thiele.ThieleScore` via the argument ``thiele_score_class``.
 
 .. code-block:: python
 
-    from trivoting.rules import thiele_method, PAVILPKraiczy2025
+    from trivoting.rules import thiele_method, PAVScoreKraiczy2025
 
-    selection = thiele_method(profile, max_size_selection=3, ilp_builder_class=PAVILPKraiczy2025)
+    selection = thiele_method(profile, max_size_selection=3, thiele_score_class=PAVScoreKraiczy2025)
 
-    print(result)
-
-By default, the function returns a single optimal selection (resolute). To retrieve all optimal selections (if multiple exist), set `resoluteness=False`.
+You can use ``resoluteness=False`` to obtain an irresolute outcome:
 
 .. code-block:: python
 
-    results = thiele_method(profile, max_size_selection=3, ilp_builder_class=PAVILPKraiczy2025, resoluteness=False)
+    results = thiele_method(
+        profile,
+        max_size_selection=3,
+        thiele_score_class=PAVScoreKraiczy2025,
+        resoluteness=False
+    )
 
-    for selection in results:
-        print(selection)
-
-You can fix certain alternatives to be selected or rejected by providing an initial :py:class:`~trivoting.election.selection.Selection` object.
+To fix certain alternatives as already selected or rejected, provide an initial
+:py:class:`~trivoting.election.selection.Selection`:
 
 .. code-block:: python
 
@@ -409,32 +427,67 @@ You can fix certain alternatives to be selected or rejected by providing an init
 
     initial = Selection(selected=[a1], implicit_reject=True)
 
-    result = thiele_method(profile, max_size_selection=3, ilp_builder_class=PAVILPKraiczy2025, initial_selection=initial)
+    result = thiele_method(
+        profile,
+        max_size_selection=3,
+        thiele_score_class=PAVScoreKraiczy2025,
+        initial_selection=initial
+    )
 
-Additional options for the ILP solver can be passed:
+Additional options for the ILP solver:
 
-- ``verbose=True`` enables output from the ILP solver.
-- ``max_seconds`` can be used to limit the computation time (default: 600 seconds).
+- ``verbose=True`` enables solver output.
+- ``max_seconds`` sets a time limit (default is 600 seconds).
+
+Sequential Thiele Rules
+~~~~~~~~~~~~~~~~~~~~~~~
+
+For heuristic computation, :py:func:`~trivoting.rules.thiele.sequential_thiele` implements a sequential version
+of Thiele rules. The same :py:class:`~trivoting.rules.thiele.ThieleScore` subclasses can be
+used here.
 
 .. code-block:: python
 
-    result = thiele_method(
+    from trivoting.rules import sequential_thiele, PAVScoreTalmonPaige2021
+
+    selection = sequential_thiele(
         profile,
         max_size_selection=4,
-        ilp_builder_class=PAVILPKraiczy2025
-        resoluteness=True,
-        verbose=True,
-        max_seconds=300
+        thiele_score_class=PAVScoreTalmonPaige2021
     )
+
+These rules also support tie breaking mechanisms and resoluteness.
+
+Max Net Support Rule
+^^^^^^^^^^^^^^^^^^^^
+
+The :py:func:`~trivoting.rules.max_net_support.max_net_support` rule returns selectionsm aximising the total net support,
+that is, the sum over all voters of the number of approved and selected alternatives minus the number of disapproved and selected ones.
+
+.. code-block:: python
+
+    from trivoting.rules import max_net_support
+
+    selection = max_net_support(profile, max_size_selection=3)
+
+There is also an ILP version used mostly for debugging and comparison purposes.
+Note that it can also be computed as the outcome of a Thiele rule.
+
+.. code-block:: python
+
+    from trivoting.rules.max_net_support import max_net_support_ilp
+    from trivoting.rules.thiele import NetSupportThieleScore
+    from trivoting.rules import thiele
+
+    selection = max_net_support_ilp(profile, max_size_selection=3)
+    selection_same = thiele(profile, max_size_selection=3, thiele_score_class=NetSupportThieleScore)
+
 
 Sequential Phragmén
 ^^^^^^^^^^^^^^^^^^^
 
-The :py:func:`~trivoting.rules.phragmen.sequential_phragmen` function implements the sequential Phragmén rule
-adapted to trichotomous preferences. This method distributes load among voters to achieve proportional representation.
-
-You need to pass a trichotomous profile (implementing the :py:class:`~trivoting.election.trichotomous_profile.AbstractTrichotomousProfile` interface)
-and specify the maximum number of alternatives to select.
+The :py:func:`~trivoting.rules.phragmen.sequential_phragmen` function implements the Sequential Phragmén rule adapted
+to trichotomous preferences. This rule distributes “load” among voters to achieve proportional representation.
 
 .. code-block:: python
 
@@ -442,20 +495,79 @@ and specify the maximum number of alternatives to select.
 
     selection = sequential_phragmen(profile, max_size_selection=3)
 
+Additional options:
 
-By default, the function returns a single optimal selection (resolute). To retrieve all optimal selections (if multiple exist), set `resoluteness=False`.
+- ``resoluteness``: return one or all tied selections.
+- ``tie_breaking``: custom tie-breaking rule (default: :py:func:`~trivoting.tiebreaking.lexico_tie_breaking`).
+- ``initial_selection``: partially fixed selection.
+- ``initial_loads``: optional initial load vector (defaults to 0 for all voters).
+
+Tax-Based Rules
+^^^^^^^^^^^^^^^
+
+The :py:func:`~trivoting.rules.tax_rules.tax_pb_rule_scheme` function adapts participatory budgeting (PB) rules to
+trichotomous preferences by introducing a cost for each project in the from of a tax.
+
+This method converts the profile into a PB instance (using the ``pabutools`` package), applies a PB rule, and converts
+the result back to a trichotomous selection.
+
+The tax function, defining the cost of the projects on the PB side, is defined as a subclass of the
+:py:class:`~trivoting.rules.tax_rules.TaxFunction`.
+
 
 .. code-block:: python
 
-    results = sequential_phragmen(profile, max_size_selection=3, resoluteness=False)
+    from trivoting.rules import tax_pb_rule_scheme, TaxKraiczy2025
+    from pabutools.rules import method_of_equal_shares
 
-    for selection in results:
-        print(selection)
-    # Example output:
-    # {[a1, a2, a5]} // {implicit}
-    # {[a1, a3, a5]} // {implicit}
+    selection = tax_pb_rule_scheme(
+        profile,
+        max_size_selection=5,
+        tax_function=TaxKraiczy2025,
+        pb_rule=method_of_equal_shares,
+        pb_rule_kwargs={"sat_class": pb_election.Cardinality_Sat}
+    )
 
-You can fix certain alternatives to be selected or rejected by providing an initial :py:class:`~trivoting.election.selection.Selection` object.
+Two specialized wrappers are available for convenience:
+
+- :py:func:`~trivoting.rules.tax_rules.tax_method_of_equal_shares`
+- :py:func:`~trivoting.rules.tax_rules.tax_sequential_phragmen`
+
+.. code-block:: python
+
+    from trivoting.rules import tax_method_of_equal_shares
+    from trivoting.tiebreaking import lexico_tie_breaking
+
+    selection = tax_method_of_equal_shares(
+        profile,
+        max_size_selection=5,
+        resoluteness=False,
+        tie_breaking=lexico_tie_breaking
+    )
+
+
+Chamberlin–Courant Rule
+^^^^^^^^^^^^^^^^^^^^^^^
+
+The :py:func:~`trivoting.rules.chamberlin_courant.chamberlin_courant` function implements the Chamberlin–Courant rule for trichotomous preferences.
+It computes selections that maximizes the number of covered voters, that is, voters who have strictly more approved and selected alternatives than disapproved and selected ones.
+
+The outcome of the rule is computed through an ILP solver.
+
+.. code-block:: python
+
+    from trivoting.rules import chamberlin_courant
+
+    selection = chamberlin_courant(profile, max_size_selection=3)
+
+Irresolute outcomes can be obtained by using `resoluteness=False`:
+
+.. code-block:: python
+
+    results = chamberlin_courant(profile, max_size_selection=3, resoluteness=False)
+
+You can fix certain alternatives to be selected or rejected by providing an initial
+:py:class:`~trivoting.election.selection.Selection` object.
 
 .. code-block:: python
 
@@ -463,90 +575,36 @@ You can fix certain alternatives to be selected or rejected by providing an init
 
     initial = Selection(selected=[a1], implicit_reject=True)
 
-    result = sequential_phragmen(profile, max_size_selection=3, initial_selection=initial)
-
-Additional options include:
-
-- ``initial_loads``: a list of numeric values to set initial loads for the voters (default is 0 for all).
-- ``tie_breaking``: a custom tie-breaking rule. Defaults to lexicographic tie-breaking.
-
-.. code-block:: python
-
-    from trivoting.tiebreaking import lexico_tie_breaking
-
-    result = sequential_phragmen(
+    result = chamberlin_courant(
         profile,
-        max_size_selection=4,
-        initial_loads=[0, 0, 0],
+        max_size_selection=3,
         initial_selection=initial,
-        tie_breaking=lexico_tie_breaking,
         resoluteness=True
     )
 
+Additional options for the ILP solver can be passed:
 
-Tax PB Rule Scheme
-^^^^^^^^^^^^^^^^^^
-
-The :py:func:`~trivoting.rules.tax_rules.tax_pb_rule_scheme` function implements a generic scheme for applying
-participatory budgeting (PB) rules to trichotomous profiles converted into PB instance via an opposition tax.
-
-This method first translates the trichotomous profile into a PB instance by assigning higher costs to alternatives with
-lower net support (approvals minus disapprovals). It then applies a PB rule from the `pabutools` package and converts
-the resulting budget allocations back into selections of alternatives.
-
-You need to pass a trichotomous profile (implementing the :py:class:`~trivoting.election.trichotomous_profile.AbstractTrichotomousProfile` interface),
-specify the maximum number of alternatives to select and the PB rule to use (that may require kwargs).
+- `verbose=True` enables solver output;
+- `max_seconds` limits the solver runtime (default is 600 seconds).
 
 .. code-block:: python
 
-    from trivoting.rules import tax_pb_rule_scheme
-    from pabutools.rules import method_of_equal_shares
-
-    selection = tax_pb_rule_scheme(
+    result = chamberlin_courant(
         profile,
-        max_size_selection=5,
-        pb_rule=method_of_equal_shares,
-        pb_rule_kwargs={"sat_class": pb_election.Cardinality_Sat}
+        max_size_selection=4,
+        initial_selection=initial,
+        resoluteness=True,
+        verbose=True,
+        max_seconds=300
     )
 
-Additionally, resoluteness, initial selection and tie-breaking can be specified:
+A brute-force variant is also available for testing purposes:
 
 .. code-block:: python
 
-    from trivoting.tiebreaking import lexico_tie_breaking
+    from trivoting.rules.chamberlin_courant import chamberlin_courant_brute_force
 
-    selection = tax_pb_rule_scheme(
-        profile,
-        max_size_selection=5,
-        pb_rule=method_of_equal_shares,
-        pb_rule_kwargs={"sat_class": pb_election.Cardinality_Sat},
-        resoluteness=False,
-        tie_breaking=lexico_tie_breaking,
-        initial_selection=selection
-    )
-
-Two tax-based rules are defined by default: :py:func:`~trivoting.rules.tax_rules.tax_method_of_equal_shares` and
-:py:func:`~trivoting.rules.tax_rules.tax_sequential_phragmen`.
-
-.. code-block:: python
-
-    from trivoting.rules import tax_pb_rule_scheme
-
-    selection_mes = tax_method_of_equal_shares(
-        profile,
-        max_size_selection=5,
-        resoluteness=False,
-        tie_breaking=lexico_tie_breaking,
-        initial_selection=selection
-    )
-
-    selection_phrag = tax_sequential_phragmen(
-        profile,
-        max_size_selection=5,
-        resoluteness=False,
-        tie_breaking=lexico_tie_breaking,
-        initial_selection=selection
-    )
+    selection = chamberlin_courant_brute_force(profile, max_size_selection=3)
 
 Tie-Breaking
 ------------

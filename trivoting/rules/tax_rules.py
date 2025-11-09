@@ -1,3 +1,8 @@
+"""
+Tax rules are rules that transform the trichotomous profile into a participatory budgeting (PB) instance and then use
+PB rules to compute selections for the trichotomous profile.
+"""
+
 from __future__ import annotations
 
 import abc
@@ -178,7 +183,7 @@ def tax_pb_rule_scheme(
     profile: AbstractTrichotomousProfile,
     max_size_selection: int,
     pb_rule: Callable,
-    tax_function: type[TaxFunction] = None,
+    tax_function: type[TaxFunction],
     initial_selection: Selection | None = None,
     tie_breaking: TieBreakingRule | None = None,
     resoluteness: bool = True,
@@ -205,9 +210,8 @@ def tax_pb_rule_scheme(
         The maximum number of alternatives allowed in the selection.
     pb_rule : callable
         The participatory budgeting rule function to apply.
-    tax_function: type[TaxFunction], optional
-        A tax function defined as a subclass of the :py:class:`TaxFunction` class. Defaults to
-        :py:class:`TaxKraiczy2025`.
+    tax_function: type[TaxFunction]
+        A tax function defined as a subclass of the :py:class:`TaxFunction` class.
     initial_selection : Selection or None, optional
         An initial selection fixing some alternatives as selected or rejected.
     tie_breaking : TieBreakingRule or None, optional
@@ -228,8 +232,6 @@ def tax_pb_rule_scheme(
         pb_rule_kwargs = dict()
     if tie_breaking is None:
         tie_breaking = lexico_tie_breaking
-    if tax_function is None:
-        tax_function = TaxKraiczy2025
 
     if initial_selection is None:
         initial_selection = Selection(implicit_reject=True)

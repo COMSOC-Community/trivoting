@@ -1,3 +1,7 @@
+"""
+Phragmén's rules compute selections that try to balance the load carried by each voter to achieve proportional selections.
+"""
+
 from __future__ import annotations
 
 from copy import deepcopy
@@ -84,7 +88,7 @@ def sequential_phragmen(
         if irresolute (:code:`resoluteness == False`).
     """
 
-    def _sequential_phragmen_rec(
+    def _select_next_alternative(
         alternatives: set[Alternative],
         voters: list[PhragmenVoter],
         selection: Selection,
@@ -129,7 +133,7 @@ def sequential_phragmen(
                 if not vetoed:
                     selection.add_selected(selected_alternative)
                 alternatives.remove(selected_alternative)
-                _sequential_phragmen_rec(alternatives, voters, selection)
+                _select_next_alternative(alternatives, voters, selection)
             else:
                 for selected_alternative, vetoed in tied_alternatives:
                     new_voters = deepcopy(voters)
@@ -145,7 +149,7 @@ def sequential_phragmen(
                         new_selection.add_selected(selected_alternative)
                     new_alternatives = deepcopy(alternatives)
                     new_alternatives.remove(selected_alternative)
-                    _sequential_phragmen_rec(
+                    _select_next_alternative(
                         new_alternatives, new_voters, new_selection
                     )
 
@@ -176,10 +180,14 @@ def sequential_phragmen(
     for alternative in profile.alternatives:
         if alternative not in initial_selection.rejected:
             supps = [
-                i for i, v in enumerate(initial_voters) if alternative in v.ballot.approved
+                i
+                for i, v in enumerate(initial_voters)
+                if alternative in v.ballot.approved
             ]
             opps = [
-                i for i, v in enumerate(initial_voters) if alternative in v.ballot.disapproved
+                i
+                for i, v in enumerate(initial_voters)
+                if alternative in v.ballot.disapproved
             ]
             if supps or opps:
                 supporters[alternative] = supps
@@ -188,7 +196,7 @@ def sequential_phragmen(
 
     all_selections = []
 
-    _sequential_phragmen_rec(initial_alternatives, initial_voters, initial_selection)
+    _select_next_alternative(initial_alternatives, initial_voters, initial_selection)
 
     if resoluteness:
         return all_selections[0]

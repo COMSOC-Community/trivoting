@@ -16,7 +16,7 @@ Meta Rule
     :members:
     :show-inheritance:
 
-.. autoclass:: trivoting.rules.ilp_schemes.PuLPSolvers
+.. autoclass:: trivoting.rules.ilp_schemes.ILPSolver
     :members:
     :show-inheritance:
 
@@ -74,3 +74,27 @@ Tax-Based Rules
 .. autofunction:: trivoting.rules.tax_rules.tax_method_of_equal_shares
 
 .. autofunction:: trivoting.rules.tax_rules.tax_sequential_phragmen
+
+
+Chamberlin-Courant Rule
+-----------------------
+
+.. automodule:: trivoting.rules.chamberlin_courant
+
+.. autofunction:: trivoting.rules.chamberlin_courant.chamberlin_courant
+
+.. autoclass:: trivoting.rules.chamberlin_courant.ChamberlinCourantILPBuilder
+
+.. autofunction:: trivoting.rules.chamberlin_courant.chamberlin_courant_brute_force
+
+
+Max Net Support Rule
+--------------------
+
+.. automodule:: trivoting.rules.max_net_support
+
+.. autofunction:: trivoting.rules.max_net_support.max_net_support
+
+.. autofunction:: trivoting.rules.max_net_support.max_net_support_ilp
+
+.. autoclass:: trivoting.rules.max_net_support.MaxNetSupportILPBuilder

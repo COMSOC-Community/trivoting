@@ -279,13 +279,25 @@ document.write(`
                 <article class="bd-article">
                   
   <h1>Source code for trivoting.rules.ilp_schemes</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+<span></span><span class="sd">&quot;&quot;&quot;Generic schemes to compute outcomes of rules via integer linear programs.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">abc</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">pulp</span><span class="w"> </span><span class="kn">import</span> <span class="n">LpProblem</span><span class="p">,</span> <span class="n">LpMaximize</span><span class="p">,</span> <span class="n">LpAffineExpression</span><span class="p">,</span> <span class="n">LpVariable</span><span class="p">,</span> <span class="n">LpBinary</span><span class="p">,</span> <span class="n">lpSum</span><span class="p">,</span> <span class="n">HiGHS</span><span class="p">,</span> <span class="n">PULP_CBC_CMD</span><span class="p">,</span> \
-    <span class="n">LpStatusOptimal</span><span class="p">,</span> <span class="n">value</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pulp</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">LpProblem</span><span class="p">,</span>
+    <span class="n">LpMaximize</span><span class="p">,</span>
+    <span class="n">LpAffineExpression</span><span class="p">,</span>
+    <span class="n">LpVariable</span><span class="p">,</span>
+    <span class="n">LpBinary</span><span class="p">,</span>
+    <span class="n">lpSum</span><span class="p">,</span>
+    <span class="n">HiGHS</span><span class="p">,</span>
+    <span class="n">PULP_CBC_CMD</span><span class="p">,</span>
+    <span class="n">LpStatusOptimal</span><span class="p">,</span>
+    <span class="n">value</span><span class="p">,</span>
+<span class="p">)</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.election</span><span class="w"> </span><span class="kn">import</span> <span class="n">AbstractTrichotomousProfile</span><span class="p">,</span> <span class="n">Selection</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">trivoting.fractions</span><span class="w"> </span><span class="kn">import</span> <span class="n">Numeric</span>
@@ -294,82 +306,195 @@ document.write(`
 <div class="viewcode-block" id="ILPNotOptimalError">
 <a class="viewcode-back" href="../../../reference/rules/index.html#trivoting.rules.ilp_schemes.ILPNotOptimalError">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ILPNotOptimalError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Exception raised when the outcome of the ILP solver is not proven to be an optimal solution.&quot;&quot;&quot;</span>
+
     <span class="k">pass</span></div>
 
 
-<div class="viewcode-block" id="PuLPSolvers">
-<a class="viewcode-back" href="../../../reference/rules/index.html#trivoting.rules.ilp_schemes.PuLPSolvers">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">PuLPSolvers</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+
+<div class="viewcode-block" id="ILPSolver">
+<a class="viewcode-back" href="../../../reference/rules/index.html#trivoting.rules.ilp_schemes.ILPSolver">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ILPSolver</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Enumerates the different solvers available.&quot;&quot;&quot;</span>
+
     <span class="n">HIGHS</span> <span class="o">=</span> <span class="s2">&quot;HIGHS&quot;</span>
-    <span class="n">CBC</span> <span class="o">=</span> <span class="s2">&quot;CBC&quot;</span></div>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;HiGHS: open-source software to solve linear programming&quot;&quot;&quot;</span>
+
+    <span class="n">CBC</span> <span class="o">=</span> <span class="s2">&quot;CBC&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Cbc (Coin-or branch and cut) is an open-source mixed integer linear programming solver&quot;&quot;&quot;</span></div>
+
 
 
 <div class="viewcode-block" id="ILPBuilder">
 <a class="viewcode-back" href="../../../reference/rules/index.html#trivoting.rules.ilp_schemes.ILPBuilder">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ILPBuilder</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Abstract class used to define ILP programs that are then passed to the</span>
+<span class="sd">    :py:func:`~trivoting.rules.ilp_schemes.ilp_optimiser_rule` function for the actual solving.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    profile : AbstractTrichotomousProfile</span>
+<span class="sd">        The trichotomous profile.</span>
+<span class="sd">    max_size_selection : int</span>
+<span class="sd">        Maximum number of alternatives to select.</span>
+<span class="sd">    initial_selection : Selection, optional</span>
+<span class="sd">        An initial selection that fixes some alternatives as selected or rejected.</span>
+<span class="sd">        If `implicit_reject` is True, no alternatives are fixed to be rejected.</span>
+<span class="sd">    max_seconds : int, optional</span>
+<span class="sd">        Maximum number of seconds to run the ILP solver for.</span>
+<span class="sd">        Defaults to 600 seconds (10 minutes).</span>
+<span class="sd">    verbose : bool, optional</span>
+<span class="sd">        If True the output of the ILP solver is not silenced.</span>
+<span class="sd">        Defaults to False.</span>
+<span class="sd">    solver_name : ILPSolver</span>
+<span class="sd">        Name of the ILP solver to use.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    model_name : str</span>
+<span class="sd">        Name of the model, used when writing the LP files.</span>
+<span class="sd">    profile : AbstractTrichotomousProfile</span>
+<span class="sd">        The trichotomous profile.</span>
+<span class="sd">    max_size_selection : int</span>
+<span class="sd">        Maximum number of alternatives to select.</span>
+<span class="sd">    initial_selection : Selection, optional</span>
+<span class="sd">        An initial selection that fixes some alternatives as selected or rejected.</span>
+<span class="sd">        If `implicit_reject` is True, no alternatives are fixed to be rejected.</span>
+<span class="sd">    model : LpProblem</span>
+<span class="sd">        The actual PuLP model.</span>
+<span class="sd">    vars: dict[str, dict]</span>
+<span class="sd">        The variables used in the ILP model, mapping type of variable to dictionary containing LpVariable.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">model_name</span> <span class="o">=</span> <span class="s2">&quot;NoName&quot;</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                 <span class="n">profile</span><span class="p">:</span> <span class="n">AbstractTrichotomousProfile</span><span class="p">,</span>
-                 <span class="n">max_size_selection</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-                 <span class="n">initial_selection</span><span class="p">:</span> <span class="n">Selection</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">max_seconds</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">600</span><span class="p">,</span>
-                 <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-                 <span class="n">solver_name</span><span class="p">:</span> <span class="n">PuLPSolvers</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">profile</span><span class="p">:</span> <span class="n">AbstractTrichotomousProfile</span><span class="p">,</span>
+        <span class="n">max_size_selection</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">initial_selection</span><span class="p">:</span> <span class="n">Selection</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">max_seconds</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">600</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">solver_name</span><span class="p">:</span> <span class="n">ILPSolver</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">profile</span> <span class="o">=</span> <span class="n">profile</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">max_size_selection</span> <span class="o">=</span> <span class="n">max_size_selection</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">initial_selection</span> <span class="o">=</span> <span class="n">initial_selection</span>
         <span class="k">if</span> <span class="n">solver_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">solver_name</span> <span class="o">=</span> <span class="n">PuLPSolvers</span><span class="o">.</span><span class="n">HIGHS</span>
-        <span class="k">if</span> <span class="n">solver_name</span> <span class="o">==</span> <span class="n">PuLPSolvers</span><span class="o">.</span><span class="n">HIGHS</span><span class="p">:</span>
+            <span class="n">solver_name</span> <span class="o">=</span> <span class="n">ILPSolver</span><span class="o">.</span><span class="n">HIGHS</span>
+        <span class="k">if</span> <span class="n">solver_name</span> <span class="o">==</span> <span class="n">ILPSolver</span><span class="o">.</span><span class="n">HIGHS</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">solver</span> <span class="o">=</span> <span class="n">HiGHS</span><span class="p">(</span><span class="n">msg</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="n">timeLimit</span><span class="o">=</span><span class="n">max_seconds</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">solver_name</span> <span class="o">==</span> <span class="n">PuLPSolvers</span><span class="o">.</span><span class="n">CBC</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">solver_name</span> <span class="o">==</span> <span class="n">ILPSolver</span><span class="o">.</span><span class="n">CBC</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">solver</span> <span class="o">=</span> <span class="n">PULP_CBC_CMD</span><span class="p">(</span><span class="n">msg</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="n">timeLimit</span><span class="o">=</span><span class="n">max_seconds</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unsupported solver name </span><span class="si">{}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">solver_name</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported solver name </span><span class="si">{</span><span class="n">solver_name</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">LpProblem</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="p">,</span> <span class="n">sense</span><span class="o">=</span><span class="n">LpMaximize</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">vars</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
 
-
+<div class="viewcode-block" id="ILPBuilder.init_selection_vars">
+<a class="viewcode-back" href="../../../reference/rules/index.html#trivoting.rules.ilp_schemes.ILPBuilder.init_selection_vars">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">init_selection_vars</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialises the selections variables. Other function assumes that self.vars[&quot;selection&quot;] exists and</span>
+<span class="sd">        correspond to the variables indicating whether an alternative is selected or not.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">vars</span><span class="p">[</span><span class="s2">&quot;selection&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
             <span class="n">alt</span><span class="p">:</span> <span class="n">LpVariable</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;y_</span><span class="si">{</span><span class="n">alt</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="n">LpBinary</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">alt</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">alternatives</span>
-        <span class="p">}</span>
+        <span class="p">}</span></div>
 
+
+<div class="viewcode-block" id="ILPBuilder.init_vars">
+<a class="viewcode-back" href="../../../reference/rules/index.html#trivoting.rules.ilp_schemes.ILPBuilder.init_vars">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">init_vars</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;&quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">init_selection_vars</span><span class="p">()</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialises the variables. This function is meant to be overridden. The super() needs to be called to</span>
+<span class="sd">        ensure the initialisation of all the variables that are shared by all ILP models.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_selection_vars</span><span class="p">()</span></div>
 
+
+<div class="viewcode-block" id="ILPBuilder.constrain_initial_selection">
+<a class="viewcode-back" href="../../../reference/rules/index.html#trivoting.rules.ilp_schemes.ILPBuilder.constrain_initial_selection">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">constrain_initial_selection</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Adds the constraints related to the initial selection to the model.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_selection</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">alt</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_selection</span><span class="o">.</span><span class="n">selected</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vars</span><span class="p">[</span><span class="s2">&quot;selection&quot;</span><span class="p">][</span><span class="n">alt</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_selection</span><span class="o">.</span><span class="n">implicit_reject</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">alt</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_selection</span><span class="o">.</span><span class="n">rejected</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vars</span><span class="p">[</span><span class="s2">&quot;selection&quot;</span><span class="p">][</span><span class="n">alt</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vars</span><span class="p">[</span><span class="s2">&quot;selection&quot;</span><span class="p">][</span><span class="n">alt</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span></div>
 
+
+<div class="viewcode-block" id="ILPBuilder.constrain_max_size_selection">
+<a class="viewcode-back" href="../../../reference/rules/index.html#trivoting.rules.ilp_schemes.ILPBuilder.constrain_max_size_selection">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">constrain_max_size_selection</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">+=</span> <span class="n">lpSum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vars</span><span class="p">[</span><span class="s2">&quot;selection&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">())</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_size_selection</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Adds the constraint related to the maximum size of the selections.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">+=</span> <span class="n">lpSum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vars</span><span class="p">[</span><span class="s2">&quot;selection&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">())</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_size_selection</span></div>
 
+
+<div class="viewcode-block" id="ILPBuilder.apply_constraints">
+<a class="viewcode-back" href="../../../reference/rules/index.html#trivoting.rules.ilp_schemes.ILPBuilder.apply_constraints">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">apply_constraints</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">constrain_max_size_selection</span><span class="p">()</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Applies the different constraints to the model.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">constrain_initial_selection</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">constrain_max_size_selection</span><span class="p">()</span></div>
 
+
+<div class="viewcode-block" id="ILPBuilder.objective">
+<a class="viewcode-back" href="../../../reference/rules/index.html#trivoting.rules.ilp_schemes.ILPBuilder.objective">[docs]</a>
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">objective</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LpAffineExpression</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the objective function of the ILP.&quot;&quot;&quot;</span></div>
 
+
+<div class="viewcode-block" id="ILPBuilder.set_objective">
+<a class="viewcode-back" href="../../../reference/rules/index.html#trivoting.rules.ilp_schemes.ILPBuilder.set_objective">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_objective</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">objective</span><span class="p">()</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sets the objective function to the model itself.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">objective</span><span class="p">()</span></div>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">solve</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="p">)</span>
 
+<div class="viewcode-block" id="ILPBuilder.solve">
+<a class="viewcode-back" href="../../../reference/rules/index.html#trivoting.rules.ilp_schemes.ILPBuilder.solve">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">solve</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Optimises the model and return the optimisation status.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        int</span>
+<span class="sd">            The optimisation status of the solver.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ILPBuilder.force_objective_value">
+<a class="viewcode-back" href="../../../reference/rules/index.html#trivoting.rules.ilp_schemes.ILPBuilder.force_objective_value">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">force_objective_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="n">Numeric</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">objective</span><span class="p">()</span> <span class="o">==</span> <span class="n">v</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Adds a constraint to the model to force the objective to have a specific value.</span>
 
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        v : Numeric</span>
+<span class="sd">            The value of the objective.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">objective</span><span class="p">()</span> <span class="o">==</span> <span class="n">v</span></div>
+
+
+<div class="viewcode-block" id="ILPBuilder.ban_selection">
+<a class="viewcode-back" href="../../../reference/rules/index.html#trivoting.rules.ilp_schemes.ILPBuilder.ban_selection">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">ban_selection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selection</span><span class="p">:</span> <span class="n">Selection</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Adds the constraints to ban a given selection.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        selection : Selection</span>
+<span class="sd">            The selection to ban.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># See http://yetanothermathprogrammingconsultant.blogspot.com/2011/10/integer-cuts.html</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">+=</span> <span class="p">(</span>
             <span class="n">lpSum</span><span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">vars</span><span class="p">[</span><span class="s2">&quot;selection&quot;</span><span class="p">][</span><span class="n">a</span><span class="p">])</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">selection</span><span class="o">.</span><span class="n">selected</span><span class="p">)</span>
@@ -380,6 +505,7 @@ document.write(`
             <span class="n">lpSum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vars</span><span class="p">[</span><span class="s2">&quot;selection&quot;</span><span class="p">][</span><span class="n">a</span><span class="p">]</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">selection</span><span class="o">.</span><span class="n">selected</span><span class="p">)</span>
             <span class="o">-</span> <span class="n">lpSum</span><span class="p">(</span><span class="n">v</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vars</span><span class="p">[</span><span class="s2">&quot;selection&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">a</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">selection</span><span class="p">)</span>
         <span class="p">)</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">selection</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span></div>
+</div>
 
 
 
@@ -389,6 +515,15 @@ document.write(`
     <span class="n">ilp_builder</span><span class="p">:</span> <span class="n">ILPBuilder</span><span class="p">,</span>
     <span class="n">resoluteness</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Selection</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="n">Selection</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Rule that optimises an ILP and returns the corresponding selection(s). Returns the first optimal solution found</span>
+<span class="sd">    if :code:`resoluteness = True` and, all the optimal solutions otherwise.&quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">ilp_builder</span><span class="o">.</span><span class="n">initial_selection</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">ilp_builder</span><span class="o">.</span><span class="n">initial_selection</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">ilp_builder</span><span class="o">.</span><span class="n">max_size_selection</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">ilp_builder</span><span class="o">.</span><span class="n">initial_selection</span>
+            <span class="k">if</span> <span class="n">resoluteness</span>
+            <span class="k">else</span> <span class="p">[</span><span class="n">ilp_builder</span><span class="o">.</span><span class="n">initial_selection</span><span class="p">]</span>
+        <span class="p">)</span>
 
     <span class="n">ilp_builder</span><span class="o">.</span><span class="n">init_vars</span><span class="p">()</span>
     <span class="n">ilp_builder</span><span class="o">.</span><span class="n">apply_constraints</span><span class="p">()</span>
@@ -414,7 +549,6 @@ document.write(`
 
     <span class="c1"># If irresolute, we solve again, banning the previous selections</span>
     <span class="n">ilp_builder</span><span class="o">.</span><span class="n">force_objective_value</span><span class="p">(</span><span class="n">value</span><span class="p">(</span><span class="n">ilp_builder</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">objective</span><span class="p">))</span>
-
     <span class="n">previous_selection</span> <span class="o">=</span> <span class="n">selection</span>
     <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
         <span class="n">ilp_builder</span><span class="o">.</span><span class="n">ban_selection</span><span class="p">(</span><span class="n">previous_selection</span><span class="p">)</span>
@@ -425,7 +559,11 @@ document.write(`
             <span class="k">break</span>
 
         <span class="n">previous_selection</span> <span class="o">=</span> <span class="n">Selection</span><span class="p">(</span>
-            <span class="p">[</span><span class="n">a</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">ilp_builder</span><span class="o">.</span><span class="n">vars</span><span class="p">[</span><span class="s2">&quot;selection&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">value</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">value</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mf">0.9</span><span class="p">],</span>
+            <span class="p">[</span>
+                <span class="n">a</span>
+                <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">ilp_builder</span><span class="o">.</span><span class="n">vars</span><span class="p">[</span><span class="s2">&quot;selection&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">value</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">value</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mf">0.9</span>
+            <span class="p">],</span>
             <span class="n">implicit_reject</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="k">if</span> <span class="n">previous_selection</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">all_selections</span><span class="p">:</span>
